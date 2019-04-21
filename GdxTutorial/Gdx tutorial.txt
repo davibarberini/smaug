@@ -1,0 +1,63 @@
+To import in Eclipse: File -> Import -> Gradle -> Gradle Project
+To import to Intellij IDEA: File -> Open -> build.gradle
+To import to NetBeans: File -> Open Project...
+
+Imports necessários:
+
+	import com.badlogic.gdx.ApplicationAdapter;
+	import com.badlogic.gdx.Gdx;
+	import com.badlogic.gdx.graphics.GL20;
+	import com.badlogic.gdx.graphics.g2d.BitmapFont;
+	import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+	import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+	import com.badlogic.gdx.Input;
+
+
+Funções Padrões:
+
+	create() - é rodada uma vez, quando a aplicação é iniciada.
+	render() - update e draw do python.
+	dispose() - roda quando vc sai do jogo.
+	pause() - deixa a aplicação em segundo plano, é chamada quando saimos do aplicativo pelo android ou no desktop momentos antes de sair do jogo.
+	resize() - chamada 1 vez no create e quando tentamos redimensionar a tela.
+	resume() - resume a aplicação Android, utilizada após voltarmos para o aplicativo q estava em pause()
+	
+
+Funções necessárias:
+	
+
+	TickRate
+	Gdx.graphics.getDeltaTime(); - Serve para definir o tickrate, ela retorna o tempo que passou desde a ultima frame.
+					Ou seja, utilizaremos as variáveis definindo os valores por segundo Ex: 
+					velX = 60 * Gdx.graphics.getDeltaTime() estamos dizendo que andará 60 pixels por segundo.
+
+	Input
+	Gdx.input.isTouched() - retorna true ou false, identifica se vc esta clicando com o mouse, ou se o touch do celular foi tocado.
+	Gdx.input.getX() - retorna o valor X daonde vc tocou na tela ou clicou.
+	Gdx.input.getY() - retorna o valor Y daonde vc tocou na tela ou clicou. O OpenGL não usa as coordenadas do Gdx então pra pegar a coordenada certa
+			   vc deve fazer o seguinte calculo:  Gdx.graphics.getHeight() - Gdx.input.getY()
+													
+	Gdx.input.isKeyPressed() - retorna true ou false se a tecla esta pressionada ou não, deve passar como parâmetro a tecla desejada EX: 
+				   Gdx.input.isKeyPressed(Input.Keys.W) checka se a tecla W esta pressionada ou nao.
+
+
+
+        Gdx.input.setInputProcessor(new InputAdapter() { - Parecido com os Event Handler do pygame, keyTyped roda quando qualquer tecla é apertada
+							   touchDown, pra quando vc clica com o mouse, ou no touch do celular.
+
+            @Override
+            public boolean keyTyped (char key) {
+                r = MathUtils.random();
+                g = MathUtils.random();
+                b = MathUtils.random();
+                return true;
+            }
+
+            @Override
+            public boolean touchDown (int x, int y, int pointer, int button) {
+                r = MathUtils.random();
+                g = MathUtils.random();
+                b = MathUtils.random();
+                return true;
+            }
+        });
