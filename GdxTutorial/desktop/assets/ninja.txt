@@ -1,0 +1,12 @@
+ninja.png
+size: 900, 495
+format: RGBA8888
+filter: Linear,Linear
+repeat: none
+ninja
+  rotate: false
+  xy: 0, 0
+  size: 900, 495
+  orig: 900, 495
+  offset: 0, 0
+  index: -1

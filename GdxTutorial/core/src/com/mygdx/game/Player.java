@@ -1,9 +1,10 @@
 package com.mygdx.game;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.math.Rectangle;
 
-public class Player {
+public class Player extends Sprite {
 	public Rectangle rect;
 	public double gravity, velX, velY;
  

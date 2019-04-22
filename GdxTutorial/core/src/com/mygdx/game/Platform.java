@@ -23,12 +23,10 @@ public class Platform {
 	   
 	    if(velocidadeX < 0) {
 	    	ply.rect.x = rect.x + rect.width;
-	    	ply.velX = 0; 
 	    }
 	   
 	    else if(velocidadeX > 0) {
 	    	ply.rect.x = rect.x - ply.rect.width;
-	    	ply.velX = 0;
 	    }
     }
 
