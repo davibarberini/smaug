@@ -15,7 +15,7 @@ import com.mygdx.game.Player;
 
 public class Level1 extends ScreenAdapter {
   public static Player p1;
-  public static int WIDTH;  
+  public static int WIDTH;
   public static int HEIGHT;
   public static int mapCol = 12;
   public static int mapLin = 8;
@@ -30,6 +30,9 @@ public class Level1 extends ScreenAdapter {
 	  { 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 1 }
 	};
 	
+  MapFileWriter mapWriter;
+  MapFileReader mapReader;
+	
   public static Platform [][] platforms;
   
   OrthographicCamera camera;
@@ -39,6 +42,11 @@ public class Level1 extends ScreenAdapter {
 
   public Level1(MyGdxGame game) {
 	  this.game = game;
+	  mapWriter = new MapFileWriter(mapLin, mapCol);
+	  mapWriter.writeMap(map, "Level1");
+	  mapReader = new MapFileReader(mapLin, mapCol);
+	  map = mapReader.readMap("Level1");
+	  
 
   }
   
@@ -137,7 +145,12 @@ public class Level1 extends ScreenAdapter {
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	  
 	  
-	 
+	  game.batch.setProjectionMatrix(camera.combined);
+	  game.batch.begin();
+	  game.batch.draw(fundo, 3 , 20);
+	  game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
+	  game.batch.end();
+	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
@@ -154,11 +167,7 @@ public class Level1 extends ScreenAdapter {
 	  }
 	  game.shapeRenderer.end();
 	  
-	  game.batch.setProjectionMatrix(camera.combined);
-	  game.batch.begin();
-	  game.batch.draw(fundo, 3 , 20);
-	  game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
-	  game.batch.end();
+	 
 	  
   }
   public void dispose() {
