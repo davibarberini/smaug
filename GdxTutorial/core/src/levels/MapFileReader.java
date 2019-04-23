@@ -8,7 +8,7 @@ import java.io.IOException;
 public class MapFileReader {
 	public int[][] mapLevel;
 	public FileReader fr;
-	public String numToString;
+	public String numToString = "";
 	public int mapL, mapC;
 	
 	public MapFileReader(int mapLin, int mapCol) {
@@ -23,16 +23,26 @@ public class MapFileReader {
             int i, countL = 0, countC = 0;
             String e;
         	while ((i=fr.read()) != -1) {
-        		System.out.print((char) i);
-        		if((char) i == ',') {
-        			//if((char) i == null)
-        			mapLevel[countL][countC] = Integer.parseInt(numToString);
-        			countC += 1;
-            		if(countC == mapC) {
-            			countL += 1;
+        		if((char) i == '0' || (char) i == '1' || (char) i == ',') {
+        			//System.out.println((char) i);
+        			System.out.println(numToString);
+            		if((char) i == ',') {
+            			mapLevel[countL][countC] = Integer.parseInt(numToString);
+            			numToString = "";
+            			countC += 1;
+                		if(countC == mapC) {
+                			countL += 1;
+                			countC = 0;
+                		}
+            		} else {
+            			if((char) i == '0') {
+            				numToString += "0";
+            			}
+            			else {
+            				numToString += (char) i;
+            			}
             		}
-        		} else {
-        			numToString += (char) i;
+           	
         		}
         		
         	} 
