@@ -23,6 +23,9 @@ public class TitleScreen extends ScreenAdapter {
                 if (keyCode == Input.Keys.SPACE) {
                     game.setScreen(new Level1(game));
                 }
+                else if (keyCode == Input.Keys.X) {
+                    game.setScreen(new MapEditor(game));
+                }
                 return true;
             }
         });

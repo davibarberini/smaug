@@ -17,8 +17,8 @@ public class Level1 extends ScreenAdapter {
   public static Player p1;
   public static int WIDTH;
   public static int HEIGHT;
-  public static int mapCol = 12;
-  public static int mapLin = 22;
+  public static int mapCol = 25;
+  public static int mapLin = 44;
   public static int[][] map = new int[mapLin][mapCol];
   
   MapFileWriter mapWriter;
@@ -58,8 +58,8 @@ public class Level1 extends ScreenAdapter {
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
-	  p1.rect.x = 0;
-	  p1.rect.y = 0;
+	  p1.rect.x = 50;
+	  p1.rect.y = -10;
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x, p1.rect.y, 0);
@@ -135,7 +135,11 @@ public class Level1 extends ScreenAdapter {
 	  Gdx.gl.glClearColor(0, 0, 1, 1);
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	  
-	  
+	  game.batch.setProjectionMatrix(camera.combined);
+	  game.batch.begin();
+	  game.batch.draw(fundo, 3 , 20);
+	  game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
+	  game.batch.end();
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -153,11 +157,7 @@ public class Level1 extends ScreenAdapter {
 	  }
 	  game.shapeRenderer.end();
 	  
-	  game.batch.setProjectionMatrix(camera.combined);
-	  game.batch.begin();
-	  game.batch.draw(fundo, 3 , 20);
-	  game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
-	  game.batch.end();
+	  
 	  
 	  
 	 

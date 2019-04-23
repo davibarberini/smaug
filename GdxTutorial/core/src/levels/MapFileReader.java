@@ -21,11 +21,10 @@ public class MapFileReader {
         try {
             fr = new FileReader(mapName + ".txt");
             int i, countL = 0, countC = 0;
-            String e;
         	while ((i=fr.read()) != -1) {
         		if((char) i == '0' || (char) i == '1' || (char) i == ',') {
         			//System.out.println((char) i);
-        			System.out.println(numToString);
+        			//System.out.println(numToString);
             		if((char) i == ',') {
             			mapLevel[countL][countC] = Integer.parseInt(numToString);
             			numToString = "";
