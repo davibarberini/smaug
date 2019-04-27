@@ -22,7 +22,7 @@ public class MapFileReader {
             fr = new FileReader(mapName + ".txt");
             int i, countL = 0, countC = 0;
         	while ((i=fr.read()) != -1) {
-        		if((char) i == '0' || (char) i == '1' || (char) i == ',') {
+        		if((char) i == '0' || (char) i == '1' || (char) i == ',' || (char) i == '2' || (char) i == '3' || (char) i == '4') {
         			//System.out.println((char) i);
         			//System.out.println(numToString);
             		if((char) i == ',') {

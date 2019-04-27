@@ -1,12 +1,17 @@
 package com.mygdx.game;
 
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 public class Platform {
 	public Rectangle rect;
+	public int platformType;
+	public Color color;
 	
-	public Platform(float x, float y, float w, float h) {
+	public Platform(float x, float y, float w, float h, int pType, Color cor) {
 		rect = new Rectangle(x, y, w, h);
+		platformType = pType;
+		color = cor;
 	}
 	
     public void platCollision(double velocidadeX, double velocidadeY, Player ply) {

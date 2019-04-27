@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -51,7 +52,13 @@ public class Level1 extends ScreenAdapter {
 	  for(int e=0; e < mapLin; e++) {
 		  for(int i=0; i < mapCol; i++) {
 			  if(map[e][i] == 1) {
-				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 50, 20);
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 50, 20, 1, new Color(1, 0, 0, 1));
+			  }
+			  else if(map[e][i] == 2) {
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 25, 10, 2, new Color(1, 0.8f, 0, 1));
+			  }
+			  else if(map[e][i] == 3) {
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin) + 10, 25, 10, 3, new Color(1, 0, 0.8f, 1));
 			  }
 		  }
 	  }
@@ -110,7 +117,15 @@ public class Level1 extends ScreenAdapter {
 		  for(int j=0; j < mapCol; j++)
 		  if(platforms[k][j] != null) {
 			  Platform plat = platforms[k][j];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);
+			  if(plat.platformType / 10 >= 10 && plat.platformType / 10 <= 12.5){
+				  if(p1.rect.overlaps(plat.rect)) {
+					  
+				  }
+			  }
+			  else {
+				  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);  
+			  }
+			  
 		  }  
 	  }
 	p1.rect.x += p1.velX * delta;
@@ -135,28 +150,30 @@ public class Level1 extends ScreenAdapter {
 	  Gdx.gl.glClearColor(0, 0, 1, 1);
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 	  
-	  game.batch.setProjectionMatrix(camera.combined);
-	  game.batch.begin();
-	  game.batch.draw(fundo, 3 , 20);
-	  game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
-	  game.batch.end();
+	 
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
 	  game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width, p1.rect.height);
-	  game.shapeRenderer.setColor(1, 0, 0, 1);
 	  
 	  for(int k=0; k < mapLin; k++) {
 		  for(int j=0; j < mapCol; j++)
 		  if(platforms[k][j] != null) {
+			  game.shapeRenderer.setColor(platforms[k][j].color);
 			  Platform plat = platforms[k][j];
+			  
 			  game.shapeRenderer.rect(plat.rect.x, plat.rect.y, plat.rect.width, plat.rect.height);  
 		  }
 		  
 	  }
 	  game.shapeRenderer.end();
 	  
+	  game.batch.setProjectionMatrix(camera.combined);
+	  game.batch.begin();
+	  game.batch.draw(fundo, 3 , 20);
+	  game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
+	  game.batch.end();
 	  
 	  
 	  

@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -27,7 +28,7 @@ public class MapEditor extends ScreenAdapter {
   public static int mapCol = 25;
   public static int mapLin = 44;
   public static int[][] map = new int[mapLin][mapCol];
-  public static List <Rectangle> blocks = new ArrayList<Rectangle>();
+  public static List <Platform> blocks = new ArrayList<Platform>();
   
   MapFileWriter mapWriter;
   MapFileReader mapReader;
@@ -56,8 +57,14 @@ public class MapEditor extends ScreenAdapter {
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
-	  Rectangle plataformafixa = new Rectangle(0, 920, 50, 20);
-	  blocks.add(plataformafixa);
+	  Platform platEditor1 = new Platform(0, 920, 50, 20, 1, new Color(1, 0, 0, 1));
+	  Platform platEditor2 = new Platform(70, 920, 25, 10, 2, new Color(1, 0.8f, 0, 1));
+	  Platform platEditor3 = new Platform(115, 920, 25, 10, 3, new Color(1, 0, 0.8f, 1));
+	  Platform platEditor4 = new Platform(150, 920, 20, 50, 4, new Color(0, 1, 0, 1));
+	  blocks.add(platEditor1);
+	  blocks.add(platEditor2);
+	  blocks.add(platEditor3);
+	  blocks.add(platEditor4);
 	  fundo = new Texture("lab.png");
 	  idle = new Texture("sprite.png");
 	  
@@ -65,7 +72,16 @@ public class MapEditor extends ScreenAdapter {
 	  for(int e=0; e < mapLin; e++) {
 		  for(int i=0; i < mapCol; i++) {
 			  if(map[e][i] == 1) {
-				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 50, 20);
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 50, 20, 1, new Color(1, 0, 0, 1));
+			  }
+			  else if(map[e][i] == 2) {
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 25, 10, 2, new Color(1, 0.8f, 0, 1));
+			  }
+			  else if(map[e][i] == 3) {
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin) + 10, 25, 10, 3, new Color(1, 0, 0.8f, 1));
+			  }
+			  else if(map[e][i] == 4) {
+				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 20, 50, 4, new Color(0, 1, 0, 1));
 			  }
 		  }
 	  }
@@ -84,7 +100,7 @@ public class MapEditor extends ScreenAdapter {
             	  for(int lin=0; lin < mapLin; lin++) {
             		  for(int col=0; col < mapCol; col++) {
             			  if(platforms[lin][col] != null) {
-            				  map[lin][col] = 1;
+            				  map[lin][col] = platforms[lin][col].platformType;
             			  }
             			  else {
             				  map[lin][col] = 0;
@@ -119,8 +135,8 @@ public class MapEditor extends ScreenAdapter {
             	  return true;
               }
               else if(keyCode == Input.Keys.R) {
-            	  blocks.get(0).x = 0;
-            	  blocks.get(0).y = 920;
+            	  blocks.get(0).rect.x = 0;
+            	  blocks.get(0).rect.y = 920;
             	  return true;
               }
               else if(keyCode == Input.Keys.K) {
@@ -159,13 +175,13 @@ public class MapEditor extends ScreenAdapter {
             	  isClicking = true;
             	  for(int b=0; b < blocks.size(); b++) {
             		  if(camera.zoom == 2) {
-            			  if(pointInRectangle(blocks.get(b), mouseX, mouseY)) {
+            			  if(pointInRectangle(blocks.get(b).rect, mouseX, mouseY)) {
                 			  System.out.println(b);
                 			  selected = b;
                 		  }  
             		  }
             		  else if(camera.zoom == 1) {
-            			  Rectangle block = blocks.get(b);
+            			  Rectangle block = blocks.get(b).rect;
             			  Rectangle block2 = new Rectangle(block.x + 310, block.y - 230, 25, 10);
             			  if(pointInRectangle(block2, mouseX, mouseY)) {
                 			  System.out.println(b);
@@ -178,7 +194,7 @@ public class MapEditor extends ScreenAdapter {
                   return true;     
               }
               if (button == Input.Buttons.RIGHT) {
-            	  selected = 1;
+            	  selected = 999;
               }
               return false;
            }
@@ -196,7 +212,7 @@ public class MapEditor extends ScreenAdapter {
   
   @Override
   public void render(float delta) {
-	Rectangle mainPosition = blocks.get(0);
+	Rectangle mainPosition = blocks.get(0).rect;
     
 	mainPosition.y += velY * delta;
 	mainPosition.x += velX * delta;
@@ -207,9 +223,15 @@ public class MapEditor extends ScreenAdapter {
 		if(mouseX > 0 && mouseX < 1240 && mouseY < 900 && mouseY > 20) {
 			  if(selected != 99999) {
 				  if(selected == 0) {
-					  platforms[(int)linr][(int)colr] = new Platform(colr * 50, ((linr * -20) + (20 * mapLin)), 50, 20);
+					  platforms[(int)linr][(int)colr] = new Platform(colr * 50, ((linr * -20) + (20 * mapLin)), 50, 20, 1, new Color(1, 0, 0, 1));
 				  }
-				  else if (selected == 1) {
+				  else if(selected == 1) {
+					  platforms[(int)linr][(int)colr] = new Platform(colr * 50, ((linr * -20) + (20 * mapLin)), 25, 10, 2, new Color(1, 0.8f, 0, 1));
+				  }
+				  else if(selected == 2) {
+					  platforms[(int)linr][(int)colr] = new Platform(colr * 50, ((linr * -20) + (20 * mapLin) + 10), 25, 10, 3, new Color(1, 0, 0.8f, 1));
+				  }
+				  else if (selected == 999) {
 					  platforms[(int)linr][(int)colr] = null;
 				  }
 				  
@@ -226,7 +248,7 @@ public class MapEditor extends ScreenAdapter {
 	if(colr > mapCol - 1) {
 		colr = mapCol - 1;
 	}
-	System.out.println("Col: " + colr +"Lin: " + linr);
+	//System.out.println("Col: " + colr +"Lin: " + linr);
 	
 	this.draw();
   
@@ -244,11 +266,11 @@ public class MapEditor extends ScreenAdapter {
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-	  game.shapeRenderer.setColor(1, 0, 0, 1);
 	  
 	  for(int k=0; k < mapLin; k++) {
 		  for(int j=0; j < mapCol; j++)
 		  if(platforms[k][j] != null) {
+			  game.shapeRenderer.setColor(platforms[k][j].color);
 			  Platform plat = platforms[k][j];
 			  game.shapeRenderer.rect(plat.rect.x, plat.rect.y, plat.rect.width, plat.rect.height);  
 		  }
@@ -256,11 +278,13 @@ public class MapEditor extends ScreenAdapter {
 	  }
 	  for(int e=0; e < blocks.size(); e++) {
 		  if(camera.zoom == 2) {
-			  Rectangle block = blocks.get(e);
+			  game.shapeRenderer.setColor(blocks.get(e).color);
+			  Rectangle block = blocks.get(e).rect;
 			  game.shapeRenderer.rect(block.x, block.y, block.width, block.height);
 		  }
 		  else if(camera.zoom == 1) {
-			  Rectangle block = blocks.get(e);
+			  game.shapeRenderer.setColor(blocks.get(e).color);
+			  Rectangle block = blocks.get(e).rect;
 			  game.shapeRenderer.rect(block.x + 310, block.y - 230, block.width / 2, block.height / 2);
 		  }
 		  
@@ -277,6 +301,14 @@ public class MapEditor extends ScreenAdapter {
         		  game.shapeRenderer.rect((colr * 50), 880 -(linr * 20), 50, 20);  
     		  }
     		  else if(selected == 1) {
+    			  game.shapeRenderer.setColor(1, 0.8f, 0, 1);
+        		  game.shapeRenderer.rect((colr * 50), 880 -(linr * 20), 25, 10);  
+    		  }
+    		  else if(selected == 2) {
+    			  game.shapeRenderer.setColor(1, 0, 0.8f, 1);
+        		  game.shapeRenderer.rect((colr * 50), 890 -(linr * 20), 25, 10);  
+    		  }
+    		  else if(selected == 999) {
     			  game.shapeRenderer.setColor(1, 1, 1, 0);
         		  game.shapeRenderer.rect((colr * 50), 880 -(linr * 20), 50, 20);
     		  }
@@ -288,6 +320,14 @@ public class MapEditor extends ScreenAdapter {
         		  game.shapeRenderer.rect(mouseX - 25, mouseY - 10 , 50, 20);
     		  }
     		  else if(selected == 1) {
+    			  game.shapeRenderer.setColor(1, 0.8f, 0, 1);
+        		  game.shapeRenderer.rect((colr * 50), 880 -(linr * 20), 25, 10);  
+    		  }
+    		  else if(selected == 2) {
+    			  game.shapeRenderer.setColor(1, 0, 0.8f, 1);
+        		  game.shapeRenderer.rect((colr * 50), 890 -(linr * 20), 25, 10);  
+    		  }
+    		  else if(selected == 999) {
     			  game.shapeRenderer.setColor(1, 1, 1, 10);
         		  game.shapeRenderer.rect(mouseX - 25, mouseY - 10 , 50, 20);
     		  }
