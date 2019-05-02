@@ -16,7 +16,7 @@ import com.mygdx.game.Player;
 
 
 public class Level1 extends ScreenAdapter {
-  public static Player p1;
+  public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
   public static int mapCol = 25;
@@ -79,30 +79,17 @@ public class Level1 extends ScreenAdapter {
               if (keyCode == Input.Keys.SPACE) {
                   game.setScreen(new EndScreen(game));
               }
-              else if(keyCode == Input.Keys.W) {
-                  p1.gravity = 500;
-              }
-              else if(keyCode == Input.Keys.D) {
-              	p1.velX = 500;
-              }
-              else if(keyCode == Input.Keys.A) {
-              	p1.velX = -500;
-              }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
               }
+              p1.keyDown(keyCode);
               return true;
           }
           public boolean keyUp(int keyCode) {
-        	  if(keyCode == Input.Keys.D && p1.velX > 0) {
-                	p1.velX = 0;
-              }
-        	  else if(keyCode == Input.Keys.A && p1.velX < 0) {
-                	p1.velX = 0;
-              }
-        	  else if(keyCode == Input.Keys.K) {
+        	  if(keyCode == Input.Keys.K) {
                 	camera.zoom = 1;
               }
+        	  p1.keyUp(keyCode);
         	  return true;
           }
       });
@@ -172,9 +159,8 @@ public class Level1 extends ScreenAdapter {
 	  
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();
-	  
-	  p1.draw(game.batch);
 	  game.batch.draw(fundo, 3 , 20);
+	  p1.draw(game.batch);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 
