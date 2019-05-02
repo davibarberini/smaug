@@ -77,7 +77,7 @@ public class Level1 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
-                  game.setScreen(new EndScreen(game));
+                  game.setScreen(new Level2(game));
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
