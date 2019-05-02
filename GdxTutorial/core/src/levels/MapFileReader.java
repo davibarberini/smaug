@@ -15,7 +15,7 @@ public class MapFileReader {
 		 mapLevel = new int[mapLin][mapCol];
 		 mapL = mapLin;
 		 mapC = mapCol;
-	}
+	} 
     public int[][] readMap(String mapName) {
        
         try {

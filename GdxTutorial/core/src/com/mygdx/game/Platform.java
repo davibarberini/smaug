@@ -5,7 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Platform {
 	public Rectangle rect;
-	public int platformType;
+	public int platformType; 
 	public Color color;
 	
 	public Platform(float x, float y, float w, float h, int pType, Color cor) {

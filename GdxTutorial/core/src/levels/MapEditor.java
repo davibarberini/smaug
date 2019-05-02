@@ -20,7 +20,7 @@ import java.util.List;
 public class MapEditor extends ScreenAdapter {
   public static double velX, velY;
   public static int WIDTH;
-  public static int HEIGHT;
+  public static int HEIGHT; 
   public static int selected = 99999;
   public static int mouseX, mouseY;
   public static boolean isClicking;
