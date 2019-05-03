@@ -3,49 +3,90 @@ package levels;
 import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.List;
+
+import com.badlogic.gdx.graphics.Color;
+
+import platforms.Platform;
+import platforms.Teleporter;
  
  
 public class MapFileReader {
-	public int[][] mapLevel;
+	public static List <Platform> platforms = new ArrayList<Platform>();
+	public static Platform[] platformsReturn;
+	public float[] tempRect = new float[4];
+	public int count = 0;
 	public FileReader fr;
 	public String numToString = "";
-	public int mapL, mapC;
+	public boolean passed = false;
+	public int platformType;
 	
-	public MapFileReader(int mapLin, int mapCol) {
-		 mapLevel = new int[mapLin][mapCol];
-		 mapL = mapLin;
-		 mapC = mapCol;
-	} 
-    public int[][] readMap(String mapName) {
+	public MapFileReader() {}
+	
+    public Platform[] readMapToLevel(String levelName) {
+    	
+    	read(levelName);
+        
+    	platformsReturn = new Platform[platforms.size()];
+        for(int e=0; e < platforms.size(); e++) {
+        	platformsReturn[e] = platforms.get(e);
+        }
+        return platformsReturn;
+     
+    }
+    public List<Platform> readMapToEditor(String levelName) {
+    	
+        read(levelName);
        
-        try {
-            fr = new FileReader(mapName + ".txt");
-            int i, countL = 0, countC = 0;
+        return platforms;
+    }
+    
+    public void read(String levelName) {
+    	try {
+            fr = new FileReader(levelName + ".txt");
+            int i;
         	while ((i=fr.read()) != -1) {
-        		if((char) i == '0' || (char) i == '1' || (char) i == ',' || (char) i == '2' || (char) i == '3' || (char) i == '4') {
-        			//System.out.println((char) i);
-        			//System.out.println(numToString);
-            		if((char) i == ',') {
-            			mapLevel[countL][countC] = Integer.parseInt(numToString);
-            			numToString = "";
-            			countC += 1;
-                		if(countC == mapC) {
-                			countL += 1;
-                			countC = 0;
-                		}
-            		} else {
-            			if((char) i == '0') {
-            				numToString += "0";
-            			}
-            			else {
-            				numToString += (char) i;
-            			}
-            		}
-           	
+        		if((char) i != '[' && (char) i != ']'&& (char) i != '[' && (char) i != ',' && passed) {
+        			numToString += (char)i;
+        		} else {
+        			if((char) i == '[') {
+        				passed = true;
+        			}
+        			if(!passed) {
+        				String temp = ""; 
+        				temp += (char) i;
+        				platformType = Integer.parseInt(temp);
+        				System.out.println(platformType);
+        				temp = "";
+        			}
+        			if((char) i == ',') {
+        				System.out.println(numToString + "  " + count);
+        				tempRect[count] = (float)Float.parseFloat(numToString);
+        				count += 1;
+        				numToString = "";
+        			}
+        			else if((char) i == ']') {
+        				tempRect[count] = (float)Float.parseFloat(numToString);
+        				count += 1;
+        				numToString = "";
+        				passed = false;
+        			}
+        			if(count == 4) {
+        				if(platformType == 0) {
+        					Color color = new Color(1, 0, 0, 1);
+        					platforms.add(new Platform(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 0, color));
+            				
+        				}
+        				else if(platformType == 4) {
+        					Color color = new Color(0, 1, 0, 1);
+        					platforms.add(new Teleporter(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 4, color));
+        				}
+        				count = 0;
+        				
+        			}
         		}
-        		
-        	} 
-        		
+        	}
         } 
        
         
@@ -54,7 +95,5 @@ public class MapFileReader {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        return mapLevel;
- 
     }
 }

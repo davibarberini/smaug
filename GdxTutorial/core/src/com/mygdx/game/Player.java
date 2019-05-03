@@ -15,8 +15,8 @@ public class Player extends Sprite {
 	public double gravity, velX, velY;
 	public int numColunas = 5;
 	public int numLinhas = 2;
-	public int spriteLargura = 45;
-	public int spriteAltura = 70;
+	public int spriteLargura = 35;
+	public int spriteAltura = 40;
 	public String animState = "parado";
 	public float stateTime;
 	public String facing = "direita";

@@ -42,5 +42,6 @@ public class EndScreen extends ScreenAdapter {
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);
+  	  
     }
 }

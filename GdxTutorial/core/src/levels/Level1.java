@@ -11,22 +11,21 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Platform;
 import com.mygdx.game.Player;
+
+import levelWithMatrix.Level2Matrix;
+import platforms.Platform;
 
 
 public class Level1 extends ScreenAdapter {
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
-  public static int mapCol = 25;
-  public static int mapLin = 44;
-  public static int[][] map = new int[mapLin][mapCol];
   
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
-  public static Platform [][] platforms;
+  public static Platform [] platforms;
   
   OrthographicCamera camera;
   MyGdxGame game;
@@ -37,8 +36,8 @@ public class Level1 extends ScreenAdapter {
 	  this.game = game;
 	  //mapWriter = new MapFileWriter(mapLin, mapCol);
 	  //mapWriter.writeMap(map, "Level1");
-	  mapReader = new MapFileReader(mapLin, mapCol);
-	  map = mapReader.readMap("Level1");
+	  mapReader = new MapFileReader();
+	  platforms = mapReader.readMapToLevel("Level1");
 	  
 
   }
@@ -49,25 +48,11 @@ public class Level1 extends ScreenAdapter {
 	  fundo = new Texture("lab.png");
 	  idle = new Texture("sprite.png");
 	  
-	  platforms = new Platform[mapLin][mapCol];
-	  for(int e=0; e < mapLin; e++) {
-		  for(int i=0; i < mapCol; i++) {
-			  if(map[e][i] == 1) {
-				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 50, 20, 1, new Color(1, 0, 0, 1));
-			  }
-			  else if(map[e][i] == 2) {
-				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin), 25, 10, 2, new Color(1, 0.8f, 0, 1));
-			  }
-			  else if(map[e][i] == 3) {
-				  platforms[e][i] = new Platform(i * 50, (e * -20) + (20 * mapLin) + 10, 25, 10, 3, new Color(1, 0, 0.8f, 1));
-			  }
-		  }
-	  }
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
 	  p1.rect.x = 50;
-	  p1.rect.y = -10;
+	  p1.rect.y = 20;
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x, p1.rect.y, 0);
@@ -77,7 +62,7 @@ public class Level1 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
-                  game.setScreen(new Level2(game));
+                  game.setScreen(new Level2Matrix(game));
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
@@ -101,30 +86,21 @@ public class Level1 extends ScreenAdapter {
   public void render(float delta) {
     
 	p1.rect.y += p1.gravity * delta;
-	for(int k=0; k < mapLin; k++) {     //Colisao após a movimentação Y
-		  for(int j=0; j < mapCol; j++)
-		  if(platforms[k][j] != null) {
-			  Platform plat = platforms[k][j];
-			  if(plat.platformType / 10 >= 10 && plat.platformType / 10 <= 12.5){
-				  if(p1.rect.overlaps(plat.rect)) {
-					  
-				  }
-			  }
-			  else {
-				  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);  
-			  }
-			  
+	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
+		  if(platforms[k] != null) {
+			  Platform plat = platforms[k];
+			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);
 		  }  
-	  }
+	}
+	
 	p1.rect.x += p1.velX * delta;
-	for(int k=0; k < mapLin; k++) {   //Colisao após a movimentação X
-		  for(int j=0; j < mapCol; j++)
-		  if(platforms[k][j] != null) {
-			  Platform plat = platforms[k][j];
+	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+		  if(platforms[k] != null) {
+			  Platform plat = platforms[k];
 			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(p1.velX, 0.0, p1);
 		  }
 		  
-	  }
+	}
 	p1.update();
 	
     camera.position.set(p1.rect.x, p1.rect.y, 0);
@@ -145,16 +121,14 @@ public class Level1 extends ScreenAdapter {
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
 	  game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width, p1.rect.height);
 	  
-	  for(int k=0; k < mapLin; k++) {
-		  for(int j=0; j < mapCol; j++)
-		  if(platforms[k][j] != null) {
-			  game.shapeRenderer.setColor(platforms[k][j].color);
-			  Platform plat = platforms[k][j];
-			  
+	  /*for(int k=0; k < platforms.length; k++) {
+		  if(platforms[k] != null) {
+			  game.shapeRenderer.setColor(platforms[k].color);
+			  Platform plat = platforms[k];
 			  game.shapeRenderer.rect(plat.rect.x, plat.rect.y, plat.rect.width, plat.rect.height);  
 		  }
 		  
-	  }
+	  }*/
 	  game.shapeRenderer.end();
 	  
 	  game.batch.setProjectionMatrix(camera.combined);
@@ -167,8 +141,9 @@ public class Level1 extends ScreenAdapter {
 	  
   }
   
-  public void dispose() {
-	  game.shapeRenderer.setProjectionMatrix(null);
+  public void hide() {
+	  Gdx.input.setInputProcessor(null);
+	  
   }
   
   

@@ -2,28 +2,24 @@ package levels;
 
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.List;
+
+import platforms.Platform;
 
 public class MapFileWriter {
-	
-	public int[][] mapObjects;
 	public PrintWriter writer;
 	
-	public MapFileWriter(int mapLin, int mapCol) {
-		mapObjects = new int[mapLin][mapCol];
-	}
+	public MapFileWriter() {}
 	
-	public void writeMap(int[][] levelMap, String mapName) {
+	public void writeMap(List<Platform> platforms, String mapName) {
 		
 		 
 		try
 		{
 			writer = new PrintWriter(mapName + ".txt");
-			for (int i = 0; i<levelMap.length; i++){
-	        	for(int j = 0; j<levelMap[i].length; j++){
-	        	writer.print(levelMap[i][j] + ",");
-	        	      }
-	        	writer.println();
-			}	
+			for (int i = 0; i<platforms.size(); i++){
+	        	writer.print(platforms.get(i).rect + String.valueOf(platforms.get(i).platformType));
+			}
 		}
 		catch (FileNotFoundException e){
 			System.out.println("Error: " + e.getMessage());			

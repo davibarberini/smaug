@@ -7,9 +7,6 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.mygdx.game.MyGdxGame;
 
-import levelTest.Level1PlatTest;
-import levelTest.MapEditorTest;
-
 public class TitleScreen extends ScreenAdapter {
 
     MyGdxGame game;
@@ -24,10 +21,10 @@ public class TitleScreen extends ScreenAdapter {
             @Override
             public boolean keyDown(int keyCode) {
                 if (keyCode == Input.Keys.SPACE) {
-                    game.setScreen(new Level1PlatTest(game));
+                    game.setScreen(new Level1(game));
                 }
                 else if (keyCode == Input.Keys.X) {
-                    game.setScreen(new MapEditorTest(game));
+                    game.setScreen(new MapEditor(game));
                 }
                 return true;
             }
