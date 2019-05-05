@@ -1,7 +1,5 @@
 package levels;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -16,7 +14,7 @@ import com.mygdx.game.Player;
 import platforms.Platform;
 
 
-public class Level1 extends ScreenAdapter {
+public class Level2 extends ScreenAdapter {
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
@@ -31,22 +29,12 @@ public class Level1 extends ScreenAdapter {
   
   Texture fundo, idle;
 
-  public Level1(MyGdxGame game) {
+  public Level2(MyGdxGame game) {
 	  this.game = game;
 	  //mapWriter = new MapFileWriter(mapLin, mapCol);
 	  //mapWriter.writeMap(map, "Level1");
 	  mapReader = new MapFileReader();
-	  try {
-		  System.out.println("Tamanho atual" + platforms.length);
-		  for(int e=0; e < platforms.length; e++) {
-			  platforms[e] = null;
-			
-		  }
-	  } catch(Exception e){
-		  
-	  }
-	  
-	  platforms = mapReader.readMapToLevel("Level1");
+	  platforms = mapReader.readMapToLevel("Level2");
 	  
 
   }
@@ -54,7 +42,7 @@ public class Level1 extends ScreenAdapter {
   @Override
   public void show() {
 	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
-	  fundo = new Texture("lab.png");
+	  fundo = new Texture("city.jpg");
 	  idle = new Texture("sprite.png");
 	  
 	  WIDTH = Gdx.graphics.getWidth();
@@ -71,7 +59,7 @@ public class Level1 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
-                  game.setScreen(new Level2(game));
+                  game.setScreen(new TitleScreen(game));
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;

@@ -20,6 +20,7 @@ public class Player extends Sprite {
 	public String animState = "parado";
 	public float stateTime;
 	public String facing = "direita";
+	public boolean isColliding = false;
 	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> paradoAnim;
@@ -45,7 +46,7 @@ public class Player extends Sprite {
 
 			}
 		}
-		System.out.println(correndo.length + "--" + correndoTmp.length);
+		//System.out.println(correndo.length + "--" + correndoTmp.length);
 
 		parado[0] = correndoTmp[0][1];
 		jumping[0] = correndoTmp[0][0];

@@ -31,8 +31,9 @@ public class MapEditor extends ScreenAdapter {
   public double pVelX, pVelY;
   public static boolean isClicking;
   public static float colr, linr;
-  public static List <Platform> platforms = new ArrayList<Platform>();
+  public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
+  public String levelToEdit = "Level1";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -45,13 +46,10 @@ public class MapEditor extends ScreenAdapter {
   public MapEditor(MyGdxGame game) {
 	  this.game = game; 
 	  mapReader = new MapFileReader();
-	  platforms = mapReader.readMapToEditor("Level1");
+	  platforms = mapReader.readMapToEditor(levelToEdit);
+	  System.out.println(platforms.size());
 	  
 
-  }
-  public void RestartMap(String mapName) {
-	  mapReader = new MapFileReader();
-	  platforms = mapReader.readMapToEditor(mapName);
   }
   
   @Override
@@ -59,7 +57,9 @@ public class MapEditor extends ScreenAdapter {
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
-	  fundo = new Texture("lab.png");
+	  if(levelToEdit == "Level1") fundo = new Texture("lab.png");
+	  if(levelToEdit == "Level2") fundo = new Texture("city.jpg");
+	  
 	  delete = new Texture("deleting.png");
 	  
 	  x = 0;
@@ -77,7 +77,8 @@ public class MapEditor extends ScreenAdapter {
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
             	  mapWriter = new MapFileWriter();
-            	  mapWriter.writeMap(platforms, "Level1");
+            	  mapWriter.writeMap(platforms, levelToEdit);
+            	  platforms.clear();
                   game.setScreen(new TitleScreen(game));
                   return true;
               }
@@ -303,8 +304,8 @@ public class MapEditor extends ScreenAdapter {
   public static boolean pointInRectangle (Rectangle r, float x, float y) {
       return r.x <= x && r.x + r.width >= x && r.y <= y && r.y + r.height >= y;
   }
-  public void dispose() {
-	  game.shapeRenderer.setProjectionMatrix(null);
+  public void hide() {
+	  Gdx.input.setInputProcessor(null);
   }
 }
 	

@@ -13,14 +13,16 @@ import platforms.Teleporter;
  
  
 public class MapFileReader {
-	public static List <Platform> platforms = new ArrayList<Platform>();
-	public static Platform[] platformsReturn;
+	public ArrayList<Platform> platforms = new ArrayList<Platform>();
+	public Platform[] platformsReturn;
 	public float[] tempRect = new float[4];
 	public int count = 0;
 	public FileReader fr;
 	public String numToString = "";
 	public boolean passed = false;
 	public int platformType;
+	public Teleporter lastTeleporter, teleporterAtual;
+	public boolean passedOne = false;
 	
 	public MapFileReader() {}
 	
@@ -35,7 +37,7 @@ public class MapFileReader {
         return platformsReturn;
      
     }
-    public List<Platform> readMapToEditor(String levelName) {
+    public ArrayList<Platform> readMapToEditor(String levelName) {
     	
         read(levelName);
        
@@ -57,11 +59,11 @@ public class MapFileReader {
         				String temp = ""; 
         				temp += (char) i;
         				platformType = Integer.parseInt(temp);
-        				System.out.println(platformType);
+        				//System.out.println(platformType);
         				temp = "";
         			}
         			if((char) i == ',') {
-        				System.out.println(numToString + "  " + count);
+        				//System.out.println(numToString + "  " + count);
         				tempRect[count] = (float)Float.parseFloat(numToString);
         				count += 1;
         				numToString = "";
@@ -80,7 +82,13 @@ public class MapFileReader {
         				}
         				else if(platformType == 4) {
         					Color color = new Color(0, 1, 0, 1);
-        					platforms.add(new Teleporter(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 4, color));
+        					teleporterAtual = new Teleporter(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 4, color);
+        					if(passedOne) {
+        						teleporterAtual.posX = lastTeleporter.rect.x;
+        						teleporterAtual.posX = lastTeleporter.rect.y;
+        					}
+        					platforms.add(teleporterAtual);
+        					lastTeleporter = teleporterAtual;
         				}
         				count = 0;
         				
