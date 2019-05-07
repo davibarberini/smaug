@@ -5,11 +5,16 @@ import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
+import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.mygdx.game.MyGdxGame;
 
 public class TitleScreen extends ScreenAdapter {
 
     MyGdxGame game;
+    Texture fundo, select;
+    OrthographicCamera camera;
+    public String selected = "play";
 
     public TitleScreen(MyGdxGame game) {
         this.game = game;
@@ -17,14 +22,34 @@ public class TitleScreen extends ScreenAdapter {
 
     @Override
     public void show(){
+    	fundo = new Texture("TitleScreen/titlescreen.jpg");
+    	select = new Texture("TitleScreen/badlogic.jpg");
+    	
+    	camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
+    	
+    	camera.position.set(0 + (Gdx.graphics.getWidth() / 2), 0 + (Gdx.graphics.getHeight() / 2), 0);
+    	camera.update();
+    	
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {
                 if (keyCode == Input.Keys.SPACE) {
-                    game.setScreen(new Level1(game));
+                    if(selected == "play") game.setScreen(new Level1(game));
+                    else if(selected == "editor") game.setScreen(new MapEditor(game));
+                    else if(selected == "exit") game.setScreen(new EndScreen(game));
                 }
                 else if (keyCode == Input.Keys.X) {
-                    game.setScreen(new MapEditor(game));
+                	game.setScreen(new MapEditor(game));
+                }
+                else if(keyCode == Input.Keys.UP || keyCode == Input.Keys.W) {
+                	if(selected == "play") selected = "exit";
+                	else if (selected == "editor") selected = "play";
+                	else if (selected == "exit") selected = "editor";
+                }
+                else if(keyCode == Input.Keys.DOWN || keyCode == Input.Keys.S) {
+                	if(selected == "play") selected = "editor";
+                	else if (selected == "editor") selected = "exit";
+                	else if (selected == "exit") selected = "play";
                 }
                 return true;
             }
@@ -35,11 +60,15 @@ public class TitleScreen extends ScreenAdapter {
     public void render(float delta) {
         Gdx.gl.glClearColor(0, .25f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+        
+        game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.font.draw(game.batch, "Title Screen!", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .75f);
-        game.font.draw(game.batch, "Move the Rectangle.", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .5f);
-        game.font.draw(game.batch, "Press space to play.", Gdx.graphics.getWidth() * .25f, Gdx.graphics.getHeight() * .25f);
+        game.batch.draw(fundo, 0, 0);
+        if(selected == "play") game.batch.draw(select, 175, 280, 40, 40);
+        else if(selected == "editor") game.batch.draw(select, 175, 180, 40, 40);
+        else if(selected == "exit") game.batch.draw(select, 175, 80, 40, 40);
         game.batch.end();
+        
     }
 
     @Override

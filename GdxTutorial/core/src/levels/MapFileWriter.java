@@ -16,7 +16,7 @@ public class MapFileWriter {
 	
 	public void writeMap(List<Platform> platforms, String mapName) {
 			try {
-				System.out.println(platforms.size());
+				//System.out.println(platforms.size());
 				PrintWriter writer = new PrintWriter(mapName + ".txt");
 				writer.print("");
 				writer.close();

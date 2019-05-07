@@ -33,7 +33,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Level1";
+  public String levelToEdit = "Level2/Level2";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -41,7 +41,7 @@ public class MapEditor extends ScreenAdapter {
   OrthographicCamera camera;
   MyGdxGame game;
   
-  Texture fundo, delete;
+  Texture fundo;
 
   public MapEditor(MyGdxGame game) {
 	  this.game = game; 
@@ -57,10 +57,8 @@ public class MapEditor extends ScreenAdapter {
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
-	  if(levelToEdit == "Level1") fundo = new Texture("lab.png");
-	  if(levelToEdit == "Level2") fundo = new Texture("city.jpg");
-	  
-	  delete = new Texture("deleting.png");
+	  if(levelToEdit == "Level1/Level1") fundo = new Texture("Level1/lab.png");
+	  if(levelToEdit == "Level2/Level2") fundo = new Texture("Level2/city.png");
 	  
 	  x = 0;
 	  y = 900;

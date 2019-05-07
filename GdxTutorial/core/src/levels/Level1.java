@@ -1,7 +1,5 @@
 package levels;
 
-import java.io.IOException;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -29,7 +27,7 @@ public class Level1 extends ScreenAdapter {
   OrthographicCamera camera;
   MyGdxGame game;
   
-  Texture fundo, idle;
+  Texture fundo;
 
   public Level1(MyGdxGame game) {
 	  this.game = game;
@@ -40,13 +38,14 @@ public class Level1 extends ScreenAdapter {
 		  System.out.println("Tamanho atual" + platforms.length);
 		  for(int e=0; e < platforms.length; e++) {
 			  platforms[e] = null;
+			  
 			
 		  }
 	  } catch(Exception e){
 		  
 	  }
 	  
-	  platforms = mapReader.readMapToLevel("Level1");
+	  platforms = mapReader.readMapToLevel("Level1/Level1");
 	  
 
   }
@@ -54,8 +53,7 @@ public class Level1 extends ScreenAdapter {
   @Override
   public void show() {
 	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
-	  fundo = new Texture("lab.png");
-	  idle = new Texture("sprite.png");
+	  fundo = new Texture("Level1/lab.png");
 	  
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
@@ -64,13 +62,14 @@ public class Level1 extends ScreenAdapter {
 	  p1.rect.y = 20;
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
-	  camera.position.set(p1.rect.x, p1.rect.y, 0);
+	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
 	  camera.update();
 	  
 	  Gdx.input.setInputProcessor(new InputAdapter() {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
+            	  camera.position.set(0, 0, 0);
                   game.setScreen(new Level2(game));
               }
               else if(keyCode == Input.Keys.K) {
@@ -112,7 +111,7 @@ public class Level1 extends ScreenAdapter {
 	}
 	p1.update();
 	
-    camera.position.set(p1.rect.x, p1.rect.y, 0);
+	camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
 	camera.update();
 	
 	this.draw();
@@ -125,20 +124,20 @@ public class Level1 extends ScreenAdapter {
 	  
 	 
 	  
-	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  /*game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
 	  game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width, p1.rect.height);
 	  
-	  /*for(int k=0; k < platforms.length; k++) {
+	  for(int k=0; k < platforms.length; k++) {
 		  if(platforms[k] != null) {
 			  game.shapeRenderer.setColor(platforms[k].color);
 			  Platform plat = platforms[k];
 			  game.shapeRenderer.rect(plat.rect.x, plat.rect.y, plat.rect.width, plat.rect.height);  
 		  }
 		  
-	  }*/
-	  game.shapeRenderer.end();
+	  }
+	  game.shapeRenderer.end();*/
 	  
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();

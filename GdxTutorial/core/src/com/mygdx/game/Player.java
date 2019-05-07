@@ -12,7 +12,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 public class Player extends Sprite {
 	public Rectangle rect;
-	public double gravity, velX, velY;
+	public double gravity, velX, velY, aceX;
 	public int numColunas = 5;
 	public int numLinhas = 2;
 	public int spriteLargura = 35;
@@ -27,7 +27,7 @@ public class Player extends Sprite {
 	Animation<TextureRegion> jumpingAnim;
 	
 	TextureRegion currentFrame;
-	Texture ninja = new Texture(Gdx.files.internal("ninja.png"));
+	Texture ninja = new Texture(Gdx.files.internal("Player/ninja.png"));
 	
 	TextureRegion[][] correndoTmp = TextureRegion.split(ninja, ninja.getWidth() / numColunas, ninja.getHeight()/ numLinhas);
 	TextureRegion[] correndo = new TextureRegion[numColunas * numLinhas];
@@ -36,7 +36,7 @@ public class Player extends Sprite {
 
 	public Player(float x, float y, float w, float h, double g, double vX, double vY) {
 		rect = new Rectangle(x, y, w, h);
-		gravity = g; 
+		gravity = g;
 		velX = vX;
 		velY = vY;
 		int count = 0;
@@ -59,6 +59,9 @@ public class Player extends Sprite {
  
 	public void update() {
 		gravity += -1000 * Gdx.graphics.getDeltaTime();
+		velX += aceX * Gdx.graphics.getDeltaTime();
+		if(velX > 500) velX = 500;
+		else if(velX < -500) velX = -500;
 		if(gravity < 50) {
 			if(velX == 0) {
 				animState = "parado";
@@ -120,23 +123,27 @@ public class Player extends Sprite {
             animState = "jumping";
         }
         else if(keyCode == Input.Keys.D) {
-        	this.velX = 500;
+        	if(this.velX < 0) velX = 0;
+        	this.aceX = 2000;
         	if(animState != "jumping") animState = "running";
         	facing = "direita";
         }
         else if(keyCode == Input.Keys.A) {
-        	this.velX = -500;
+        	if(this.velX > 0) velX = 0;
+        	this.aceX = -2000;
         	if(animState != "jumping") animState = "running";
         	facing = "esquerda";
         }
 	}
 	
 	public void keyUp(int keyCode) {
-	  if(keyCode == Input.Keys.D && this.velX > 0) {
+	  if(keyCode == Input.Keys.D && this.aceX > 0) {
+        	this.aceX = 0;
         	this.velX = 0;
         	if(animState != "jumping") animState = "parado";
       }
-	  else if(keyCode == Input.Keys.A && this.velX < 0) {
+	  else if(keyCode == Input.Keys.A && this.aceX < 0) {
+        	this.aceX = 0;
         	this.velX = 0;
         	if(animState != "jumping") animState = "parado";
       }
