@@ -59,22 +59,11 @@ public class MapFileReader {
         				String temp = ""; 
         				temp += (char) i;
         				platformType = Integer.parseInt(temp);
-        				//System.out.println(platformType);
+        				System.out.println("Platform Type = " + platformType);
         				temp = "";
         			}
-        			if((char) i == ',') {
-        				//System.out.println(numToString + "  " + count);
-        				tempRect[count] = (float)Float.parseFloat(numToString);
-        				count += 1;
-        				numToString = "";
-        			}
-        			else if((char) i == ']') {
-        				tempRect[count] = (float)Float.parseFloat(numToString);
-        				count += 1;
-        				numToString = "";
-        				passed = false;
-        			}
         			if(count == 4) {
+        				System.out.println("Passou : " + platformType);
         				if(platformType == 0) {
         					Color color = new Color(1, 0, 0, 1);
         					platforms.add(new Platform(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 0, color));
@@ -84,14 +73,30 @@ public class MapFileReader {
         					Color color = new Color(0, 1, 0, 1);
         					teleporterAtual = new Teleporter(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 4, color);
         					if(passedOne) {
+        						System.out.println("Passou");
         						teleporterAtual.posX = lastTeleporter.rect.x;
         						teleporterAtual.posX = lastTeleporter.rect.y;
         					}
+        					else passedOne = true;
         					platforms.add(teleporterAtual);
         					lastTeleporter = teleporterAtual;
         				}
         				count = 0;
         				
+        			}
+        			if((char) i == ',') {
+        				//System.out.println(numToString + "  " + count);
+        				tempRect[count] = (float)Float.parseFloat(numToString);
+        				count += 1;
+        				numToString = "";
+        				System.out.println("Count: " + count + "Passed: " + passed );
+        			}
+        			else if((char) i == ']') {
+        				tempRect[count] = (float)Float.parseFloat(numToString);
+        				count += 1;
+        				numToString = "";
+        				passed = false;
+        				System.out.println("Count: " + count + "Passed: " + passed );
         			}
         		}
         	}

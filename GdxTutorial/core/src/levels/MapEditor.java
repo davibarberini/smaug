@@ -104,7 +104,9 @@ public class MapEditor extends ScreenAdapter {
             	  return true;
               }
               else if(keyCode == Input.Keys.R) {
-            	  //reset positions
+            	  float temp = platW;
+            	  platW = platH;
+            	  platH = temp;
             	  return true;
               }
               else if(keyCode == Input.Keys.K) {
