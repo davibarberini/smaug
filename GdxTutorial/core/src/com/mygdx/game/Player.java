@@ -83,7 +83,7 @@ public class Player extends Sprite {
 			else {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + 35, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
 			}
 			
 		}		
@@ -96,7 +96,7 @@ public class Player extends Sprite {
 			else {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = jumpingAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + 35, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
 			}
 			
 		}
@@ -109,7 +109,7 @@ public class Player extends Sprite {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + 35, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
 			}
 		}
 		else {

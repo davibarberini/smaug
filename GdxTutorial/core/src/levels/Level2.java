@@ -71,6 +71,9 @@ public class Level2 extends ScreenAdapter {
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
               }
+              else if(keyCode == Input.Keys.R) {
+            	  game.setScreen(new Level2(game));
+              }
               p1.keyDown(keyCode);
               return true;
           }

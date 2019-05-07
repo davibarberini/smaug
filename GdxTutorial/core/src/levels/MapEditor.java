@@ -15,6 +15,7 @@ import com.mygdx.game.MyGdxGame;
 
 import platforms.Platform;
 import platforms.Teleporter;
+import platforms.Teleporter2;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Level2/Level2";
+  public String levelToEdit = "Level1/Level1";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -156,6 +157,10 @@ public class MapEditor extends ScreenAdapter {
             	  selected = 4;
             	  return true;
               }
+              else if(keyCode == Input.Keys.NUM_5) {
+            	  selected = 5;
+            	  return true;
+              }
               return false;
               
           }
@@ -215,6 +220,10 @@ public class MapEditor extends ScreenAdapter {
             	  else if(selected == 4) {
             		  Color color = new Color(0, 1, 0, 1);
             		  platforms.add(new Teleporter(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH, 4, color));  
+            	  }
+            	  else if(selected == 5) {
+            		  Color color = new Color(1, 1, 0, 1);
+            		  platforms.add(new Teleporter2(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH, 5, color));  
             	  }
                   return true;     
               }
@@ -289,6 +298,7 @@ public class MapEditor extends ScreenAdapter {
 	  if(selected != 999) {
 		  if(selected == 1) game.shapeRenderer.setColor(1, 0, 0, 1);
 		  else if(selected == 4) game.shapeRenderer.setColor(0, 1, 0, 1);
+		  else if(selected == 5) game.shapeRenderer.setColor(1, 1, 0, 1);
     	  game.shapeRenderer.rect(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH);  
 	  }
 	  else {

@@ -10,6 +10,7 @@ import com.badlogic.gdx.graphics.Color;
 
 import platforms.Platform;
 import platforms.Teleporter;
+import platforms.Teleporter2;
  
  
 public class MapFileReader {
@@ -21,8 +22,10 @@ public class MapFileReader {
 	public String numToString = "";
 	public boolean passed = false;
 	public int platformType;
-	public Teleporter lastTeleporter, teleporterAtual;
+	public float xTel, yTel;
 	public boolean passedOne = false;
+	public Teleporter tel;
+	public Teleporter2 tel2;
 	
 	public MapFileReader() {}
 	
@@ -71,15 +74,15 @@ public class MapFileReader {
         				}
         				else if(platformType == 4) {
         					Color color = new Color(0, 1, 0, 1);
-        					teleporterAtual = new Teleporter(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 4, color);
-        					if(passedOne) {
-        						//System.out.println("Passou");
-        						teleporterAtual.posX = lastTeleporter.rect.x;
-        						teleporterAtual.posX = lastTeleporter.rect.y;
-        					}
-        					else passedOne = true;
-        					platforms.add(teleporterAtual);
-        					lastTeleporter = teleporterAtual;
+        					tel = new Teleporter(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 4, color);
+        					platforms.add(tel);
+        				}
+        				else if(platformType == 5) {
+        					Color color = new Color(1, 1, 0, 1);
+        					tel2 = new Teleporter2(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 5, color);
+        					tel2.posX = tel.rect.x;
+        					tel2.posY = tel.rect.y;
+        					platforms.add(tel2);
         				}
         				count = 0;
         				

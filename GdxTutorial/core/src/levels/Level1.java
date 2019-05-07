@@ -75,6 +75,9 @@ public class Level1 extends ScreenAdapter {
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
               }
+              else if(keyCode == Input.Keys.R) {
+            	  game.setScreen(new Level1(game));
+              }
               p1.keyDown(keyCode);
               return true;
           }
@@ -98,6 +101,9 @@ public class Level1 extends ScreenAdapter {
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
 			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);
+			  else if(plat.platformType == 4) {
+				  p1.isColliding = false;
+			  }
 		  }  
 	}
 	
@@ -145,6 +151,13 @@ public class Level1 extends ScreenAdapter {
 	  p1.draw(game.batch);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
+	  
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 1, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width, p1.rect.height);
+	  game.shapeRenderer.end();
+	  
 	 
 	  
   }
