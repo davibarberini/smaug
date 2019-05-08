@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MyGdxGame;
 
+import platforms.NextLevel;
 import platforms.Platform;
 import platforms.Teleporter;
 import platforms.Teleporter2;
@@ -34,7 +35,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Level1/Level1";
+  public String levelToEdit = "Level2/Level2";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -47,7 +48,7 @@ public class MapEditor extends ScreenAdapter {
   public MapEditor(MyGdxGame game) {
 	  this.game = game; 
 	  mapReader = new MapFileReader();
-	  platforms = mapReader.readMapToEditor(levelToEdit);
+	  platforms = mapReader.readMapToEditor(levelToEdit, game, "TitleScreen");
 	  System.out.println(platforms.size());
 	  
 
@@ -86,6 +87,7 @@ public class MapEditor extends ScreenAdapter {
             	  else if(camera.zoom == 2) velY = 1000;
             	  return true;
                   
+            	  
               }
               else if(keyCode == Input.Keys.DOWN) {
             	  if(camera.zoom == 1) velY = -500;
@@ -161,6 +163,11 @@ public class MapEditor extends ScreenAdapter {
             	  selected = 5;
             	  return true;
               }
+              else if(keyCode == Input.Keys.NUM_9) {
+            	  selected = 9;
+            	  return true;
+              }
+              
               return false;
               
           }
@@ -224,6 +231,10 @@ public class MapEditor extends ScreenAdapter {
             	  else if(selected == 5) {
             		  Color color = new Color(1, 1, 0, 1);
             		  platforms.add(new Teleporter2(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH, 5, color));  
+            	  }
+            	  else if(selected == 9) {
+            		  Color color = new Color(0, 0, 1, 1);
+            		  platforms.add(new NextLevel(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH, 9, color));  
             	  }
                   return true;     
               }
@@ -299,6 +310,7 @@ public class MapEditor extends ScreenAdapter {
 		  if(selected == 1) game.shapeRenderer.setColor(1, 0, 0, 1);
 		  else if(selected == 4) game.shapeRenderer.setColor(0, 1, 0, 1);
 		  else if(selected == 5) game.shapeRenderer.setColor(1, 1, 0, 1);
+		  else if(selected == 9) game.shapeRenderer.setColor(0, 0, 1, 1);
     	  game.shapeRenderer.rect(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH);  
 	  }
 	  else {

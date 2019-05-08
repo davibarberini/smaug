@@ -10,8 +10,8 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Player;
 
+import entities.Player;
 import levels.EndScreen;
 import platforms.Platform;
 

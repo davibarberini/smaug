@@ -7,10 +7,13 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Player;
 
+import entities.Player;
+import entities.cientistas.Cientista;
 import platforms.Platform;
 
 
@@ -18,6 +21,10 @@ public class Level1 extends ScreenAdapter {
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
+  
+  public Cientista[] cientistas;
+  
+  FillViewport view;
   
   //MapFileWriter mapWriter;
   MapFileReader mapReader;
@@ -45,14 +52,17 @@ public class Level1 extends ScreenAdapter {
 		  
 	  }
 	  
-	  platforms = mapReader.readMapToLevel("Level1/Level1");
+	  platforms = mapReader.readMapToLevel("Level1/Level1", game, "Level2");
 	  
 
   }
   
   @Override
   public void show() {
+	  
 	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
+	  cientistas = new Cientista[1];
+	  cientistas[0] = new Cientista(200, 50, 35, 35, p1);
 	  fundo = new Texture("Level1/lab.png");
 	  
 	  WIDTH = Gdx.graphics.getWidth();
@@ -63,6 +73,7 @@ public class Level1 extends ScreenAdapter {
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
+	  view = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	  camera.update();
 	  
 	  Gdx.input.setInputProcessor(new InputAdapter() {
@@ -96,6 +107,8 @@ public class Level1 extends ScreenAdapter {
   @Override
   public void render(float delta) {
     
+	  
+	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
 	p1.rect.y += p1.gravity * delta;
 	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 		  if(platforms[k] != null) {
@@ -130,7 +143,8 @@ public class Level1 extends ScreenAdapter {
 	  
 	 
 	  
-	  /*game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  /*
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
 	  game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width, p1.rect.height);
@@ -149,14 +163,13 @@ public class Level1 extends ScreenAdapter {
 	  game.batch.begin();
 	  game.batch.draw(fundo, 3 , 20);
 	  p1.draw(game.batch);
+	  for(int e=0; e < cientistas.length; e++) {
+		  cientistas[e].update(game.batch);
+	  }
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	  
-	  game.shapeRenderer.setProjectionMatrix(camera.combined);
-	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-	  game.shapeRenderer.setColor(0, 1, 0, 1);
-	  game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width, p1.rect.height);
-	  game.shapeRenderer.end();
+	  
 	  
 	 
 	  

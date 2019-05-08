@@ -2,7 +2,8 @@ package platforms;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
-import com.mygdx.game.Player;
+
+import entities.Player;
 
 public class Platform {
 	public Rectangle rect;

@@ -1,7 +1,8 @@
 package platforms;
 
 import com.badlogic.gdx.graphics.Color;
-import com.mygdx.game.Player;
+
+import entities.Player;
 
 public class Teleporter extends Platform{
 	

@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
 public class TitleScreen extends ScreenAdapter {
@@ -14,6 +15,7 @@ public class TitleScreen extends ScreenAdapter {
     MyGdxGame game;
     Texture fundo, select;
     OrthographicCamera camera;
+    FillViewport view;
     public String selected = "play";
 
     public TitleScreen(MyGdxGame game) {
@@ -28,6 +30,7 @@ public class TitleScreen extends ScreenAdapter {
     	camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     	
     	camera.position.set(0 + (Gdx.graphics.getWidth() / 2), 0 + (Gdx.graphics.getHeight() / 2), 0);
+    	view = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     	camera.update();
     	
         Gdx.input.setInputProcessor(new InputAdapter() {
@@ -58,15 +61,26 @@ public class TitleScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
+    	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
+    	
         Gdx.gl.glClearColor(0, .25f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(fundo, 0, 0);
-        if(selected == "play") game.batch.draw(select, 175, 280, 40, 40);
-        else if(selected == "editor") game.batch.draw(select, 175, 180, 40, 40);
-        else if(selected == "exit") game.batch.draw(select, 175, 80, 40, 40);
+        if(Gdx.graphics.getWidth() != 640) {
+        	game.batch.draw(fundo, 0, 60, 640, 350);
+        	if(selected == "play") game.batch.draw(select, 175, 260, 40, 40);
+            else if(selected == "editor") game.batch.draw(select, 175, 180, 40, 40);
+            else if(selected == "exit") game.batch.draw(select, 175, 110, 40, 40);
+        }
+        else {
+        	game.batch.draw(fundo, 0, 0);
+        	if(selected == "play") game.batch.draw(select, 175, 280, 40, 40);
+            else if(selected == "editor") game.batch.draw(select, 175, 180, 40, 40);
+            else if(selected == "exit") game.batch.draw(select, 175, 80, 40, 40);
+        }
+        
         game.batch.end();
         
     }

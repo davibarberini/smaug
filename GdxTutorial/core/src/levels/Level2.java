@@ -8,10 +8,11 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 import com.mygdx.game.Parallax;
-import com.mygdx.game.Player;
 
+import entities.Player;
 import platforms.Platform;
 
 
@@ -26,6 +27,7 @@ public class Level2 extends ScreenAdapter {
   public Platform [] platforms;
   
   OrthographicCamera camera;
+  FillViewport view;
   MyGdxGame game;
   
   Texture fundo, fundo2;
@@ -38,7 +40,7 @@ public class Level2 extends ScreenAdapter {
 	  //mapWriter = new MapFileWriter(mapLin, mapCol);
 	  //mapWriter.writeMap(map, "Level1");
 	  mapReader = new MapFileReader();
-	  platforms = mapReader.readMapToLevel("Level2/Level2");
+	  platforms = mapReader.readMapToLevel("Level2/Level2", game, "TitleScreen");
 	  
 
   }
@@ -60,6 +62,7 @@ public class Level2 extends ScreenAdapter {
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
+	  view = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	  camera.update();
 	  
 	  Gdx.input.setInputProcessor(new InputAdapter() {
@@ -92,6 +95,7 @@ public class Level2 extends ScreenAdapter {
   @Override
   public void render(float delta) {
     
+	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
 	p1.rect.y += p1.gravity * delta;
 	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 		  if(platforms[k] != null) {

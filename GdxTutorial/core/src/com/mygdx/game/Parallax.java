@@ -3,6 +3,8 @@ package com.mygdx.game;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 
+import entities.Player;
+
 public class Parallax {
 	Texture image;
 	public int velocity;

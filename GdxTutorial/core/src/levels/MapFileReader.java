@@ -7,7 +7,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.badlogic.gdx.graphics.Color;
+import com.mygdx.game.MyGdxGame;
 
+import platforms.NextLevel;
 import platforms.Platform;
 import platforms.Teleporter;
 import platforms.Teleporter2;
@@ -26,12 +28,13 @@ public class MapFileReader {
 	public boolean passedOne = false;
 	public Teleporter tel;
 	public Teleporter2 tel2;
+	NextLevel nl;
 	
 	public MapFileReader() {}
 	
-    public Platform[] readMapToLevel(String levelName) {
+    public Platform[] readMapToLevel(String levelName, MyGdxGame game, String nextLevel) {
     	
-    	read(levelName);
+    	read(levelName, game, nextLevel);
         
     	platformsReturn = new Platform[platforms.size()];
         for(int e=0; e < platforms.size(); e++) {
@@ -40,14 +43,14 @@ public class MapFileReader {
         return platformsReturn;
      
     }
-    public ArrayList<Platform> readMapToEditor(String levelName) {
+    public ArrayList<Platform> readMapToEditor(String levelName, MyGdxGame game, String nextLevel) {
     	
-        read(levelName);
+    	read(levelName, game, nextLevel);
        
         return platforms;
     }
     
-    public void read(String levelName) {
+    public void read(String levelName, MyGdxGame gameF, String nextLevel) {
     	try {
             fr = new FileReader(levelName + ".txt");
             int i;
@@ -83,6 +86,13 @@ public class MapFileReader {
         					tel2.posX = tel.rect.x;
         					tel2.posY = tel.rect.y;
         					platforms.add(tel2);
+        				}
+        				else if(platformType == 9) {
+        					Color color = new Color(0, 0, 1, 1);
+        					nl = new NextLevel(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 9, color);
+        					nl.game = gameF;
+        					nl.nextLevel = nextLevel;
+        					platforms.add(new NextLevel(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 9, color));
         				}
         				count = 0;
         				
