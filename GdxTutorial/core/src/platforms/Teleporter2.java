@@ -15,7 +15,15 @@ public class Teleporter2 extends Platform{
 	}
 	
 	
-	public void platCollision(double velocidadeX, double velocidadeY, Player ply) {
+	public void platCollisionX(double velocidadeX, Player ply) {
+		if(!ply.isColliding) {
+			ply.rect.x = posX;
+			ply.rect.y = posY;
+			ply.isColliding = true;
+		}
+		
+	}
+	public void platCollisionY(double velocidadeY, Player ply) {
 		if(!ply.isColliding) {
 			ply.rect.x = posX;
 			ply.rect.y = posY;

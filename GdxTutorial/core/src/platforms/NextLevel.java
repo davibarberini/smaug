@@ -16,8 +16,7 @@ public class NextLevel extends Platform{
 		super(x, y, w, h, pType, cor);
 	}
 	
-	
-	public void platCollision(double velocidadeX, double velocidadeY, Player ply) {
+	public void platCollisionX(double velocidadeX, Player ply) {
 		System.out.println(nextLevel);
 		if(nextLevel == "Level2") {
 			game.setScreen(new Level2(game));
@@ -25,7 +24,15 @@ public class NextLevel extends Platform{
 		else if(nextLevel == "TitleScreen") {
 			game.setScreen(new TitleScreen(game));
 		}
-		
+	}
+	public void platCollisionY(double velocidadeY, Player ply) {
+		System.out.println(nextLevel);
+		if(nextLevel == "Level2") {
+			game.setScreen(new Level2(game));
+		}
+		else if(nextLevel == "TitleScreen") {
+			game.setScreen(new TitleScreen(game));
+		}
 	}
 
 }

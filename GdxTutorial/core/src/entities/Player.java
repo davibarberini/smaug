@@ -23,6 +23,7 @@ public class Player extends Sprite {
 	public boolean isColliding = false;
 	public boolean isAttacking = false;
 	public int attackCount = 0;
+	public int vida = 100;
 	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> paradoAnim;

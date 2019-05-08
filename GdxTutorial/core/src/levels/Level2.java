@@ -100,7 +100,7 @@ public class Level2 extends ScreenAdapter {
 	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);
+			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionY(p1.gravity, p1);
 		  }  
 	}
 	
@@ -108,7 +108,7 @@ public class Level2 extends ScreenAdapter {
 	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(p1.velX, 0.0, p1);
+			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionX(p1.velX, p1);
 		  }
 		  
 	}

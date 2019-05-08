@@ -15,7 +15,10 @@ public class Teleporter extends Platform{
 	}
 	
 	
-	public void platCollision(double velocidadeX, double velocidadeY, Player ply) {
+	public void platCollisionX(double velocidadeX, Player ply) {
+		
+	}
+	public void platCollisionY(double velocidadeY, Player ply) {
 		
 	}
 

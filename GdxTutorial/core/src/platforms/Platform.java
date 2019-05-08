@@ -16,7 +16,17 @@ public class Platform {
 		color = cor;
 	}
 	
-    public void platCollision(double velocidadeX, double velocidadeY, Player ply) {
+    public void platCollisionX(double velocidadeX, Player ply) {
+    	
+	    if(velocidadeX < 0) {
+	    	ply.rect.x = rect.x + rect.width;
+	    }
+	   
+	    else if(velocidadeX > 0) {
+	    	ply.rect.x = rect.x - ply.rect.width;
+	    }
+    }
+    public void platCollisionY(double velocidadeY, Player ply) {
     	
 	    if(velocidadeY < 0) {
 	    	ply.rect.y = rect.y + rect.height;
@@ -28,13 +38,6 @@ public class Platform {
 	    	ply.gravity = 0;
 	    }
 	   
-	    if(velocidadeX < 0) {
-	    	ply.rect.x = rect.x + rect.width;
-	    }
-	   
-	    else if(velocidadeX > 0) {
-	    	ply.rect.x = rect.x - ply.rect.width;
-	    }
     }
 
 }

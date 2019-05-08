@@ -9,11 +9,15 @@ import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
 import entities.cientistas.Cientista;
+import entities.cientistas.CientistaAtirador;
+import entities.cientistas.CientistaEscudo;
+import entities.cientistas.CientistaRicochete;
 import platforms.Platform;
 
 
@@ -61,10 +65,9 @@ public class Level1 extends ScreenAdapter {
   public void show() {
 	  
 	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
-	  cientistas = new Cientista[1];
-	  cientistas[0] = new Cientista(200, 50, 35, 35, p1);
 	  fundo = new Texture("Level1/lab.png");
 	  
+	  createEnemies();
 	  WIDTH = Gdx.graphics.getWidth();
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
@@ -107,27 +110,36 @@ public class Level1 extends ScreenAdapter {
   @Override
   public void render(float delta) {
     
-	  
+	if (p1.vida <= 0) game.setScreen(new EndScreen(game));
 	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
+	
 	p1.rect.y += p1.gravity * delta;
+	if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
+		cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
+	}
 	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(0.0, p1.gravity, p1);
+			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionY(p1.gravity, p1);
 			  else if(plat.platformType == 4) {
 				  p1.isColliding = false;
 			  }
 		  }  
 	}
 	
+	
 	p1.rect.x += p1.velX * delta;
+	if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive) {
+		cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
+	}
 	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollision(p1.velX, 0.0, p1);
+			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionX(p1.velX, p1);
 		  }
 		  
 	}
+	//if(p1.rect.overlaps()
 	p1.update();
 	
 	camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
@@ -173,6 +185,14 @@ public class Level1 extends ScreenAdapter {
 	  
 	 
 	  
+  }
+  
+  public void createEnemies() {
+	  cientistas = new Cientista[4];
+	  cientistas[0] = new Cientista(170, 35, 35, 35, 100, 100, 0, p1);
+	  cientistas[1] = new CientistaAtirador(450, 175, 35, 35, 50, 0, 200, p1);
+	  cientistas[2] = new CientistaRicochete(900, 315, 35, 35, 30, 0, 100, p1);
+	  cientistas[3] = new CientistaEscudo(900, 585, 35, 35, 70, 0, 200, p1);
   }
   
   public void dispose() {
