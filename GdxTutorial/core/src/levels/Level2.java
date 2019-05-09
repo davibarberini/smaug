@@ -10,10 +10,12 @@ import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
-import com.mygdx.game.Parallax;
 
+import editor.MapFileReader;
+import entities.Parallax;
 import entities.Player;
 import platforms.Platform;
+import soundandmusic.MusicPlayer;
 
 
 public class Level2 extends ScreenAdapter {
@@ -47,6 +49,9 @@ public class Level2 extends ScreenAdapter {
   
   @Override
   public void show() {
+	  game.t1 = new MusicPlayer("Level2/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
+      game.t1.start(); 
+	  
 	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
 	  prx1 = new Parallax("Level2/parallax1.png", 0, 4);
 	  prx2 = new Parallax("Level2/parallax2.png", 50, 12);
@@ -58,7 +63,7 @@ public class Level2 extends ScreenAdapter {
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
 	  p1.rect.x = 50;
-	  p1.rect.y = 20;
+	  p1.rect.y = 50;
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
@@ -69,15 +74,25 @@ public class Level2 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
+            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+              	  game.t1.interrupt();
                   game.setScreen(new TitleScreen(game));
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
               }
               else if(keyCode == Input.Keys.R) {
+            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+              	  game.t1.interrupt();
             	  game.setScreen(new Level2(game));
               }
+              else if(keyCode == Input.Keys.ESCAPE) {
+            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+              	  game.t1.interrupt();
+            	  game.setScreen(new TitleScreen(game));
+              }
               p1.keyDown(keyCode);
+              game.t1.keysDown(keyCode);
               return true;
           }
           public boolean keyUp(int keyCode) {
@@ -100,7 +115,7 @@ public class Level2 extends ScreenAdapter {
 	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionY(p1.gravity, p1);
+			  plat.platCollisionY(p1.gravity, p1);
 		  }  
 	}
 	
@@ -108,7 +123,7 @@ public class Level2 extends ScreenAdapter {
 	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionX(p1.velX, p1);
+			  plat.platCollisionX(p1.velX, p1);
 		  }
 		  
 	}

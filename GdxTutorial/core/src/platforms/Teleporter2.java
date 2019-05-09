@@ -15,20 +15,36 @@ public class Teleporter2 extends Platform{
 	}
 	
 	
-	public void platCollisionX(double velocidadeX, Player ply) {
-		if(!ply.isColliding) {
-			ply.rect.x = posX;
-			ply.rect.y = posY;
-			ply.isColliding = true;
+	public boolean platCollisionX(double velocidadeX, Player ply) {
+		if(ply.rect.overlaps(rect)) {
+			if(!ply.isColliding) {
+				ply.rect.x = posX;
+				ply.rect.y = posY;
+				ply.isColliding = true;
+			}
+			return true;
+		}
+		else {
+			ply.isColliding = false;
+			return false;
 		}
 		
+		
 	}
-	public void platCollisionY(double velocidadeY, Player ply) {
-		if(!ply.isColliding) {
-			ply.rect.x = posX;
-			ply.rect.y = posY;
-			ply.isColliding = true;
+	public boolean platCollisionY(double velocidadeY, Player ply) {
+		if(ply.rect.overlaps(rect)) {
+			if(!ply.isColliding) {
+				ply.rect.x = posX;
+				ply.rect.y = posY;
+				ply.isColliding = true;
+			}
+			return true;
 		}
+		else {
+			ply.isColliding = false;
+			return false;
+		}
+		
 		
 	}
 

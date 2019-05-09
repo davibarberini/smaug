@@ -15,11 +15,13 @@ public class Teleporter extends Platform{
 	}
 	
 	
-	public void platCollisionX(double velocidadeX, Player ply) {
-		
+	public boolean platCollisionX(double velocidadeX, Player ply) {
+		if(ply.rect.overlaps(rect)) return true;
+		else return false;
 	}
-	public void platCollisionY(double velocidadeY, Player ply) {
-		
+	public boolean platCollisionY(double velocidadeY, Player ply) {
+		if(ply.rect.overlaps(rect)) return true;
+		else return false;
 	}
 
 }

@@ -23,6 +23,9 @@ public class EndScreen extends ScreenAdapter {
                 if (keyCode == Input.Keys.SPACE) {
                     game.setScreen(new TitleScreen(game));
                 }
+                else if(keyCode == Input.Keys.ESCAPE) {
+                	System.exit(0);
+                }
                 return true;
             }
         });

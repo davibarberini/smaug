@@ -13,10 +13,12 @@ import com.badlogic.gdx.math.Rectangle;
 public class Player extends Sprite {
 	public Rectangle rect;
 	public double gravity, velX, velY, aceX;
-	public int numColunas = 5;
+	public int numColunas = 6;
 	public int numLinhas = 2;
-	public int spriteLargura = 35;
-	public int spriteAltura = 40;
+	public int spriteLargura = 45;
+	public int spriteAltura = 45;
+	public int spriteAdjustmentY = -5;
+	public int spriteAdjustmentX = -8;
 	public String animState = "parado";
 	public float stateTime;
 	public String facing = "direita";
@@ -31,12 +33,12 @@ public class Player extends Sprite {
 	Animation<TextureRegion> attackingAnim;
 	
 	TextureRegion currentFrame;
-	Texture ninja = new Texture(Gdx.files.internal("Player/ninja.png"));
-	
-	TextureRegion[][] correndoTmp = TextureRegion.split(ninja, ninja.getWidth() / numColunas, ninja.getHeight()/ numLinhas);
-	TextureRegion[] correndo = new TextureRegion[numColunas * numLinhas];
+	Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
+	//robo.getWidth() / numColunas
+	TextureRegion[][] roboSheet = TextureRegion.split(robo, 40, 40);
+	TextureRegion[] correndo = new TextureRegion[6];
 	TextureRegion[] parado = new TextureRegion[1];
-	TextureRegion[] jumping = new TextureRegion[1];
+	TextureRegion[] jumping = new TextureRegion[4];
 	TextureRegion[] attacking = new TextureRegion[2];
 
 	public Player(float x, float y, float w, float h, double g, double vX, double vY) {
@@ -44,23 +46,21 @@ public class Player extends Sprite {
 		gravity = g;
 		velX = vX;
 		velY = vY;
-		int count = 0;
-		for(int i=0; i < numLinhas; i++) {
-			for(int e=0; e < numColunas; e++) {
-				correndo[count ++] = correndoTmp[i][e];
+		for(int e=0; e < 6; e++) {
+			correndo[e] = roboSheet[0][e];
 
-			}
 		}
-		//System.out.println(correndo.length + "--" + correndoTmp.length);
+		for(int i=0; i < 4; i++) {
+			jumping[i] = roboSheet[1][i];
+		}
 
-		parado[0] = correndoTmp[0][1];
-		jumping[0] = correndoTmp[0][0];
-		attacking[0] = correndoTmp[1][2];
-		attacking[1] = correndoTmp[0][0];
+		parado[0] = roboSheet[0][1];
+		attacking[0] = roboSheet[1][0];
+		attacking[1] = roboSheet[1][3];
 		
-		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
+		correndoAnim = new Animation<TextureRegion>(0.09f, correndo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
-		jumpingAnim = new Animation<TextureRegion>(0.06f, jumping);
+		jumpingAnim = new Animation<TextureRegion>(0.1f, jumping);
 		attackingAnim = new Animation<TextureRegion>(0.5f, attacking);
 		
 	}
@@ -95,25 +95,25 @@ public class Player extends Sprite {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 			
 		}		
 		else if(animState == "jumping") {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = jumpingAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				currentFrame = jumpingAnim.getKeyFrame(stateTime, false);
+				sb.draw(currentFrame, this.rect.x, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = jumpingAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 			
 		}
@@ -121,24 +121,24 @@ public class Player extends Sprite {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
 		else if(animState == "attacking") {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = attackingAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = attackingAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
 		else {
@@ -148,6 +148,8 @@ public class Player extends Sprite {
 	
 	public void keyDown(int keyCode) {
 		if(keyCode == Input.Keys.W) {
+			System.out.println("here");
+			stateTime = 0;
             this.gravity = 500;
             animState = "jumping";
         }

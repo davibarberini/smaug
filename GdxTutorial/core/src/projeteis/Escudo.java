@@ -39,25 +39,39 @@ public class Escudo extends Platform {
 		sb.draw(shield, rect.x, rect.y, rect.width + 15, rect.height);
 	}
 	
-	public void platCollisionX(double velocidadeX, Player ply) {
-	    if(velocidadeX < 0) {
-	    	ply.rect.x = rect.x + rect.width;
-	    }
-	   
-	    else if(velocidadeX > 0) {
-	    	ply.rect.x = rect.x - ply.rect.width;
-	    }
+	public boolean platCollisionX(double velocidadeX, Player ply) {
+		if(ply.rect.overlaps(rect)) {
+			if(velocidadeX < 0) {
+		    	ply.rect.x = rect.x + rect.width;
+		    }
+		   
+		    else if(velocidadeX > 0) {
+		    	ply.rect.x = rect.x - ply.rect.width;
+		    }
+			return true;
+		}
+		else {
+			return false;
+		}
+	    
     }
-    public void platCollisionY(double velocidadeY, Player ply) {
-	    if(velocidadeY < 0) {
-	    	ply.rect.y = rect.y + rect.height;
-	    	ply.gravity = 0;
-	    }
-	   
-	    else if(velocidadeY > 0) {
-	    	ply.rect.y = rect.y - ply.rect.height; 
-	    	ply.gravity = 0;
-	    }
+    public boolean platCollisionY(double velocidadeY, Player ply) {
+    	if(ply.rect.overlaps(rect)) {
+    		if(velocidadeY < 0) {
+    	    	ply.rect.y = rect.y + rect.height;
+    	    	ply.gravity = 0;
+    	    }
+    	   
+    	    else if(velocidadeY > 0) {
+    	    	ply.rect.y = rect.y - ply.rect.height; 
+    	    	ply.gravity = 0;
+    	    }
+    		return true;
+    	}
+    	else {
+    		return false;
+    	}
+	    
 	   
     }
     public void checkAttack() {

@@ -13,12 +13,14 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
+import editor.MapFileReader;
 import entities.Player;
 import entities.cientistas.Cientista;
 import entities.cientistas.CientistaAtirador;
 import entities.cientistas.CientistaEscudo;
 import entities.cientistas.CientistaRicochete;
 import platforms.Platform;
+import soundandmusic.MusicPlayer;
 
 
 public class Level1 extends ScreenAdapter {
@@ -63,7 +65,9 @@ public class Level1 extends ScreenAdapter {
   
   @Override
   public void show() {
-	  
+	  game.t1 = new MusicPlayer("Level1/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
+      game.t1.start(); 
+      
 	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
 	  fundo = new Texture("Level1/lab.png");
 	  
@@ -83,6 +87,8 @@ public class Level1 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
+            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+              	  game.t1.interrupt();
             	  camera.position.set(0, 0, 0);
                   game.setScreen(new Level2(game));
               }
@@ -90,9 +96,17 @@ public class Level1 extends ScreenAdapter {
               	camera.zoom = 2;
               }
               else if(keyCode == Input.Keys.R) {
+            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+              	  game.t1.interrupt();
             	  game.setScreen(new Level1(game));
               }
+              else if(keyCode == Input.Keys.ESCAPE) {
+            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+              	  game.t1.interrupt();
+            	  game.setScreen(new TitleScreen(game));
+              }
               p1.keyDown(keyCode);
+              game.t1.keysDown(keyCode);
               return true;
           }
           public boolean keyUp(int keyCode) {
@@ -120,22 +134,19 @@ public class Level1 extends ScreenAdapter {
 	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionY(p1.gravity, p1);
-			  else if(plat.platformType == 4) {
-				  p1.isColliding = false;
-			  }
+			  plat.platCollisionY(p1.gravity, p1);
 		  }  
 	}
 	
 	
 	p1.rect.x += p1.velX * delta;
-	if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive) {
+	if(cientistas[3].getEscudo().isAlive) {
 		cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
 	}
 	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
 		  if(platforms[k] != null) {
 			  Platform plat = platforms[k];
-			  if(p1.rect.overlaps(plat.rect)) plat.platCollisionX(p1.velX, p1);
+			  plat.platCollisionX(p1.velX, p1);
 		  }
 		  
 	}

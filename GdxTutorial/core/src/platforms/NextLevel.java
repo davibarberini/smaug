@@ -11,28 +11,57 @@ import levels.TitleScreen;
 public class NextLevel extends Platform{
 	public static MyGdxGame game;
 	public static String nextLevel;
+	public boolean collideX = false, collideY = false;
+
 	
 	public NextLevel(float x, float y, float w, float h, int pType, Color cor) {
 		super(x, y, w, h, pType, cor);
 	}
 	
-	public void platCollisionX(double velocidadeX, Player ply) {
-		System.out.println(nextLevel);
-		if(nextLevel == "Level2") {
-			game.setScreen(new Level2(game));
+	public boolean platCollisionX(double velocidadeX, Player ply) {
+		if(ply.rect.overlaps(rect)) {
+			collideX = false;
+			System.out.println(nextLevel);
+			if(!collideY) {
+				if(nextLevel == "Level2") {
+					collideX = true;
+					game.setScreen(new Level2(game));
+				}
+				else if(nextLevel == "TitleScreen") {
+					collideX = true;
+					game.setScreen(new TitleScreen(game));
+				}
+			}
+			return true;
 		}
-		else if(nextLevel == "TitleScreen") {
-			game.setScreen(new TitleScreen(game));
+		else {
+			return false;
 		}
 	}
-	public void platCollisionY(double velocidadeY, Player ply) {
-		System.out.println(nextLevel);
-		if(nextLevel == "Level2") {
-			game.setScreen(new Level2(game));
+	public boolean platCollisionY(double velocidadeY, Player ply) {
+		if(ply.rect.overlaps(rect)) {
+			collideY = false;
+			System.out.println(nextLevel);
+			if(!collideX) {
+				if(nextLevel == "Level2") {
+					collideY = true;
+					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+	              	game.t1.interrupt();
+					game.setScreen(new Level2(game));
+				}
+				else if(nextLevel == "TitleScreen") {
+					collideY = true;
+					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+	              	game.t1.interrupt();
+					game.setScreen(new TitleScreen(game));
+				}
+			}
+			return true;
 		}
-		else if(nextLevel == "TitleScreen") {
-			game.setScreen(new TitleScreen(game));
+		else {
+			return false;
 		}
+		
 	}
 
 }
