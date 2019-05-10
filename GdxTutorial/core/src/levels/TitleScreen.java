@@ -28,6 +28,18 @@ public class TitleScreen extends ScreenAdapter{
 
     @Override	
     public void show(){
+    	//Parando a thread anterior
+    	if(game.t1 != null && game.t1.isAlive()) {
+    		game.t1.toStop = true;
+    		try {
+    			System.out.println("Join");
+				game.t1.join();
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+    	}
+    	
     	
     	//Criando a thread da musica
     	game.t1 = new MusicPlayer("TitleScreen/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
@@ -45,16 +57,12 @@ public class TitleScreen extends ScreenAdapter{
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean keyDown(int keyCode) {
                 if (keyCode == Input.Keys.SPACE || keyCode == Input.Keys.ENTER) {
-                	game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-                	game.t1.interrupt();
                     if(selected == "play") game.setScreen(new Level1(game));
                     else if(selected == "editor") game.setScreen(new MapEditor(game));
                     else if(selected == "exit") System.exit(1);
                     return true;
                 }
                 else if (keyCode == Input.Keys.X) {
-                	game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-                	game.t1.interrupt();
                 	game.setScreen(new MapEditor(game));
                 	return true;
                 }

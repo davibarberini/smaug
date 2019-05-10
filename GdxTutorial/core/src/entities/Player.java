@@ -8,6 +8,9 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.MyGdxGame;
+
+import levels.EndScreen;
 
 
 public class Player extends Sprite {
@@ -15,6 +18,7 @@ public class Player extends Sprite {
 	public double gravity, velX, velY, aceX;
 	public int numColunas = 6;
 	public int numLinhas = 2;
+	public int jumpCount = 0;
 	public int spriteLargura = 45;
 	public int spriteAltura = 45;
 	public int spriteAdjustmentY = -5;
@@ -65,19 +69,12 @@ public class Player extends Sprite {
 		
 	}
  
-	public void update() {
-		gravity += -1000 * Gdx.graphics.getDeltaTime();
+	public void update(MyGdxGame game) {
+		if (vida <= 0) game.setScreen(new EndScreen(game));
+		gravity += -2000 * Gdx.graphics.getDeltaTime();
 		velX += aceX * Gdx.graphics.getDeltaTime();
-		if(velX > 500) velX = 500;
-		else if(velX < -500) velX = -500;
-		if(gravity < 50) {
-			if(velX == 0) {
-				animState = "parado";
-			}
-			else {
-				animState = "running";
-			}
-		}
+		if(velX > 300) velX = 300;
+		else if(velX < -300) velX = -300;
 		if(isAttacking) {
 			animState = "attacking";
 			attackCount++;
@@ -112,13 +109,13 @@ public class Player extends Sprite {
 			}
 			else {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = jumpingAnim.getKeyFrame(stateTime, true);
+				currentFrame = jumpingAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 			
 		}
 		else if(animState == "running") {
-			if(velX > 0) {
+			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
 				sb.draw(currentFrame, this.rect.x, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
@@ -147,21 +144,22 @@ public class Player extends Sprite {
 	}
 	
 	public void keyDown(int keyCode) {
-		if(keyCode == Input.Keys.W) {
+		if(keyCode == Input.Keys.W && jumpCount < 2) {
 			System.out.println("here");
 			stateTime = 0;
-            this.gravity = 500;
+            this.gravity = 600;
             animState = "jumping";
+            jumpCount += 1;
         }
         else if(keyCode == Input.Keys.D) {
         	if(this.velX < 0) velX = 0;
-        	this.aceX = 2000;
+        	this.aceX = 1000;
         	if(animState != "jumping") animState = "running";
         	facing = "direita";
         }
         else if(keyCode == Input.Keys.A) {
         	if(this.velX > 0) velX = 0;
-        	this.aceX = -2000;
+        	this.aceX = -1000;
         	if(animState != "jumping") animState = "running";
         	facing = "esquerda";
         }

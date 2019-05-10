@@ -58,7 +58,20 @@ public class MapEditor extends ScreenAdapter {
   
   @Override
   public void show() {
-	  game.t1 = new MusicPlayer("Level1/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
+	//Parando a thread anterior se existir.
+	  if(game.t1 != null && game.t1.isAlive()) {
+  		game.t1.toStop = true;
+  		try {
+  			System.out.println("Join");
+			game.t1.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+  	  }
+	  
+	  
+	  game.t1 = new MusicPlayer("MapEditor/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
       game.t1.start(); 
 	  
 	  WIDTH = Gdx.graphics.getWidth();
@@ -84,8 +97,6 @@ public class MapEditor extends ScreenAdapter {
             	  mapWriter = new MapFileWriter();
             	  mapWriter.writeMap(platforms, levelToEdit);
             	  platforms.clear();
-            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-              	  game.t1.interrupt();
                   game.setScreen(new TitleScreen(game));
                   return true;
               }
@@ -175,8 +186,6 @@ public class MapEditor extends ScreenAdapter {
             	  return true;
               }
               else if(keyCode == Input.Keys.ESCAPE) {
-            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-              	  game.t1.interrupt();
             	  game.setScreen(new TitleScreen(game));
               }
               

@@ -18,7 +18,7 @@ public class CientistaAtirador extends Cientista {
 	public CientistaAtirador(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply) {
 		super(x, y, w, h, vel, pixelsToWalkRight, pixelsToWalkLeft, ply);
-		tiro = new TiroNormal(0, 0, 10, 10, 0, 0, ply);
+		tiro = new TiroNormal(0, 0, 5, 5, 0, 0, ply);
 	}
 	
 	public void update(SpriteBatch sb) {

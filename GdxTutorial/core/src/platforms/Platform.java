@@ -36,6 +36,13 @@ public class Platform {
     		if(velocidadeY < 0) {
     	    	ply.rect.y = rect.y + rect.height;
     	    	ply.gravity = 0;
+    	    	ply.jumpCount = 0;
+    	    	if(ply.velX == 0) {
+    				ply.animState = "parado";
+    			}
+    			else {
+    				ply.animState = "running";
+    			}
     	    }
     	   
     	    else if(velocidadeY > 0) {

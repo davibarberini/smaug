@@ -49,6 +49,19 @@ public class Level2 extends ScreenAdapter {
   
   @Override
   public void show() {
+	//Parando a thread anterior se existir.
+	  if(game.t1 != null && game.t1.isAlive()) {
+  		game.t1.toStop = true;
+  		try {
+  			System.out.println("Join");
+			game.t1.join();
+		} catch (InterruptedException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+  	  }
+	  
+	  //Iniciando a nova thread da musica.
 	  game.t1 = new MusicPlayer("Level2/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
       game.t1.start(); 
 	  
@@ -74,21 +87,15 @@ public class Level2 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.SPACE) {
-            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-              	  game.t1.interrupt();
                   game.setScreen(new TitleScreen(game));
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
               }
               else if(keyCode == Input.Keys.R) {
-            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-              	  game.t1.interrupt();
             	  game.setScreen(new Level2(game));
               }
               else if(keyCode == Input.Keys.ESCAPE) {
-            	  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
-              	  game.t1.interrupt();
             	  game.setScreen(new TitleScreen(game));
               }
               p1.keyDown(keyCode);
@@ -127,7 +134,7 @@ public class Level2 extends ScreenAdapter {
 		  }
 		  
 	}
-	p1.update();
+	p1.update(game);
 	
     camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
 	camera.update();

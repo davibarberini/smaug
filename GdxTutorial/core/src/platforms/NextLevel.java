@@ -24,10 +24,14 @@ public class NextLevel extends Platform{
 			System.out.println(nextLevel);
 			if(!collideY) {
 				if(nextLevel == "Level2") {
+					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+	              	game.t1.interrupt();
 					collideX = true;
 					game.setScreen(new Level2(game));
 				}
 				else if(nextLevel == "TitleScreen") {
+					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+	              	game.t1.interrupt();
 					collideX = true;
 					game.setScreen(new TitleScreen(game));
 				}
