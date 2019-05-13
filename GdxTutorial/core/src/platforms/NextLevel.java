@@ -7,6 +7,8 @@ import com.mygdx.game.MyGdxGame;
 import entities.Player;
 import levels.Level2;
 import levels.TitleScreen;
+import projeteis.TiroNormal;
+import projeteis.TiroRicochete;
 
 public class NextLevel extends Platform{
 	public static MyGdxGame game;
@@ -67,5 +69,8 @@ public class NextLevel extends Platform{
 		}
 		
 	}
+	public void platCollisionBulletX(TiroRicochete tiro) {}
+    public void platCollisionBulletY(TiroRicochete tiro) {}
+    public void normalBulletCollision(TiroNormal tiro) {}
 
 }

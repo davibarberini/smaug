@@ -1,9 +1,14 @@
 package entities.cientistas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
+import platforms.Platform;
 import projeteis.TiroNormal;
 
 public class CientistaAtirador extends Cientista {
@@ -14,21 +19,33 @@ public class CientistaAtirador extends Cientista {
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
 	public int waitUntilShoot = 50;
-
+	Rectangle p1Rect = ply.rect;
+	
 	public CientistaAtirador(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
-			int pixelsToWalkLeft, Player ply) {
+			int pixelsToWalkLeft, Player ply, Platform[] platforms) {
 		super(x, y, w, h, vel, pixelsToWalkRight, pixelsToWalkLeft, ply);
-		tiro = new TiroNormal(0, 0, 5, 5, 0, 0, ply);
+		tiro = new TiroNormal(0, 0, 5, 5, 0, 0, ply, platforms);
+		
+		parado[0] = spriteSheet[0][0];
+		for(int e=0; e < 4; e++) {
+			correndo[e] = spriteSheet[0][e];
+		}
+		
+		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
+		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
 	}
 	
 	public void update(SpriteBatch sb) {
 		if(ply.isAttacking) {
-			if(rect.overlaps(ply.rect)) {
+			Rectangle p1Rect = new Rectangle(ply.rect);
+			p1Rect.width = ply.rect.width + 25;
+			if(rect.overlaps(p1Rect)) {
 				isAlive = false;
 			}
 		}
 		if(isAlive) {
 			if(isNear) {
+				tiro.drawFlash = true;
 				tiro.count += 1;
 				if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
 					tiro.rect.x = rect.x;
@@ -40,6 +57,7 @@ public class CientistaAtirador extends Cientista {
 				}
 			}
 			else {
+				tiro.drawFlash = false;
 				rect.x += velX * Gdx.graphics.getDeltaTime();
 				walked += velX * Gdx.graphics.getDeltaTime();
 				if(walked >= toWalkRight) {
@@ -49,6 +67,9 @@ public class CientistaAtirador extends Cientista {
 					velX = vel;
 				}
 			}
+			if(comingFrom == "direita") tiro.fixedX = rect.x + 20;
+			else if(comingFrom == "esquerda") tiro.fixedX = rect.x - 20;
+			tiro.fixedY = rect.y + 20;
 			this.checkNear();
 			this.draw(sb);
 			tiro.update(sb);
@@ -63,24 +84,24 @@ public class CientistaAtirador extends Cientista {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else if(animState == "parado") {
 			if(comingFrom == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else {

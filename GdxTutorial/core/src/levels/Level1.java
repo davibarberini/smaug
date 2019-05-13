@@ -17,6 +17,7 @@ import editor.MapFileReader;
 import entities.Player;
 import entities.cientistas.Cientista;
 import entities.cientistas.CientistaAtirador;
+import entities.cientistas.CientistaBurstFire;
 import entities.cientistas.CientistaEscudo;
 import entities.cientistas.CientistaRicochete;
 import platforms.Platform;
@@ -207,11 +208,12 @@ public class Level1 extends ScreenAdapter {
   }
   
   public void createEnemies() {
-	  cientistas = new Cientista[4];
+	  cientistas = new Cientista[5];
 	  cientistas[0] = new Cientista(170, 35, 35, 35, 100, 100, 0, p1);
-	  cientistas[1] = new CientistaAtirador(450, 175, 35, 35, 50, 0, 200, p1);
-	  cientistas[2] = new CientistaRicochete(900, 315, 35, 35, 30, 0, 100, p1);
-	  cientistas[3] = new CientistaEscudo(900, 585, 35, 35, 70, 0, 200, p1);
+	  cientistas[1] = new CientistaAtirador(450, 175, 35, 35, 50, 0, 200, p1, platforms);
+	  cientistas[2] = new CientistaRicochete(900, 580, 35, 35, 30, 0, 100, p1, platforms);
+	  cientistas[3] = new CientistaEscudo(600, 315, 35, 35, 70, 0, 200, p1);
+	  cientistas[4] = new CientistaBurstFire(800, 315, 35, 35, 70, 0, 200, p1, platforms);
   }
   
   public void dispose() {

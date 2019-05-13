@@ -3,6 +3,8 @@ package platforms;
 import com.badlogic.gdx.graphics.Color;
 
 import entities.Player;
+import projeteis.TiroNormal;
+import projeteis.TiroRicochete;
 
 public class Teleporter2 extends Platform{
 	
@@ -47,5 +49,8 @@ public class Teleporter2 extends Platform{
 		
 		
 	}
+	public void platCollisionBulletX(TiroRicochete tiro) {}
+    public void platCollisionBulletY(TiroRicochete tiro) {}
+    public void normalBulletCollision(TiroNormal tiro) {}
 
 }

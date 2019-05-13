@@ -1,36 +1,47 @@
 package projeteis;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
+import platforms.Platform;
 
 public class TiroRicochete extends TiroNormal{
 	
-	public float maxY, minY;
 	public float moved = 0;
 	public int bounceCount = 0;
+	public float fixedVelX;
 	public float vel = 0;
+	public float spriteLargura = 40;
+	public float spriteAltura = 40;
+	public float pCorrectX = 12;
+	public float pCorrectY = -10;
 	
-	public TiroRicochete(float x, float y, float w, float h, float velX, float velY, Player ply, float maxY, float minY) {
-		super(x, y, w, h, velX, velY, ply);
-		this.maxY = maxY;
-		this.minY = minY;
+	public TiroRicochete(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
+		super(x, y, w, h, velX, velY, ply, platforms);
+		flash[0] = spriteSheet[1][0];
+		for(int e=0; e < 3; e++) {
+			projetil[e] = spriteSheet[1][e];
+		}
+		
+		flashAnim = new Animation<TextureRegion>(0.06f, flash);
+		projetilAnim = new Animation<TextureRegion>(0.1f, projetil);
 	}
 	
 	public void update(SpriteBatch sb) {
 		if(isAlive) {
 			rect.x += velX * Gdx.graphics.getDeltaTime();
+			for(int e=0; e < platforms.length; e++) {
+				platforms[e].platCollisionBulletX(this);
+			}
 			rect.y += velY * Gdx.graphics.getDeltaTime();
+			for(int i=0; i < platforms.length; i++) {
+				platforms[i].platCollisionBulletY(this);
+			}
 			moved += velY * Gdx.graphics.getDeltaTime();
-			if(moved > maxY) {
-				velY = - vel;
-				bounceCount += 1;
-			}
-			else if(moved < minY) {
-				velY = vel;
-				bounceCount += 1;
-			}
 			if(rect.overlaps(ply.rect)) {
 				isAlive = false;
 				ply.vida -= 10;
@@ -40,12 +51,31 @@ public class TiroRicochete extends TiroNormal{
 				isAlive = false;
 				count = 0;
 			}
+		
+			
 			this.draw(sb);
 		}
 	}
-	
 	public void draw(SpriteBatch sb) {
-		sb.draw(tiro, rect.x, rect.y, rect.width, rect.height);
-		
-	}
+		if(velX > 0) {
+			stateTime += Gdx.graphics.getDeltaTime();
+			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
+			sb.draw(currentFrame, this.rect.x, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			
+		}
+		else{
+			stateTime += Gdx.graphics.getDeltaTime();
+			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
+			sb.draw(currentFrame, rect.x + this.rect.width  + pCorrectX, rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			
+		}
+		if(fixedVelX > 0 && drawFlash) {
+			currentFrame = flashAnim.getKeyFrame(stateTime, true);
+			sb.draw(currentFrame, fixedX, fixedY + pCorrectY, spriteLargura, spriteAltura);
+		}
+		else if(drawFlash){
+			currentFrame = flashAnim.getKeyFrame(stateTime, true);
+			sb.draw(currentFrame, fixedX + this.rect.width, fixedY + pCorrectY, -spriteLargura, spriteAltura);
+		}
+	}	
 }

@@ -8,8 +8,10 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
+import platforms.Platform;
 import projeteis.Escudo;
 
 
@@ -18,7 +20,10 @@ public class Cientista extends Sprite {
 	public float velX, vel;
 	public int numColunas = 8;
 	public int numLinhas = 1;
-	public float spriteLargura, spriteAltura;
+	public float spriteLargura = 80; 
+	public float spriteAltura = 80;
+	public float pCorrectX = -30;
+	public float pCorrectY = -14;
 	public String animState = "running";
 	public float stateTime;
 	public int toWalkLeft, toWalkRight;
@@ -30,11 +35,11 @@ public class Cientista extends Sprite {
 	Animation<TextureRegion> correndoAnim;
 	
 	TextureRegion currentFrame;
-	Texture correndoTxt = new Texture(Gdx.files.internal("Cientista/running.png"));
+	Texture sprite = new Texture(Gdx.files.internal("Cientista/cientista.png"));
 	
-	TextureRegion[][] correndoTmp = TextureRegion.split(correndoTxt, correndoTxt.getWidth() / numColunas, correndoTxt.getHeight()/ numLinhas);
+	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	TextureRegion[] parado = new TextureRegion[1];
-	TextureRegion[] correndo = new TextureRegion[numColunas * numLinhas];
+	TextureRegion[] correndo = new TextureRegion[4];
 
 	public Cientista(float x, float y, float w, float h, float vel, int pixelsToWalkRight, int pixelsToWalkLeft, Player ply) {
 		rect = new Rectangle(x, y, w, h);
@@ -43,15 +48,10 @@ public class Cientista extends Sprite {
 		velX = vel;
 		toWalkRight = pixelsToWalkRight;
 		toWalkLeft = pixelsToWalkLeft;
-		spriteLargura = w;
-		spriteAltura = h;
 		
-		int count = 0;
-		parado[0] = correndoTmp[0][0];
-		for(int e=0; e < numLinhas; e++) {
-			for(int i=0; i < numColunas; i++ ) {
-				correndo[count++] = correndoTmp[e][i];
-			}
+		parado[0] = spriteSheet[0][0];
+		for(int e=0; e < 4; e++) {
+			correndo[e] = spriteSheet[0][e];
 		}
 		
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
@@ -61,7 +61,9 @@ public class Cientista extends Sprite {
  
 	public void update(SpriteBatch sb) {
 		if(ply.isAttacking) {
-			if(rect.overlaps(ply.rect)) {
+			Rectangle p1Rect = new Rectangle(ply.rect);
+			p1Rect.width = ply.rect.width + 25;
+			if(rect.overlaps(p1Rect)) {
 				isAlive = false;
 			}
 		}
@@ -85,12 +87,12 @@ public class Cientista extends Sprite {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x, this.rect.y, spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 		}	}
 		else {
 			stateTime = 0;

@@ -26,8 +26,7 @@ public class Escudo extends Platform {
 	public void update(SpriteBatch sb) {
 		if(isAlive) {
 			Rectangle temp = new Rectangle(ply.rect);
-			temp.width = ply.rect.width + 40;
-			temp.x = ply.rect.x - 20;
+			temp.width = ply.rect.width + 25;
 			if(temp.overlaps(rect)) {
 				//System.out.println(isVulnerable);
 				checkAttack();
@@ -93,5 +92,8 @@ public class Escudo extends Platform {
 			}
 		}
     	
+    }
+    public boolean isEscudo() {
+    	return true;
     }
 }

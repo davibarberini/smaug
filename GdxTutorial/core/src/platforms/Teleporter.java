@@ -3,6 +3,8 @@ package platforms;
 import com.badlogic.gdx.graphics.Color;
 
 import entities.Player;
+import projeteis.TiroNormal;
+import projeteis.TiroRicochete;
 
 public class Teleporter extends Platform{
 	
@@ -23,5 +25,9 @@ public class Teleporter extends Platform{
 		if(ply.rect.overlaps(rect)) return true;
 		else return false;
 	}
+	public void platCollisionBulletX(TiroRicochete tiro) {}
+    public void platCollisionBulletY(TiroRicochete tiro) {}
+    public void normalBulletCollision(TiroNormal tiro) {}
+
 
 }
