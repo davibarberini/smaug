@@ -33,7 +33,11 @@ public class CientistaBurstFire extends Cientista {
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[3][e];
 		}
+		for(int i=0; i < 4; i++) {
+			morrendo[i] = spriteSheet[i][0];
+		}
 		
+		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
 		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
 	}
@@ -43,50 +47,60 @@ public class CientistaBurstFire extends Cientista {
 			Rectangle p1Rect = new Rectangle(ply.rect);
 			p1Rect.width = ply.rect.width + 25;
 			if(rect.overlaps(p1Rect)) {
-				isAlive = false;
+				animState = "morrendo";
 			}
 		}
 		if(isAlive) {
-			if(isNear) {
-				countBurst += 1;
-				for(int e=0; e < tiros.length; e++) {
-					tiros[e].drawFlash = true;
-					tiros[e].count += 1;
-					if(countBurst > e * 10) {
-						if(tiros[e].count >= waitUntilShoot && tiros[e].isAlive == false) {
-							tiros[e].rect.x = rect.x;
-							tiros[e].rect.y = rect.y + 20;
-							tiros[e].velX = velTiroX;
-							tiros[e].velY = velTiroY;
-							tiros[e].wait = waitUntilShoot + 50;
-							tiros[e].isAlive = true;
+			if(animState == "morrendo") {
+				deathCount += 1;
+				if(deathCount > 40) {
+					isAlive = false;
+					deathCount = 0;
+				}
+			}
+			else {
+				if(isNear) {
+					countBurst += 1;
+					for(int e=0; e < tiros.length; e++) {
+						tiros[e].drawFlash = true;
+						tiros[e].count += 1;
+						if(countBurst > e * 10) {
+							if(tiros[e].count >= waitUntilShoot && tiros[e].isAlive == false) {
+								tiros[e].rect.x = rect.x;
+								tiros[e].rect.y = rect.y + 20;
+								tiros[e].velX = velTiroX;
+								tiros[e].velY = velTiroY;
+								tiros[e].wait = waitUntilShoot + 50;
+								tiros[e].isAlive = true;
+							}
 						}
 					}
-				}
-				if(countBurst > 30) countBurst = 0;
-			}
-				
-			else {
-				for(int e=0; e < tiros.length; e++) {
-					tiros[e].drawFlash = false;
-				}
-				rect.x += velX * Gdx.graphics.getDeltaTime();
-				walked += velX * Gdx.graphics.getDeltaTime();
-				if(walked >= toWalkRight) {
-					velX = -vel;
+					if(countBurst > 30) countBurst = 0;
 				}
 					
-				else if(walked <= -toWalkLeft) {
-					velX = vel;
+				else {
+					for(int e=0; e < tiros.length; e++) {
+						tiros[e].drawFlash = false;
+					}
+					rect.x += velX * Gdx.graphics.getDeltaTime();
+					walked += velX * Gdx.graphics.getDeltaTime();
+					if(walked >= toWalkRight) {
+						velX = -vel;
+					}
+						
+					else if(walked <= -toWalkLeft) {
+						velX = vel;
+					}
 				}
+				this.checkNear();
 			}
+			
 			for(int e=0; e < tiros.length; e++) {
 				if(comingFrom == "direita") tiros[e].fixedX = rect.x + 20;
 				else if(comingFrom == "esquerda") tiros[e].fixedX = rect.x - 20;
 				tiros[e].fixedY = rect.y + 20;
 				tiros[e].update(sb);
 			}
-			this.checkNear();
 			this.draw(sb);
 		}
 		
@@ -113,6 +127,18 @@ public class CientistaBurstFire extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			}	
+		}
+		else if(animState == "morrendo") {
+			if(velX > 0) {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
 				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}

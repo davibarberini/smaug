@@ -70,7 +70,7 @@ public class Level1 extends ScreenAdapter {
 	  if(game.t1 != null && game.t1.isAlive()) {
   		game.t1.toStop = true;
   		try {
-  			System.out.println("Join");
+  			//System.out.println("Join");
 			game.t1.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block
@@ -115,6 +115,9 @@ public class Level1 extends ScreenAdapter {
               }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  game.setScreen(new TitleScreen(game));
+              }
+              else if(keyCode == Input.Keys.Q) {
+            	  game.setScreen(new EndScreen(game));
               }
               p1.keyDown(keyCode);
               game.t1.keysDown(keyCode);

@@ -26,6 +26,7 @@ public class Escudo extends Platform {
 	public void update(SpriteBatch sb) {
 		if(isAlive) {
 			Rectangle temp = new Rectangle(ply.rect);
+			if(ply.facing == "esquerda") temp.x = ply.rect.x - 20;
 			temp.width = ply.rect.width + 25;
 			if(temp.overlaps(rect)) {
 				//System.out.println(isVulnerable);

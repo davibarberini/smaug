@@ -53,7 +53,7 @@ public class Level2 extends ScreenAdapter {
 	  if(game.t1 != null && game.t1.isAlive()) {
   		game.t1.toStop = true;
   		try {
-  			System.out.println("Join");
+  			//System.out.println("Join");
 			game.t1.join();
 		} catch (InterruptedException e) {
 			// TODO Auto-generated catch block

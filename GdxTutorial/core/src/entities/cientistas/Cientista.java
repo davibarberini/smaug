@@ -30,9 +30,11 @@ public class Cientista extends Sprite {
 	public float walked = 0;
 	public boolean isAlive = true;
 	public Player ply;
+	public int deathCount = 0;
 	
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> correndoAnim;
+	Animation<TextureRegion> morrendoAnim;
 	
 	TextureRegion currentFrame;
 	Texture sprite = new Texture(Gdx.files.internal("Cientista/cientista.png"));
@@ -40,6 +42,7 @@ public class Cientista extends Sprite {
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] correndo = new TextureRegion[4];
+	TextureRegion[] morrendo = new TextureRegion[4];
 
 	public Cientista(float x, float y, float w, float h, float vel, int pixelsToWalkRight, int pixelsToWalkLeft, Player ply) {
 		rect = new Rectangle(x, y, w, h);
@@ -54,8 +57,12 @@ public class Cientista extends Sprite {
 			correndo[e] = spriteSheet[0][e];
 		}
 		
+		for(int i=0; i < 4; i++) {
+			morrendo[i] = spriteSheet[i][0];
+		}
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
 		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
+		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		
 	}
  
@@ -64,19 +71,28 @@ public class Cientista extends Sprite {
 			Rectangle p1Rect = new Rectangle(ply.rect);
 			p1Rect.width = ply.rect.width + 25;
 			if(rect.overlaps(p1Rect)) {
-				isAlive = false;
+				animState = "morrendo";
 			}
 		}
 		if(isAlive) {
+			if(animState == "morrendo") {
+				deathCount += 1;
+				if(deathCount > 40) {
+					isAlive = false;
+					deathCount = 0;
+				}
+			}
+			else {
+				rect.x += velX * Gdx.graphics.getDeltaTime();
+				walked += velX * Gdx.graphics.getDeltaTime();
+				if(walked >= toWalkRight) {
+					velX = -vel;
+				}
+				else if(walked <= -toWalkLeft) {
+					velX = vel;
+				}
+			}
 			this.draw(sb);
-			rect.x += velX * Gdx.graphics.getDeltaTime();
-			walked += velX * Gdx.graphics.getDeltaTime();
-			if(walked >= toWalkRight) {
-				velX = -vel;
-			}
-			else if(walked <= -toWalkLeft) {
-				velX = vel;
-			}
 		}
 		
 		
@@ -93,7 +109,20 @@ public class Cientista extends Sprite {
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
 				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
-		}	}
+			}	
+		}
+		else if(animState == "morrendo") {
+			if(velX > 0) {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			}	
+		}
 		else {
 			stateTime = 0;
 		}

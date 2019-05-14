@@ -30,7 +30,11 @@ public class CientistaEscudo extends Cientista {
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[2][e];
 		}
+		for(int i=0; i < 4; i++) {
+			morrendo[i] = spriteSheet[i][0];
+		}
 		
+		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
 		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
 	}
@@ -40,31 +44,41 @@ public class CientistaEscudo extends Cientista {
 			Rectangle p1Rect = new Rectangle(ply.rect);
 			p1Rect.width = ply.rect.width + 25;
 			if(rect.overlaps(p1Rect)) {
-				isAlive = false;
+				animState = "morrendo";
 			}
 		}
 		if(isAlive) {
-			if(isNear) {
-				escudo.count += 1;
-				if(escudo.count >= waitUntilShoot && escudo.isAlive == false) {
-					escudo.rect.x = rect.x - (escudo.pixelsToProtect / 2);
-					escudo.rect.width = rect.width + escudo.pixelsToProtect - 15;
-					escudo.rect.height = rect.height + escudo.pixelsToProtect;
-					escudo.rect.y = rect.y;
-					escudo.isAlive = true;
+			if(animState == "morrendo") {
+				deathCount += 1;
+				if(deathCount > 40) {
+					isAlive = false;
+					deathCount = 0;
 				}
 			}
-			else if(!escudo.isAlive){
-				rect.x += velX * Gdx.graphics.getDeltaTime();
-				walked += velX * Gdx.graphics.getDeltaTime();
-				if(walked >= toWalkRight) {
-					velX = -vel;
+			else {
+				if(isNear) {
+					escudo.count += 1;
+					if(escudo.count >= waitUntilShoot && escudo.isAlive == false) {
+						escudo.rect.x = rect.x - (escudo.pixelsToProtect / 2) - 20;
+						escudo.rect.width = rect.width + escudo.pixelsToProtect - 15;
+						escudo.rect.height = rect.height + escudo.pixelsToProtect;
+						escudo.rect.y = rect.y;
+						escudo.isAlive = true;
+					}
 				}
-				else if(walked <= -toWalkLeft) {
-					velX = vel;
+				else if(!escudo.isAlive){
+					rect.x += velX * Gdx.graphics.getDeltaTime();
+					walked += velX * Gdx.graphics.getDeltaTime();
+					if(walked >= toWalkRight) {
+						velX = -vel;
+					}
+					else if(walked <= -toWalkLeft) {
+						velX = vel;
+					}
 				}
+				this.checkNear();
 			}
-			this.checkNear();
+			
 			this.draw(sb);
 			escudo.update(sb);
 			
@@ -95,6 +109,18 @@ public class CientistaEscudo extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			}	
+		}
+		else if(animState == "morrendo") {
+			if(velX > 0) {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
 				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}

@@ -16,8 +16,6 @@ import levels.EndScreen;
 public class Player extends Sprite {
 	public Rectangle rect;
 	public double gravity, velX, velY, aceX;
-	public int numColunas = 6;
-	public int numLinhas = 2;
 	public int jumpCount = 0;
 	public int spriteLargura = 85;
 	public int spriteAltura = 85;
@@ -29,13 +27,14 @@ public class Player extends Sprite {
 	public boolean isColliding = false;
 	public boolean isAttacking = false;
 	public int attackCount = 0;
-	public int moreAttacks = 0;
 	public static int vida = 100;
 	public float actualWidth;
+	public int deathCount = 0;
 	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> jumpingAnim;
+	Animation<TextureRegion> morrendoAnim;
 	Animation<TextureRegion> attackingAnim;
 	Animation<TextureRegion> attackingAnim2;
 	Animation<TextureRegion> attackingAnim3;
@@ -43,11 +42,11 @@ public class Player extends Sprite {
 	TextureRegion currentFrame;
 	Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
 	Texture life = new Texture(Gdx.files.internal("Player/vida.png"));
-	//robo.getWidth() / numColunas
 	TextureRegion[][] roboSheet = TextureRegion.split(robo, 80, 80);
 	TextureRegion[] correndo = new TextureRegion[6];
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] jumping = new TextureRegion[4];
+	TextureRegion[] morrendo = new TextureRegion[3];
 	TextureRegion[] attacking = new TextureRegion[3];
 	TextureRegion[] attacking2 = new TextureRegion[5];
 	TextureRegion[] attacking3 = new TextureRegion[4];
@@ -75,11 +74,16 @@ public class Player extends Sprite {
 		for(int j=0; j < 4; j++) {
 			attacking3[j] = roboSheet[4][j];
 		}
+		
+		for(int k=0; k < 3; k++) {
+			morrendo[k] = roboSheet[1][k + 2];
+		}
 		parado[0] = roboSheet[0][1];
 		
 		correndoAnim = new Animation<TextureRegion>(0.09f, correndo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
 		jumpingAnim = new Animation<TextureRegion>(0.1f, jumping);
+		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		attackingAnim = new Animation<TextureRegion>(0.1f, attacking);
 		attackingAnim2 = new Animation<TextureRegion>(0.1f, attacking2);
 		attackingAnim3 = new Animation<TextureRegion>(0.1f, attacking3);
@@ -87,7 +91,14 @@ public class Player extends Sprite {
 	}
  
 	public void update(MyGdxGame game) {
-		if (vida <= 0) game.setScreen(new EndScreen(game));
+		if (vida <= 0) {
+			animState = "morrendo";
+			deathCount += 1;
+			if(deathCount > 60) {
+				deathCount = 0;
+				game.setScreen(new EndScreen(game));
+			}
+		}
 		gravity += -2000 * Gdx.graphics.getDeltaTime();
 		velX += aceX * Gdx.graphics.getDeltaTime();
 		if(velX > 300) velX = 300;
@@ -178,6 +189,18 @@ public class Player extends Sprite {
 				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
+		else if(animState == "morrendo") {
+			if(facing == "direita") {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
+			}
+		}
 		else {
 			stateTime = 0;
 		}
@@ -185,7 +208,7 @@ public class Player extends Sprite {
 	
 	public void keyDown(int keyCode) {
 		if(keyCode == Input.Keys.W && jumpCount < 2) {
-			System.out.println("here");
+			//System.out.println("here");
 			stateTime = 0;
             this.gravity = 600;
             animState = "jumping";
