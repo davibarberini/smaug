@@ -30,8 +30,8 @@ public class CientistaRicochete extends Cientista {
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[1][e];
 		}
-		for(int i=0; i < 4; i++) {
-			morrendo[i] = spriteSheet[i][0];
+		for(int i=0; i < 3; i++) {
+			morrendo[i] = spriteSheet[1][i + 4];
 		}
 		
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
@@ -40,14 +40,49 @@ public class CientistaRicochete extends Cientista {
 	}
 	
 	public void update(SpriteBatch sb) {
-		if(ply.isAttacking) {
-			Rectangle p1Rect = new Rectangle(ply.rect);
-			p1Rect.width = ply.rect.width + 25;
-			if(rect.overlaps(p1Rect)) {
-				animState = "morrendo";
+		if(animState != "morrendo" && vulnerable) {
+			if(ply.isAttacking) {
+				Rectangle p1Rect = new Rectangle(ply.rect);
+				p1Rect.width = ply.rect.width + ply.widthLimit;
+				if(rect.overlaps(p1Rect)) {
+					vida -= 10;
+					if(vida <= 0) {
+						stateTime = 0;
+						animState = "morrendo";
+					} else {
+						vulnerable = false;
+						velX = 0;
+						fixedX = ply.rect.x;
+					}
+				}
 			}
+			if(ply.tiro.rect.overlaps(rect)) {
+				vida -= 10;
+				if(vida <= 0) {
+					stateTime = 0;
+					animState = "morrendo";
+				} else {
+					vulnerable = false;
+					velX = 0;
+					fixedX = ply.rect.x;
+				}
+			}
+			
 		}
+		
 		if(isAlive) {
+			if(!vulnerable) {
+				if(fixedX > rect.x) rect.x -= 1;
+				else rect.x += 1;
+				if(vulnerableCount < 15) rect.y += 1;
+				else if(vulnerableCount < 30) rect.y -= 1;
+				vulnerableCount += 1;
+				if(vulnerableCount > 50) {
+					velX = vel;
+					vulnerable = true;
+					vulnerableCount = 0;
+				}
+			}
 			if(animState == "morrendo") {
 				deathCount += 1;
 				if(deathCount > 40) {
@@ -124,12 +159,12 @@ public class CientistaRicochete extends Cientista {
 		else if(animState == "morrendo") {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}

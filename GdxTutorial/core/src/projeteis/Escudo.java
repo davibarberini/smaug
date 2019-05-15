@@ -1,8 +1,10 @@
 package projeteis;
 
+import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
@@ -14,13 +16,20 @@ public class Escudo extends Platform {
 	public int vulCount;
 	public boolean isVulnerable = true;
 	public boolean isAlive;
-	Texture shield = new Texture("Cientista/shield.png");
+	Texture sprite = new Texture(Gdx.files.internal("Cientista/shield.png"));
+	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, sprite.getWidth() / 3, sprite.getHeight());
+	TextureRegion[] escudo = new TextureRegion[3];
+	TextureRegion atualShield;
 	public int count;
 	Player ply;
 	
 	public Escudo(float x, float y, float w, float h, int pType, Color cor, Player ply) {
 		super(x, y, w, h, pType, cor);
 		this.ply = ply;
+		escudo[0] = spriteSheet[0][0];
+		escudo[1] = spriteSheet[0][1];
+		escudo[2] = spriteSheet[0][2];
+		atualShield = escudo[0];
 	}
 	
 	public void update(SpriteBatch sb) {
@@ -36,7 +45,7 @@ public class Escudo extends Platform {
 		}
 	}
 	public void draw(SpriteBatch sb) {
-		sb.draw(shield, rect.x, rect.y, rect.width + 15, rect.height);
+		sb.draw(atualShield, rect.x, rect.y, rect.width, rect.height);
 	}
 	
 	public boolean platCollisionX(double velocidadeX, Player ply) {
@@ -78,13 +87,24 @@ public class Escudo extends Platform {
     	if(isVulnerable) {
 	    	if(ply.isAttacking) {
 	    			vida -= 50;
-	    			vulCount = 0;
+	    			if(vida < 60) atualShield = escudo[1];
+	    			vulCount = 0; 
 	    			isVulnerable = false;
 	    			if(vida <= 0) {
 	    				isAlive = false;
 	    				count = 0;
+	    				atualShield = escudo[0];
 	    			}
 	    		}
+	    	if(ply.tiro.rect.overlaps(rect)) {
+	    		vida -= 50;
+    			vulCount = 0;
+    			isVulnerable = false;
+    			if(vida <= 0) {
+    				isAlive = false;
+    				count = 0;   
+    			}
+    		}
     	}
     	else {
 			vulCount += 1;

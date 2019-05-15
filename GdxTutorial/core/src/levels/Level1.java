@@ -41,7 +41,7 @@ public class Level1 extends ScreenAdapter {
   OrthographicCamera camera;
   MyGdxGame game;
   
-  Texture fundo;
+  Texture fundo, portaElevador, vidro;
 
   public Level1(MyGdxGame game) {
 	  this.game = game;
@@ -83,8 +83,10 @@ public class Level1 extends ScreenAdapter {
 	  game.t1 = new MusicPlayer("Level1/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
       game.t1.start(); 
       
-	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
+	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0, platforms);
 	  fundo = new Texture("Level1/lab.png");
+	  portaElevador = new Texture("Level1/portaelevador.png");
+	  vidro = new Texture("Level1/vidro.png");
 	  
 	  createEnemies();
 	  WIDTH = Gdx.graphics.getWidth();
@@ -196,12 +198,21 @@ public class Level1 extends ScreenAdapter {
 	  
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();
-	  game.batch.draw(fundo, 3 , 20);
-	  p1.draw(game.batch);
+	  game.batch.draw(fundo, -288 , -210);
+	  //game.batch.draw(portaElevador, -129 , 100);
+	  game.batch.draw(vidro, 52 , 718);
 	  for(int e=0; e < cientistas.length; e++) {
 		  cientistas[e].update(game.batch);
 	  }
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
+	  game.batch.end();
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 1, 0, 1);
+	  //game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width + p1.widthLimit, p1.rect.height);
+	  game.shapeRenderer.end();
+	  game.batch.begin();
+	  p1.draw(game.batch);
 	  game.batch.end();
 	  
 	  

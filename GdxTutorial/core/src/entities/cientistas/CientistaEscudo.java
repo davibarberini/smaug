@@ -18,7 +18,7 @@ public class CientistaEscudo extends Cientista {
 	public float velTiroY = 400;
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
-	public int waitUntilShoot = 100;
+	public int waitUntilShoot = 50;
 
 	public CientistaEscudo(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply) {
@@ -30,8 +30,8 @@ public class CientistaEscudo extends Cientista {
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[2][e];
 		}
-		for(int i=0; i < 4; i++) {
-			morrendo[i] = spriteSheet[i][0];
+		for(int i=0; i < 3; i++) {
+			morrendo[i] = spriteSheet[2][i + 4];
 		}
 		
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
@@ -40,13 +40,21 @@ public class CientistaEscudo extends Cientista {
 	}
 	
 	public void update(SpriteBatch sb) {
-		if(ply.isAttacking && !escudo.isAlive) {
-			Rectangle p1Rect = new Rectangle(ply.rect);
-			p1Rect.width = ply.rect.width + 25;
-			if(rect.overlaps(p1Rect)) {
+		if(!escudo.isAlive && animState != "morrendo") {
+			if(ply.isAttacking) {
+				Rectangle p1Rect = new Rectangle(ply.rect);
+				p1Rect.width = ply.rect.width + ply.widthLimit;
+				if(rect.overlaps(p1Rect)) {
+					animState = "morrendo";
+					stateTime = 0;
+				}
+			}
+			if(ply.tiro.rect.overlaps(rect)) {
 				animState = "morrendo";
+				stateTime = 0;
 			}
 		}
+		
 		if(isAlive) {
 			if(animState == "morrendo") {
 				deathCount += 1;
@@ -60,9 +68,10 @@ public class CientistaEscudo extends Cientista {
 					escudo.count += 1;
 					if(escudo.count >= waitUntilShoot && escudo.isAlive == false) {
 						escudo.rect.x = rect.x - (escudo.pixelsToProtect / 2) - 20;
-						escudo.rect.width = rect.width + escudo.pixelsToProtect - 15;
+						escudo.rect.width = rect.width + escudo.pixelsToProtect;
 						escudo.rect.height = rect.height + escudo.pixelsToProtect;
 						escudo.rect.y = rect.y;
+						escudo.vida = 100;
 						escudo.isAlive = true;
 					}
 				}
@@ -115,12 +124,12 @@ public class CientistaEscudo extends Cientista {
 		else if(animState == "morrendo") {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}

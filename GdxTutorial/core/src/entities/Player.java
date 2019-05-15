@@ -11,6 +11,8 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 
 import levels.EndScreen;
+import platforms.Platform;
+import projeteis.TiroPlayer;
 
 
 public class Player extends Sprite {
@@ -23,13 +25,17 @@ public class Player extends Sprite {
 	public int spriteAdjustmentX = -18;
 	public String animState = "parado";
 	public float stateTime;
+	public int attackLimit = 40;
+	public int widthLimit = 0;
 	public String facing = "direita";
 	public boolean isColliding = false;
 	public boolean isAttacking = false;
 	public int attackCount = 0;
+	public int tiroCooldown = 0;
 	public static int vida = 100;
 	public float actualWidth;
 	public int deathCount = 0;
+	public TiroPlayer tiro;
 	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> paradoAnim;
@@ -51,12 +57,14 @@ public class Player extends Sprite {
 	TextureRegion[] attacking2 = new TextureRegion[5];
 	TextureRegion[] attacking3 = new TextureRegion[4];
 
-	public Player(float x, float y, float w, float h, double g, double vX, double vY) {
+	public Player(float x, float y, float w, float h, double g, double vX, double vY, Platform[] platforms) {
 		rect = new Rectangle(x, y, w, h);
 		actualWidth = w;
 		gravity = g;
 		velX = vX;
 		velY = vY;
+		tiro = new TiroPlayer(x, y, 20, 20, 0, 0, platforms);
+		
 		for(int e=0; e < 6; e++) {
 			correndo[e] = roboSheet[0][e];
 
@@ -84,18 +92,24 @@ public class Player extends Sprite {
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
 		jumpingAnim = new Animation<TextureRegion>(0.1f, jumping);
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
-		attackingAnim = new Animation<TextureRegion>(0.1f, attacking);
-		attackingAnim2 = new Animation<TextureRegion>(0.1f, attacking2);
-		attackingAnim3 = new Animation<TextureRegion>(0.1f, attacking3);
+		attackingAnim = new Animation<TextureRegion>(0.06f, attacking);
+		attackingAnim2 = new Animation<TextureRegion>(0.06f, attacking2);
+		attackingAnim3 = new Animation<TextureRegion>(0.08f, attacking3);
 		
 	}
  
 	public void update(MyGdxGame game) {
+		if(facing == "direita") tiro.fixedX = rect.x + 15;
+		if(facing == "esquerda") tiro.fixedX = rect.x;
+		tiro.fixedY = rect.y + 5;
+		tiro.facing = facing;
+		tiroCooldown += 1;
 		if (vida <= 0) {
 			animState = "morrendo";
 			deathCount += 1;
 			if(deathCount > 60) {
 				deathCount = 0;
+				vida = 100;
 				game.setScreen(new EndScreen(game));
 			}
 		}
@@ -105,8 +119,9 @@ public class Player extends Sprite {
 		else if(velX < -300) velX = -300;
 		if(isAttacking) {
 			attackCount++;
-			if(attackCount > 40) {
+			if(attackCount > attackLimit) {
 				isAttacking = false;
+				widthLimit = 0;
 				attackCount = 0;
 			}
 		}
@@ -114,6 +129,13 @@ public class Player extends Sprite {
 	
 	
 	public void draw(SpriteBatch sb) {
+		tiro.update(sb);
+		if(tiro.isAlive) tiro.count += 1;
+		if(tiro.count > 50) {
+			tiro.count = 0;
+			tiro.isAlive = false;
+			tiro.drawFlash = false;
+		}
 		sb.draw(life, rect.x - 300, rect.y + 200, vida, 30);
 		if(animState == "parado") {
 			if(facing == "direita") {
@@ -156,24 +178,24 @@ public class Player extends Sprite {
 		else if(animState == "attacking") {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = attackingAnim.getKeyFrame(stateTime, true);
+				currentFrame = attackingAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = attackingAnim.getKeyFrame(stateTime, true);
+				currentFrame = attackingAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
 		else if(animState == "attacking2") {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = attackingAnim2.getKeyFrame(stateTime, true);
+				currentFrame = attackingAnim2.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = attackingAnim2.getKeyFrame(stateTime, true);
+				currentFrame = attackingAnim2.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
@@ -227,21 +249,63 @@ public class Player extends Sprite {
         	facing = "esquerda";
         }
         else if(keyCode == Input.Keys.F) {
-        	this.isAttacking = true;
+        	isAttacking = true;
         	if(animState == "attacking") {
         		attackCount = 0;
         		stateTime = 0;
+        		attackLimit = 25;
+        		widthLimit = 15;
         		animState = "attacking2";
         	}
         	else if(animState == "attacking2") {
         		attackCount = 0;
+        		attackLimit = 70;
         		stateTime = 0;
+        		widthLimit = 10;
         		animState = "attacking3";
         	}
         	else{
         		attackCount = 0;
         		stateTime = 0;
+        		attackLimit = 25;
+        		widthLimit = 25;
         		animState = "attacking";
+        	}
+        }
+        else if(keyCode == Input.Keys.I) {
+        	if(!tiro.isAlive && tiroCooldown > 60) {
+        		tiro.rect.x = rect.x;
+            	tiro.rect.y = rect.y + 10;
+            	if(facing == "direita") tiro.velX = 400;
+            	if(facing == "esquerda") tiro.velX = -400;
+            	tiro.velY = 200;
+            	tiro.isAlive = true;
+            	tiroCooldown = 0;
+            	tiro.drawFlash = true;
+        	}
+        }
+        else if(keyCode == Input.Keys.J) {
+        	if(!tiro.isAlive && tiroCooldown > 60) {
+        		tiro.rect.x = rect.x;
+            	tiro.rect.y = rect.y + 10;
+            	if(facing == "direita") tiro.velX = 400;
+            	if(facing == "esquerda") tiro.velX = -400;
+            	tiro.velY = 0;
+            	tiro.isAlive = true;
+            	tiroCooldown = 0;
+            	tiro.drawFlash = true;
+        	}
+        }
+        else if(keyCode == Input.Keys.N) {
+        	if(!tiro.isAlive && tiroCooldown > 60) {
+        		tiro.rect.x = rect.x;
+            	tiro.rect.y = rect.y + 10;
+            	if(facing == "direita") tiro.velX = 400;
+            	if(facing == "esquerda") tiro.velX = -400;
+            	tiro.velY = -200;
+            	tiro.isAlive = true;
+            	tiroCooldown = 0;
+            	tiro.drawFlash = true;
         	}
         }
 	}

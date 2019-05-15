@@ -65,7 +65,7 @@ public class Level2 extends ScreenAdapter {
 	  game.t1 = new MusicPlayer("Level2/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
       game.t1.start(); 
 	  
-	  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0);
+	  p1 = new Player(0, 0, 35, 35, 0, 0, 0, platforms);
 	  prx1 = new Parallax("Level2/parallax1.png", 0, 4);
 	  prx2 = new Parallax("Level2/parallax2.png", 50, 12);
 	  prx3 = new Parallax("Level2/parallax3.png", 150, 40);

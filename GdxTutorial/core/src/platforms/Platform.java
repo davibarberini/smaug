@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
 import projeteis.TiroNormal;
+import projeteis.TiroPlayer;
 import projeteis.TiroRicochete;
 
 public class Platform {
@@ -91,7 +92,16 @@ public class Platform {
     		tiro.isAlive = false;
     	}
     }
+    public void playerBulletCollision(TiroPlayer tiro) {
+    	if(tiro.rect.overlaps(rect)) {
+    		tiro.count = 0;
+    		tiro.isAlive = false;
+    	}
+    }
     
+    public boolean isPlatform() {
+    	return true;
+    }
     public boolean isEscudo() {
     	return false;
     }

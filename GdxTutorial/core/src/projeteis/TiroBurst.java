@@ -16,13 +16,14 @@ public class TiroBurst extends TiroNormal{
 	public float spriteAltura = 30;
 	public float pCorrectY = -10;
 	public float pCorrectX = -10;
+	TextureRegion[] projetil = new TextureRegion[3];
 	
 	public TiroBurst(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
 		super(x, y, w, h, velX, velY, ply, platforms);
 		
 		flash[0] = spriteSheet[2][0];
 		for(int e=0; e < 3; e++) {
-			projetil[e] = spriteSheet[2][e];
+			projetil[e] = spriteSheet[2][e + 1];
 		}
 		
 		flashAnim = new Animation<TextureRegion>(0.06f, flash);
@@ -34,7 +35,7 @@ public class TiroBurst extends TiroNormal{
 			rect.x += velX * Gdx.graphics.getDeltaTime();
 			rect.y += velY * Gdx.graphics.getDeltaTime();
 			for(int e=0; e < platforms.length; e++) {
-				if(!platforms[e].isEscudo()) platforms[e].normalBulletCollision(this);
+				if(platforms[e].isPlatform()) platforms[e].normalBulletCollision(this);
 			}
 			if(rect.overlaps(ply.rect)) {
 				isAlive = false;

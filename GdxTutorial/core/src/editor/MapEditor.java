@@ -37,7 +37,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Level2/Level2";
+  public String levelToEdit = "Level1/Level1";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -312,7 +312,7 @@ public class MapEditor extends ScreenAdapter {
 	  
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();
-	  game.batch.draw(fundo, 3 , 20);
+	  if(levelToEdit == "Level1/Level1") game.batch.draw(fundo, -288, -210);
 	  game.batch.end();
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);

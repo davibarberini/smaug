@@ -1,27 +1,50 @@
 package projeteis;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
 import platforms.Platform;
 
-public class TiroRicochete extends TiroNormal{
+public class TiroPlayer{
 	
-	public float moved = 0;
-	public int bounceCount = 0;
-	public float fixedVelX;
 	public float vel = 0;
 	public float spriteLargura = 40;
 	public float spriteAltura = 40;
 	public float pCorrectX = 12;
 	public float pCorrectY = -10;
+	public Rectangle rect;
+	public float velX, velY;
+	public boolean isAlive = false, drawFlash = false;
+	public int count = 0;
+	public String facing = "direita";
+	public float fixedX, fixedY;
+	public float stateTime = 0;
+	public Platform[] platforms;
 	
-	public TiroRicochete(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
-		super(x, y, w, h, velX, velY, ply, platforms);
+	Animation<TextureRegion> flashAnim;
+	Animation<TextureRegion> projetilAnim;
+	
+	TextureRegion currentFrame;
+	Texture sprite = new Texture(Gdx.files.internal("Cientista/projeteis.png"));
+	
+	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 20, 20);
+	TextureRegion[] flash = new TextureRegion[1];
+	TextureRegion[] projetil = new TextureRegion[4];
+	
+	public TiroPlayer(float x, float y, float w, float h, float velX, float velY, Platform[] platforms) {
+		rect = new Rectangle(x, y, w, h);
+		fixedX = x;
+		fixedY = y;
+		this.velX = velX;
+		this.velY = velY;
+		this.platforms = platforms;
+		
 		flash[0] = spriteSheet[1][0];
 		for(int e=0; e < 4; e++) {
 			projetil[e] = spriteSheet[1][e + 1];
@@ -35,23 +58,9 @@ public class TiroRicochete extends TiroNormal{
 		if(isAlive) {
 			rect.x += velX * Gdx.graphics.getDeltaTime();
 			for(int e=0; e < platforms.length; e++) {
-				platforms[e].platCollisionBulletX(this);
+				if(platforms[e].isPlatform() || platforms[e].isEscudo()) platforms[e].playerBulletCollision(this);
 			}
 			rect.y += velY * Gdx.graphics.getDeltaTime();
-			for(int i=0; i < platforms.length; i++) {
-				platforms[i].platCollisionBulletY(this);
-			}
-			moved += velY * Gdx.graphics.getDeltaTime();
-			if(rect.overlaps(ply.rect)) {
-				isAlive = false;
-				ply.vida -= 10;
-				count = 0;
-			}
-			if(count > wait) {
-				isAlive = false;
-				count = 0;
-			}
-		
 			
 			this.draw(sb);
 		}
@@ -69,7 +78,7 @@ public class TiroRicochete extends TiroNormal{
 			sb.draw(currentFrame, rect.x + this.rect.width  + pCorrectX, rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			
 		}
-		if(fixedVelX > 0 && drawFlash) {
+		if(facing == "direita" && drawFlash) {
 			currentFrame = flashAnim.getKeyFrame(stateTime, true);
 			sb.draw(currentFrame, fixedX, fixedY + pCorrectY, spriteLargura, spriteAltura);
 		}

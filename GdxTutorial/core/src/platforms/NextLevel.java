@@ -72,5 +72,7 @@ public class NextLevel extends Platform{
 	public void platCollisionBulletX(TiroRicochete tiro) {}
     public void platCollisionBulletY(TiroRicochete tiro) {}
     public void normalBulletCollision(TiroNormal tiro) {}
-
+    public boolean isPlatform() {
+    	return false;
+    }
 }

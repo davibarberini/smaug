@@ -33,7 +33,7 @@ public class TiroNormal {
 	
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 20, 20);
 	TextureRegion[] flash = new TextureRegion[1];
-	TextureRegion[] projetil = new TextureRegion[3];
+	TextureRegion[] projetil = new TextureRegion[4];
 
 	
 	public TiroNormal(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
@@ -46,8 +46,8 @@ public class TiroNormal {
 		this.platforms = platforms;
 		
 		flash[0] = spriteSheet[0][0];
-		for(int e=0; e < 3; e++) {
-			projetil[e] = spriteSheet[0][e];
+		for(int e=0; e < 4; e++) {
+			projetil[e] = spriteSheet[0][e + 1];
 		}
 		
 		flashAnim = new Animation<TextureRegion>(0.06f, flash);
@@ -59,7 +59,7 @@ public class TiroNormal {
 			rect.x += velX * Gdx.graphics.getDeltaTime();
 			rect.y += velY * Gdx.graphics.getDeltaTime();
 			for(int e=0; e < platforms.length; e++) {
-				platforms[e].normalBulletCollision(this);
+				if(platforms[e].isPlatform()) platforms[e].normalBulletCollision(this);
 			}
 			if(rect.overlaps(ply.rect)) {
 				isAlive = false;

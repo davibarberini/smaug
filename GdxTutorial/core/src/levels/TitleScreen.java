@@ -45,7 +45,7 @@ public class TitleScreen extends ScreenAdapter{
     	game.t1 = new MusicPlayer("TitleScreen/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
         game.t1.start(); 
         
-    	fundo = new Texture("TitleScreen/titlescreen.jpg");
+    	fundo = new Texture("TitleScreen/fundo.png");
     	select = new Texture("TitleScreen/icon.png");
     	
     	camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
