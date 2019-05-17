@@ -200,10 +200,13 @@ public class Level1 extends ScreenAdapter {
 	  game.batch.begin();
 	  game.batch.draw(fundo, -288 , -210);
 	  //game.batch.draw(portaElevador, -129 , 100);
+	  p1.draw(game.batch);
+	  
 	  game.batch.draw(vidro, 52 , 718);
 	  for(int e=0; e < cientistas.length; e++) {
 		  cientistas[e].update(game.batch);
 	  }
+	  game.batch.draw(p1.life, p1.rect.x - 300, p1.rect.y + 200, p1.vida, 30);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
@@ -212,7 +215,6 @@ public class Level1 extends ScreenAdapter {
 	  //game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width + p1.widthLimit, p1.rect.height);
 	  game.shapeRenderer.end();
 	  game.batch.begin();
-	  p1.draw(game.batch);
 	  game.batch.end();
 	  
 	  

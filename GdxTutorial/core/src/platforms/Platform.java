@@ -40,11 +40,11 @@ public class Platform {
     	    	ply.rect.y = rect.y + rect.height;
     	    	ply.gravity = 0;
     	    	ply.jumpCount = 0;
-    	    	if(ply.velX == 0 && !ply.isAttacking) {
+    	    	if(ply.velX == 0 && !ply.isAttacking || ply.animState == "airAttack") {
     				ply.animState = "parado";
     			}
     			else {
-    				if(!ply.isAttacking)ply.animState = "running";
+    				if(!ply.isAttacking || ply.animState == "airAttack")ply.animState = "running";
     			}
     	    }
     	   

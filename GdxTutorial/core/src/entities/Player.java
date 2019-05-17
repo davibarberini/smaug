@@ -44,10 +44,11 @@ public class Player extends Sprite {
 	Animation<TextureRegion> attackingAnim;
 	Animation<TextureRegion> attackingAnim2;
 	Animation<TextureRegion> attackingAnim3;
+	Animation<TextureRegion> airAttackAnim;
 	
 	TextureRegion currentFrame;
 	Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
-	Texture life = new Texture(Gdx.files.internal("Player/vida.png"));
+	public Texture life = new Texture(Gdx.files.internal("Player/vida.png"));
 	TextureRegion[][] roboSheet = TextureRegion.split(robo, 80, 80);
 	TextureRegion[] correndo = new TextureRegion[6];
 	TextureRegion[] parado = new TextureRegion[1];
@@ -56,6 +57,7 @@ public class Player extends Sprite {
 	TextureRegion[] attacking = new TextureRegion[3];
 	TextureRegion[] attacking2 = new TextureRegion[5];
 	TextureRegion[] attacking3 = new TextureRegion[4];
+	TextureRegion[] airAttack = new TextureRegion[4];
 
 	public Player(float x, float y, float w, float h, double g, double vX, double vY, Platform[] platforms) {
 		rect = new Rectangle(x, y, w, h);
@@ -86,6 +88,9 @@ public class Player extends Sprite {
 		for(int k=0; k < 3; k++) {
 			morrendo[k] = roboSheet[1][k + 2];
 		}
+		for(int a=0; a < 4; a++) {
+			airAttack[a] = roboSheet[5][a];
+		}
 		parado[0] = roboSheet[0][1];
 		
 		correndoAnim = new Animation<TextureRegion>(0.09f, correndo);
@@ -95,6 +100,7 @@ public class Player extends Sprite {
 		attackingAnim = new Animation<TextureRegion>(0.06f, attacking);
 		attackingAnim2 = new Animation<TextureRegion>(0.06f, attacking2);
 		attackingAnim3 = new Animation<TextureRegion>(0.08f, attacking3);
+		airAttackAnim = new Animation<TextureRegion>(0.05f, airAttack);
 		
 	}
  
@@ -136,7 +142,6 @@ public class Player extends Sprite {
 			tiro.isAlive = false;
 			tiro.drawFlash = false;
 		}
-		sb.draw(life, rect.x - 300, rect.y + 200, vida, 30);
 		if(animState == "parado") {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
@@ -223,6 +228,18 @@ public class Player extends Sprite {
 				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
+		else if(animState == "airAttack") {
+			if(facing == "direita") {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = airAttackAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
+			}
+			else {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = airAttackAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
+			}
+		}
 		else {
 			stateTime = 0;
 		}
@@ -250,27 +267,36 @@ public class Player extends Sprite {
         }
         else if(keyCode == Input.Keys.F) {
         	isAttacking = true;
-        	if(animState == "attacking") {
-        		attackCount = 0;
-        		stateTime = 0;
-        		attackLimit = 25;
-        		widthLimit = 15;
-        		animState = "attacking2";
+        	if(animState != "jumping") {
+        		if(animState == "attacking") {
+            		attackCount = 0;
+            		stateTime = 0;
+            		attackLimit = 25;
+            		widthLimit = 15;
+            		animState = "attacking2";
+            	}
+            	else if(animState == "attacking2") {
+            		attackCount = 0;
+            		attackLimit = 70;
+            		stateTime = 0;
+            		widthLimit = 10;
+            		animState = "attacking3";
+            	}
+            	else{
+            		attackCount = 0;
+            		stateTime = 0;
+            		attackLimit = 25;
+            		widthLimit = 25;
+            		animState = "attacking";
+            	}
         	}
-        	else if(animState == "attacking2") {
+        	else {
         		attackCount = 0;
         		attackLimit = 70;
         		stateTime = 0;
-        		widthLimit = 10;
-        		animState = "attacking3";
+        		animState = "airAttack";
         	}
-        	else{
-        		attackCount = 0;
-        		stateTime = 0;
-        		attackLimit = 25;
-        		widthLimit = 25;
-        		animState = "attacking";
-        	}
+        	
         }
         else if(keyCode == Input.Keys.I) {
         	if(!tiro.isAlive && tiroCooldown > 60) {

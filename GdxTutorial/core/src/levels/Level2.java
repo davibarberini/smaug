@@ -136,7 +136,7 @@ public class Level2 extends ScreenAdapter {
 	}
 	p1.update(game);
 	
-    camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
+    camera.position.set(p1.rect.x + (p1.rect.width / 2) + 100,  220, 0);
 	camera.update();
 	
 	this.draw();
@@ -172,6 +172,7 @@ public class Level2 extends ScreenAdapter {
 	  prx1.parallax(game, p1);
 	  game.batch.draw(fundo, 3 , 20);
 	  p1.draw(game.batch);
+	  game.batch.draw(p1.life, p1.rect.x - 300,  350, p1.vida, 30);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 

@@ -78,7 +78,7 @@ public class Cientista extends Sprite {
 				Rectangle p1Rect = new Rectangle(ply.rect);
 				p1Rect.width = ply.rect.width + ply.widthLimit;
 				if(ply.facing == "esquerda")p1Rect.x = ply.rect.x - ply.widthLimit;
-				sb.draw(teste, ply.rect.x, ply.rect.y, p1Rect.width, ply.rect.height);
+				//sb.draw(teste, ply.rect.x, ply.rect.y, p1Rect.width, ply.rect.height);
 				if(rect.overlaps(p1Rect)) {				
 					vida -= 10;
 					if(vida <= 0) {
