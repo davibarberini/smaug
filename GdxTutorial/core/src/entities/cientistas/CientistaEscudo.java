@@ -42,8 +42,7 @@ public class CientistaEscudo extends Cientista {
 	public void update(SpriteBatch sb) {
 		if(!escudo.isAlive && animState != "morrendo") {
 			if(ply.isAttacking) {
-				Rectangle p1Rect = new Rectangle(ply.rect);
-				p1Rect.width = ply.rect.width + ply.widthLimit;
+				collisionPlayer();
 				if(rect.overlaps(p1Rect)) {
 					animState = "morrendo";
 					stateTime = 0;
@@ -67,10 +66,10 @@ public class CientistaEscudo extends Cientista {
 				if(isNear) {
 					escudo.count += 1;
 					if(escudo.count >= waitUntilShoot && escudo.isAlive == false) {
-						escudo.rect.x = rect.x - (escudo.pixelsToProtect / 2) - 20;
+						escudo.rect.x = rect.x - (escudo.pixelsToProtect / 2);
 						escudo.rect.width = rect.width + escudo.pixelsToProtect;
 						escudo.rect.height = rect.height + escudo.pixelsToProtect;
-						escudo.rect.y = rect.y;
+						escudo.rect.y = rect.y  - 10;
 						escudo.vida = 100;
 						escudo.isAlive = true;
 					}
@@ -106,7 +105,7 @@ public class CientistaEscudo extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else if(animState == "parado") {
@@ -118,7 +117,7 @@ public class CientistaEscudo extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else if(animState == "morrendo") {
@@ -130,7 +129,7 @@ public class CientistaEscudo extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else {

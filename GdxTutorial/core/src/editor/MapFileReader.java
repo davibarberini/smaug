@@ -9,6 +9,7 @@ import java.util.List;
 import com.badlogic.gdx.graphics.Color;
 import com.mygdx.game.MyGdxGame;
 
+import platforms.Hole;
 import platforms.NextLevel;
 import platforms.Platform;
 import platforms.Teleporter;
@@ -29,6 +30,7 @@ public class MapFileReader {
 	public Teleporter tel;
 	public Teleporter2 tel2;
 	NextLevel nl;
+	Hole h1;
 	
 	public MapFileReader() {}
 	
@@ -92,7 +94,13 @@ public class MapFileReader {
         					nl = new NextLevel(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 9, color);
         					nl.game = gameF;
         					nl.nextLevel = nextLevel;
-        					platforms.add(new NextLevel(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 9, color));
+        					platforms.add(nl);
+        				}
+        				else if(platformType == 2) {
+        					Color color = new Color(1, 1, 1, 1);
+        					h1 = new Hole(tempRect[0], tempRect[1], tempRect[2], tempRect[3], 2, color);
+        					h1.game = gameF;
+        					platforms.add(h1);
         				}
         				count = 0;
         				

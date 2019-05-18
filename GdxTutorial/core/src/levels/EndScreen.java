@@ -62,6 +62,9 @@ public class EndScreen extends ScreenAdapter {
                 else if(keyCode == Input.Keys.ESCAPE) {
                 	System.exit(0);
                 }
+                else if(keyCode == Input.Keys.C) {
+                	game.setScreen(new ScoreScreen(game));
+                }
                 game.t1.keysDown(keyCode);
                 return true;
             }
@@ -73,13 +76,16 @@ public class EndScreen extends ScreenAdapter {
         Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        rotation = 350 * Gdx.graphics.getDeltaTime();
-        camera.rotate(rotation);
+        rotation += 350 * Gdx.graphics.getDeltaTime();
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(death, (Gdx.graphics.getWidth() / 2) - death.getRegionWidth() / 2, (Gdx.graphics.getHeight() / 2) - death.getRegionHeight() / 2, 85, 85);;
-        game.font.draw(game.batch, "Press Space to Return", 190, 310);
+        game.titlefont.draw(game.batch, "You  Died", 129, 270);
+        game.batch.draw(death, (Gdx.graphics.getWidth() / 2) - (death.getRegionWidth() / 2) - 25, (Gdx.graphics.getHeight() / 2) - (death.getRegionHeight() / 2) - 20,
+        		55, 55, 110, 110, 1, 1, rotation);
+        game.fontSmaller.draw(game.batch, "Press Space to Return", 170, 70);
+        game.fontSmaller.draw(game.batch, "Press C to", 35, 430);
+        game.fontSmaller.draw(game.batch, "see score analysis", 35, 380);
         game.batch.end();
     }
 

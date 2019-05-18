@@ -14,6 +14,7 @@ import com.badlogic.gdx.math.Vector3;
 import com.mygdx.game.MyGdxGame;
 
 import levels.TitleScreen;
+import platforms.Hole;
 import platforms.NextLevel;
 import platforms.Platform;
 import platforms.Teleporter;
@@ -37,7 +38,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Level1/Level1";
+  public String levelToEdit = "Level2/Level2";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -185,6 +186,10 @@ public class MapEditor extends ScreenAdapter {
             	  selected = 9;
             	  return true;
               }
+              else if(keyCode == Input.Keys.NUM_2) {
+            	  selected = 2;
+            	  return true;
+              }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  game.setScreen(new TitleScreen(game));
               }
@@ -244,6 +249,10 @@ public class MapEditor extends ScreenAdapter {
             	  else if(selected == 1) {
             		  Color color = new Color(1, 0, 0, 1);
             		  platforms.add(new Platform(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH, 0, color));  
+            	  }
+            	  else if(selected == 2) {
+            		  Color color = new Color(1, 1, 1, 1);
+            		  platforms.add(new Hole(mouseX - (platW / 2), mouseY - (platH / 2), platW, platH, 2, color));  
             	  }
             	  else if(selected == 4) {
             		  Color color = new Color(0, 1, 0, 1);
@@ -313,6 +322,7 @@ public class MapEditor extends ScreenAdapter {
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();
 	  if(levelToEdit == "Level1/Level1") game.batch.draw(fundo, -288, -210);
+	  if(levelToEdit == "Level2/Level2") game.batch.draw(fundo, -225 , -180);
 	  game.batch.end();
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
@@ -329,6 +339,7 @@ public class MapEditor extends ScreenAdapter {
 	  
 	  if(selected != 999) {
 		  if(selected == 1) game.shapeRenderer.setColor(1, 0, 0, 1);
+		  else if(selected == 2) game.shapeRenderer.setColor(1, 1, 1, 1);
 		  else if(selected == 4) game.shapeRenderer.setColor(0, 1, 0, 1);
 		  else if(selected == 5) game.shapeRenderer.setColor(1, 1, 0, 1);
 		  else if(selected == 9) game.shapeRenderer.setColor(0, 0, 1, 1);

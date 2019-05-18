@@ -42,8 +42,7 @@ public class CientistaRicochete extends Cientista {
 	public void update(SpriteBatch sb) {
 		if(animState != "morrendo" && vulnerable) {
 			if(ply.isAttacking) {
-				Rectangle p1Rect = new Rectangle(ply.rect);
-				p1Rect.width = ply.rect.width + ply.widthLimit;
+				collisionPlayer();
 				if(rect.overlaps(p1Rect)) {
 					vida -= 10;
 					if(vida <= 0) {
@@ -141,7 +140,7 @@ public class CientistaRicochete extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else if(animState == "parado") {
@@ -153,7 +152,7 @@ public class CientistaRicochete extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = paradoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else if(animState == "morrendo") {
@@ -165,7 +164,7 @@ public class CientistaRicochete extends Cientista {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else {

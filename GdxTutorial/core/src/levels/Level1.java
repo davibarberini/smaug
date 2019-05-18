@@ -200,7 +200,6 @@ public class Level1 extends ScreenAdapter {
 	  game.batch.begin();
 	  game.batch.draw(fundo, -288 , -210);
 	  //game.batch.draw(portaElevador, -129 , 100);
-	  p1.draw(game.batch);
 	  
 	  game.batch.draw(vidro, 52 , 718);
 	  for(int e=0; e < cientistas.length; e++) {
@@ -215,6 +214,7 @@ public class Level1 extends ScreenAdapter {
 	  //game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width + p1.widthLimit, p1.rect.height);
 	  game.shapeRenderer.end();
 	  game.batch.begin();
+	  p1.draw(game.batch);
 	  game.batch.end();
 	  
 	  
@@ -225,11 +225,11 @@ public class Level1 extends ScreenAdapter {
   
   public void createEnemies() {
 	  cientistas = new Cientista[5];
-	  cientistas[0] = new Cientista(170, 35, 35, 35, 100, 100, 0, p1);
-	  cientistas[1] = new CientistaAtirador(450, 175, 35, 35, 50, 0, 200, p1, platforms);
-	  cientistas[2] = new CientistaRicochete(900, 580, 35, 35, 30, 0, 100, p1, platforms);
-	  cientistas[3] = new CientistaEscudo(600, 315, 35, 35, 70, 0, 200, p1);
-	  cientistas[4] = new CientistaBurstFire(800, 315, 35, 35, 70, 0, 200, p1, platforms);
+	  cientistas[0] = new Cientista(170, 40, 25, 35, 100, 100, 0, p1);
+	  cientistas[1] = new CientistaAtirador(450, 180, 25, 35, 50, 0, 200, p1, platforms);
+	  cientistas[2] = new CientistaRicochete(900, 585, 25, 35, 30, 0, 100, p1, platforms);
+	  cientistas[3] = new CientistaEscudo(600, 320, 25, 35, 70, 0, 200, p1);
+	  cientistas[4] = new CientistaBurstFire(800, 320, 25, 35, 70, 0, 200, p1, platforms);
   }
   
   public void dispose() {

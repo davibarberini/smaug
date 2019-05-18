@@ -24,8 +24,8 @@ public class Cientista extends Sprite {
 	public int numLinhas = 1;
 	public float spriteLargura = 80; 
 	public float spriteAltura = 80;
-	public float pCorrectX = -30;
-	public float pCorrectY = -14;
+	public float pCorrectX = -25;
+	public float pCorrectY = -20;
 	public String animState = "running";
 	public float stateTime;
 	public int toWalkLeft, toWalkRight;
@@ -35,6 +35,7 @@ public class Cientista extends Sprite {
 	public int vulnerableCount = 0;
 	public Player ply;
 	public int deathCount = 0;
+	Rectangle p1Rect;
 	
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> correndoAnim;
@@ -75,10 +76,8 @@ public class Cientista extends Sprite {
 	public void update(SpriteBatch sb) {
 		if(animState != "morrendo" && vulnerable) {
 			if(ply.isAttacking) {
-				Rectangle p1Rect = new Rectangle(ply.rect);
-				p1Rect.width = ply.rect.width + ply.widthLimit;
-				if(ply.facing == "esquerda")p1Rect.x = ply.rect.x - ply.widthLimit;
-				//sb.draw(teste, ply.rect.x, ply.rect.y, p1Rect.width, ply.rect.height);
+				collisionPlayer();
+				sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
 				if(rect.overlaps(p1Rect)) {				
 					vida -= 10;
 					if(vida <= 0) {
@@ -152,7 +151,7 @@ public class Cientista extends Sprite {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = correndoAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else if(animState == "morrendo") {
@@ -164,7 +163,7 @@ public class Cientista extends Sprite {
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
 				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
-				sb.draw(currentFrame, this.rect.x + this.rect.width, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
 		else {
@@ -175,6 +174,15 @@ public class Cientista extends Sprite {
 	public Escudo getEscudo() {
 		Color color = new Color(1, 1, 1, 1);
 		return new Escudo(0, 0, 0, 0, 0, color, ply);
+	}
+	public void collisionPlayer() {
+		p1Rect = new Rectangle(ply.rect);
+		p1Rect.width = ply.rect.width + ply.widthLimit;
+		p1Rect.height = ply.rect.height + ply.heightLimit;
+		p1Rect.y = ply.rect.y - (ply.heightLimit / 2);
+		if(ply.facing == "esquerda") {
+			p1Rect.x = ply.rect.x - ply.widthLimit;
+		}
 	}
 	
 }

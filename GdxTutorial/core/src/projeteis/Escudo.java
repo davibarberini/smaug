@@ -20,6 +20,7 @@ public class Escudo extends Platform {
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, sprite.getWidth() / 3, sprite.getHeight());
 	TextureRegion[] escudo = new TextureRegion[3];
 	TextureRegion atualShield;
+	Texture teste = new Texture("Player/vida.png");
 	public int count;
 	Player ply;
 	
@@ -34,10 +35,14 @@ public class Escudo extends Platform {
 	
 	public void update(SpriteBatch sb) {
 		if(isAlive) {
-			Rectangle temp = new Rectangle(ply.rect);
-			if(ply.facing == "esquerda") temp.x = ply.rect.x - 20;
-			temp.width = ply.rect.width + 25;
-			if(temp.overlaps(rect)) {
+			Rectangle p1Rect = new Rectangle(ply.rect);
+			p1Rect.width = ply.rect.width + ply.widthLimit;
+			p1Rect.height = ply.rect.height + ply.heightLimit;
+			p1Rect.y = ply.rect.y - (ply.heightLimit / 2);
+			if(ply.facing == "esquerda") {
+				p1Rect.x = ply.rect.x - ply.widthLimit;
+			}
+			if(p1Rect.overlaps(rect)) {
 				//System.out.println(isVulnerable);
 				checkAttack();
 			}
@@ -45,6 +50,7 @@ public class Escudo extends Platform {
 		}
 	}
 	public void draw(SpriteBatch sb) {
+		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
 		sb.draw(atualShield, rect.x, rect.y, rect.width, rect.height);
 	}
 	
@@ -69,6 +75,16 @@ public class Escudo extends Platform {
     		if(velocidadeY < 0) {
     	    	ply.rect.y = rect.y + rect.height;
     	    	ply.gravity = 0;
+    	    	ply.jumpCount = 0;
+    	    	if(ply.velX == 0 && (!ply.isAttacking || ply.animState == "airAttack")) {
+    				ply.animState = "parado";
+    				ply.resetAttack();
+    			}
+    			else {
+    				if(!ply.isAttacking || ply.animState == "airAttack") {
+    					ply.animState = "running";
+    					ply.resetAttack();
+    			}	}
     	    }
     	   
     	    else if(velocidadeY > 0) {
@@ -86,15 +102,15 @@ public class Escudo extends Platform {
     public void checkAttack() {
     	if(isVulnerable) {
 	    	if(ply.isAttacking) {
-	    			vida -= 50;
-	    			if(vida < 60) atualShield = escudo[1];
-	    			vulCount = 0; 
-	    			isVulnerable = false;
-	    			if(vida <= 0) {
-	    				isAlive = false;
-	    				count = 0;
-	    				atualShield = escudo[0];
-	    			}
+    			vida -= 50;
+    			if(vida < 60) atualShield = escudo[1];
+    			vulCount = 0; 
+    			isVulnerable = false;
+    			if(vida <= 0) {
+    				isAlive = false;
+    				count = 0;
+    				atualShield = escudo[0];
+    			}
 	    		}
 	    	if(ply.tiro.rect.overlaps(rect)) {
 	    		vida -= 50;

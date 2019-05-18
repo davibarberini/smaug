@@ -27,6 +27,7 @@ public class Player extends Sprite {
 	public float stateTime;
 	public int attackLimit = 40;
 	public int widthLimit = 0;
+	public int heightLimit = 0;
 	public String facing = "direita";
 	public boolean isColliding = false;
 	public boolean isAttacking = false;
@@ -105,6 +106,10 @@ public class Player extends Sprite {
 	}
  
 	public void update(MyGdxGame game) {
+		if(gravity < -100 && !isAttacking) {
+			animState = "jumping";
+			stateTime = 90f;
+		}
 		if(facing == "direita") tiro.fixedX = rect.x + 15;
 		if(facing == "esquerda") tiro.fixedX = rect.x;
 		tiro.fixedY = rect.y + 5;
@@ -126,9 +131,7 @@ public class Player extends Sprite {
 		if(isAttacking) {
 			attackCount++;
 			if(attackCount > attackLimit) {
-				isAttacking = false;
-				widthLimit = 0;
-				attackCount = 0;
+				resetAttack();
 			}
 		}
 	}
@@ -252,6 +255,7 @@ public class Player extends Sprite {
             this.gravity = 600;
             animState = "jumping";
             jumpCount += 1;
+            resetAttack();
         }
         else if(keyCode == Input.Keys.D) {
         	if(this.velX < 0) velX = 0;
@@ -267,7 +271,7 @@ public class Player extends Sprite {
         }
         else if(keyCode == Input.Keys.F) {
         	isAttacking = true;
-        	if(animState != "jumping") {
+        	if(animState != "jumping" && animState != "airAttack") {
         		if(animState == "attacking") {
             		attackCount = 0;
             		stateTime = 0;
@@ -291,10 +295,14 @@ public class Player extends Sprite {
             	}
         	}
         	else {
-        		attackCount = 0;
-        		attackLimit = 70;
-        		stateTime = 0;
-        		animState = "airAttack";
+        		if(animState != "airAttack") {
+        			attackCount = 0;
+            		attackLimit = 70;
+            		widthLimit = 25;
+            		heightLimit = 24;
+            		stateTime = 0;
+            		animState = "airAttack";
+        		}
         	}
         	
         }
@@ -347,5 +355,12 @@ public class Player extends Sprite {
         	this.velX = 0;
         	if(animState == "running") animState = "parado";
       }
+	}
+	
+	public void resetAttack() {
+		isAttacking = false;
+		widthLimit = 0;
+		heightLimit = 0;
+		attackCount = 0;
 	}
 }

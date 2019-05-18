@@ -16,7 +16,7 @@ import soundandmusic.MusicPlayer;
 public class MyGdxGame extends Game {
   public ShapeRenderer shapeRenderer;
   public SpriteBatch batch;
-  public BitmapFont font, titlefont;
+  public BitmapFont font, titlefont, fontSmaller;
   public MusicPlayer t1;
 
   @Override
@@ -24,8 +24,10 @@ public class MyGdxGame extends Game {
 	  batch = new SpriteBatch();
 	  shapeRenderer = new ShapeRenderer();
 	  font = new BitmapFont(Gdx.files.internal("Fonts/pixelfont.fnt"));
+	  fontSmaller = new BitmapFont(Gdx.files.internal("Fonts/pixelfont.fnt"));
 	  titlefont = new BitmapFont(Gdx.files.internal("Fonts/pixelfontgradient.fnt"));
 	  titlefont.getData().setScale(1.5f, 1.5f);
+	  fontSmaller.getData().setScale(0.5f, 0.5f);
 	  setScreen(new TitleScreen(this));
   }
   
