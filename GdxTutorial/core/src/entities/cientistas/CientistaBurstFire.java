@@ -45,12 +45,13 @@ public class CientistaBurstFire extends Cientista {
 	public void update(SpriteBatch sb) {
 		if(animState != "morrendo" && vulnerable) {
 			if(ply.isAttacking) {
-				collisionPlayer();
+				collisionPlayer(sb);
 				if(rect.overlaps(p1Rect)) {
 					vida -= 10;
 					if(vida <= 0) {
 						stateTime = 0;
 						animState = "morrendo";
+						Player.swordKills += 1;
 					} else {
 						vulnerable = false;
 						velX = 0;
@@ -63,6 +64,7 @@ public class CientistaBurstFire extends Cientista {
 				if(vida <= 0) {
 					stateTime = 0;
 					animState = "morrendo";
+					Player.cannonKills += 1;
 				} else {
 					vulnerable = false;
 					velX = 0;
@@ -201,6 +203,17 @@ public class CientistaBurstFire extends Cientista {
 		} 
 		
 		
+	}
+	public void collisionPlayer(SpriteBatch sb) {
+		p1Rect = new Rectangle(ply.rect);
+		p1Rect.width = ply.rect.width + ply.widthLimit;
+		p1Rect.height = ply.rect.height + ply.heightLimit;
+		p1Rect.y = ply.rect.y - (ply.heightLimit / 2);
+		if(ply.facing == "esquerda") {
+			p1Rect.x = ply.rect.x - ply.widthLimit;
+		}
+		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
+		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
 	}
 
 }

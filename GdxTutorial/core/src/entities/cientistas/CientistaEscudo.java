@@ -42,15 +42,17 @@ public class CientistaEscudo extends Cientista {
 	public void update(SpriteBatch sb) {
 		if(!escudo.isAlive && animState != "morrendo") {
 			if(ply.isAttacking) {
-				collisionPlayer();
+				collisionPlayer(sb);
 				if(rect.overlaps(p1Rect)) {
 					animState = "morrendo";
 					stateTime = 0;
+					Player.swordKills += 1;
 				}
 			}
 			if(ply.tiro.rect.overlaps(rect)) {
 				animState = "morrendo";
 				stateTime = 0;
+				Player.cannonKills += 1;
 			}
 		}
 		
@@ -159,6 +161,17 @@ public class CientistaEscudo extends Cientista {
 	public Escudo getEscudo() {
 		return escudo;
 		
+	}
+	public void collisionPlayer(SpriteBatch sb) {
+		p1Rect = new Rectangle(ply.rect);
+		p1Rect.width = ply.rect.width + ply.widthLimit;
+		p1Rect.height = ply.rect.height + ply.heightLimit;
+		p1Rect.y = ply.rect.y - (ply.heightLimit / 2);
+		if(ply.facing == "esquerda") {
+			p1Rect.x = ply.rect.x - ply.widthLimit;
+		}
+		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
+		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
 	}
 
 }

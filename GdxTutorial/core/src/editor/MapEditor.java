@@ -38,7 +38,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Level2/Level2";
+  public String levelToEdit = "Level3/Level3";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
@@ -79,7 +79,8 @@ public class MapEditor extends ScreenAdapter {
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
 	  if(levelToEdit == "Level1/Level1") fundo = new Texture("Level1/lab.png");
-	  if(levelToEdit == "Level2/Level2") fundo = new Texture("Level2/city.png");
+	  else if(levelToEdit == "Level2/Level2") fundo = new Texture("Level2/city.png");
+	  else if(levelToEdit == "Level3/Level3") fundo = new Texture("Level3/city.png");
 	  
 	  x = 0;
 	  y = 900;
@@ -322,7 +323,8 @@ public class MapEditor extends ScreenAdapter {
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();
 	  if(levelToEdit == "Level1/Level1") game.batch.draw(fundo, -288, -210);
-	  if(levelToEdit == "Level2/Level2") game.batch.draw(fundo, -225 , -180);
+	  else if(levelToEdit == "Level2/Level2") game.batch.draw(fundo, -225 , -180);
+	  else if(levelToEdit == "Level3/Level3") game.batch.draw(fundo, -225 , -180);
 	  game.batch.end();
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);

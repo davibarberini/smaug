@@ -100,25 +100,27 @@ public class Escudo extends Platform {
 	   
     }
     public void checkAttack() {
-    	if(isVulnerable) {
-	    	if(ply.isAttacking) {
-    			vida -= 50;
-    			if(vida < 60) atualShield = escudo[1];
-    			vulCount = 0; 
+    	
+    	if(ply.isAttacking) {
+			vida -= 50;
+			ply.resetAttack();
+			if(vida < 60) atualShield = escudo[1];
+			if(vida <= 0) {
+				isAlive = false;
+				count = 0;
+				atualShield = escudo[0];
+			}
+    	}
+	    if(isVulnerable) {
+	    	if(ply.tiro.rect.overlaps(rect)) {
+	    		vida -= 50;
+	    		if(vida < 60) atualShield = escudo[1];
+    			vulCount = 0;
     			isVulnerable = false;
     			if(vida <= 0) {
     				isAlive = false;
     				count = 0;
     				atualShield = escudo[0];
-    			}
-	    		}
-	    	if(ply.tiro.rect.overlaps(rect)) {
-	    		vida -= 50;
-    			vulCount = 0;
-    			isVulnerable = false;
-    			if(vida <= 0) {
-    				isAlive = false;
-    				count = 0;   
     			}
     		}
     	}

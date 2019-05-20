@@ -4,6 +4,7 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
+import entities.soldados.Soldado;
 import projeteis.TiroNormal;
 import projeteis.TiroPlayer;
 import projeteis.TiroRicochete;
@@ -100,6 +101,28 @@ public class Platform {
     		tiro.count = 0;
     		tiro.isAlive = false;
     	}
+    }
+    public void genericPlatformCollisionX(Rectangle secondRect, double velX) {
+    	if(secondRect.overlaps(rect)) {
+    		if(velX > 0) {
+    			secondRect.x = rect.x - secondRect.width;
+    		}
+    		else if(velX < 0) {
+    			secondRect.x = rect.x + rect.width;
+    		}
+    	}
+    	
+    }
+    public void genericPlatformCollisionY(Rectangle secondRect, double velY) {
+    	if(secondRect.overlaps(rect)) {
+    		if(velY > 0) {
+    			secondRect.y = rect.y - secondRect.height;
+    		}
+    		else if(velY < 0) {
+    			secondRect.y = rect.y + rect.height;
+    		}
+    	}
+    	
     }
     
     public boolean isPlatform() {

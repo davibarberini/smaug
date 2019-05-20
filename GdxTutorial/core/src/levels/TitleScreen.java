@@ -12,12 +12,13 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
 import editor.MapEditor;
+import entities.Player;
 import soundandmusic.MusicPlayer;
 
 public class TitleScreen extends ScreenAdapter{
 
     MyGdxGame game;
-    Texture fundo, select;
+    Texture fundo, select, title;
     OrthographicCamera camera;
     FillViewport view;
     public String selected = "play";
@@ -28,6 +29,10 @@ public class TitleScreen extends ScreenAdapter{
 
     @Override	
     public void show(){
+    	MyGdxGame.initTime = System.currentTimeMillis();
+    	EndScreen.hasPassed = false;
+    	ScoreScreen.hasPassed = false;
+    	
     	//Parando a thread anterior
     	if(game.t1 != null && game.t1.isAlive()) {
     		game.t1.toStop = true;
@@ -47,6 +52,7 @@ public class TitleScreen extends ScreenAdapter{
         
     	fundo = new Texture("TitleScreen/fundo.png");
     	select = new Texture("TitleScreen/icon.png");
+    	title = new Texture("TitleScreen/offlife.png");
     	
     	camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     	
@@ -56,8 +62,12 @@ public class TitleScreen extends ScreenAdapter{
     	
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean keyDown(int keyCode) {
-                if (keyCode == Input.Keys.SPACE || keyCode == Input.Keys.ENTER) {
-                    if(selected == "play") game.setScreen(new Level1(game));
+                if (keyCode == Input.Keys.F || keyCode == Input.Keys.ENTER) {
+                    if(selected == "play") {
+                    	Player.score = 10000;
+                    	Player.vida = 100;
+                    	game.setScreen(new Level1(game));
+                    } 
                     else if(selected == "editor") game.setScreen(new MapEditor(game));
                     else if(selected == "exit") System.exit(1);
                     return true;
@@ -105,6 +115,7 @@ public class TitleScreen extends ScreenAdapter{
         else if(selected == "exit") game.batch.draw(select, 130, 70, 40, 40);
     	
     	game.titlefont.draw(game.batch, "OFF-LIFE", 170, 430);
+    	//game.batch.draw(title, 155, 345);
     	game.font.draw(game.batch, "Play Game", 190, 310);
     	game.font.draw(game.batch, "Map Editor", 190, 210);
     	game.font.draw(game.batch, "Exit", 190, 110);

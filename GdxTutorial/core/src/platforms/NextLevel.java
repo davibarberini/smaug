@@ -6,6 +6,7 @@ import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
 import levels.Level2;
+import levels.Level3;
 import levels.TitleScreen;
 import projeteis.TiroNormal;
 import projeteis.TiroRicochete;
@@ -30,6 +31,12 @@ public class NextLevel extends Platform{
 	              	game.t1.interrupt();
 					collideX = true;
 					game.setScreen(new Level2(game));
+				}
+				else if(nextLevel == "Level3") {
+					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+	              	game.t1.interrupt();
+					collideX = true;
+					game.setScreen(new Level3(game));
 				}
 				else if(nextLevel == "TitleScreen") {
 					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela

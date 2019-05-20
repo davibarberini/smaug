@@ -33,7 +33,10 @@ public class Player extends Sprite {
 	public boolean isAttacking = false;
 	public int attackCount = 0;
 	public int tiroCooldown = 0;
-	public static int vida = 100;
+	public static float vida = 100;
+	public static int score = 10000;
+	public static int swordKills = 0;
+	public static int cannonKills = 0;
 	public float actualWidth;
 	public int deathCount = 0;
 	public TiroPlayer tiro;
@@ -54,7 +57,7 @@ public class Player extends Sprite {
 	TextureRegion[] correndo = new TextureRegion[6];
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] jumping = new TextureRegion[4];
-	TextureRegion[] morrendo = new TextureRegion[3];
+	TextureRegion[] morrendo = new TextureRegion[6];
 	TextureRegion[] attacking = new TextureRegion[3];
 	TextureRegion[] attacking2 = new TextureRegion[5];
 	TextureRegion[] attacking3 = new TextureRegion[4];
@@ -86,11 +89,11 @@ public class Player extends Sprite {
 			attacking3[j] = roboSheet[4][j];
 		}
 		
-		for(int k=0; k < 3; k++) {
-			morrendo[k] = roboSheet[1][k + 2];
-		}
 		for(int a=0; a < 4; a++) {
 			airAttack[a] = roboSheet[5][a];
+		}
+		for(int k=0; k < 6; k++) {
+			morrendo[k] = roboSheet[6][k];
 		}
 		parado[0] = roboSheet[0][1];
 		
@@ -116,11 +119,12 @@ public class Player extends Sprite {
 		tiro.facing = facing;
 		tiroCooldown += 1;
 		if (vida <= 0) {
+			if(deathCount == 0)stateTime = 0;
 			animState = "morrendo";
 			deathCount += 1;
 			if(deathCount > 60) {
 				deathCount = 0;
-				vida = 100;
+				MyGdxGame.endTime = System.currentTimeMillis();
 				game.setScreen(new EndScreen(game));
 			}
 		}
@@ -222,12 +226,12 @@ public class Player extends Sprite {
 		else if(animState == "morrendo") {
 			if(facing == "direita") {
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 			}
 			else{
 				stateTime += Gdx.graphics.getDeltaTime();
-				currentFrame = morrendoAnim.getKeyFrame(stateTime, true);
+				currentFrame = morrendoAnim.getKeyFrame(stateTime, false);
 				sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 			}
 		}
@@ -249,7 +253,7 @@ public class Player extends Sprite {
 	}
 	
 	public void keyDown(int keyCode) {
-		if(keyCode == Input.Keys.W && jumpCount < 2) {
+		if((keyCode == Input.Keys.W || keyCode == Input.Keys.SPACE) && jumpCount < 2) {
 			//System.out.println("here");
 			stateTime = 0;
             this.gravity = 600;
@@ -341,6 +345,9 @@ public class Player extends Sprite {
             	tiroCooldown = 0;
             	tiro.drawFlash = true;
         	}
+        }
+        else if(keyCode == Input.Keys.M) {
+        	vida = 0;
         }
 	}
 	

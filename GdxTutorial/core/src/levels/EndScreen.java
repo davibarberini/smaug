@@ -22,6 +22,7 @@ public class EndScreen extends ScreenAdapter {
     OrthographicCamera camera;
     float rotation = 0;
     float rotated = 0;
+    public static boolean hasPassed = false;
 
     public EndScreen(MyGdxGame game) {
         this.game = game;
@@ -30,7 +31,10 @@ public class EndScreen extends ScreenAdapter {
     @Override
     public void show(){
     	
-    	
+    	if(!hasPassed) {
+    		MyGdxGame.endTime = System.currentTimeMillis();
+    		hasPassed = true;
+    	} 
     	camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
     	
     	camera.position.set(0 + (Gdx.graphics.getWidth() / 2), 0 + (Gdx.graphics.getHeight() / 2), 0);
@@ -56,7 +60,7 @@ public class EndScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {
-                if (keyCode == Input.Keys.SPACE) {
+                if (keyCode == Input.Keys.F || keyCode == Input.Keys.ENTER) {
                     game.setScreen(new TitleScreen(game));
                 }
                 else if(keyCode == Input.Keys.ESCAPE) {
@@ -83,7 +87,7 @@ public class EndScreen extends ScreenAdapter {
         game.titlefont.draw(game.batch, "You  Died", 129, 270);
         game.batch.draw(death, (Gdx.graphics.getWidth() / 2) - (death.getRegionWidth() / 2) - 25, (Gdx.graphics.getHeight() / 2) - (death.getRegionHeight() / 2) - 20,
         		55, 55, 110, 110, 1, 1, rotation);
-        game.fontSmaller.draw(game.batch, "Press Space to Return", 170, 70);
+        game.fontSmaller.draw(game.batch, "Press Enter to Return", 170, 70);
         game.fontSmaller.draw(game.batch, "Press C to", 35, 430);
         game.fontSmaller.draw(game.batch, "see score analysis", 35, 380);
         game.batch.end();

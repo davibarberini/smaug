@@ -14,6 +14,9 @@ import com.mygdx.game.MyGdxGame;
 import editor.MapFileReader;
 import entities.Parallax;
 import entities.Player;
+import entities.cientistas.Cientista;
+import entities.soldados.Soldado;
+import entities.soldados.SoldadoAtirador;
 import platforms.Platform;
 import soundandmusic.MusicPlayer;
 
@@ -22,8 +25,8 @@ public class Level2 extends ScreenAdapter {
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
+  public Soldado[] soldados;
   
-  //MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
   public Platform [] platforms;
@@ -39,10 +42,18 @@ public class Level2 extends ScreenAdapter {
 
   public Level2(MyGdxGame game) {
 	  this.game = game;
-	  //mapWriter = new MapFileWriter(mapLin, mapCol);
-	  //mapWriter.writeMap(map, "Level1");
 	  mapReader = new MapFileReader();
-	  platforms = mapReader.readMapToLevel("Level2/Level2", game, "TitleScreen");
+	  try {
+		  System.out.println("Tamanho atual" + platforms.length);
+		  for(int e=0; e < platforms.length; e++) {
+			  platforms[e] = null;
+			  
+			
+		  }
+	  } catch(Exception e){
+		  
+	  }
+	  platforms = mapReader.readMapToLevel("Level2/Level2", game, "Level3");
 	  
 
   }
@@ -66,8 +77,8 @@ public class Level2 extends ScreenAdapter {
       game.t1.start(); 
 	  
 	  p1 = new Player(0, 0, 35, 35, 0, 0, 0, platforms);
-	  prx1 = new Parallax("Level2/parallax1.png", 0, 4);
-	  prx2 = new Parallax("Level2/parallax2.png", 50, 12);
+	  prx1 = new Parallax("Level2/parallax1.png", 0, 8);
+	  prx2 = new Parallax("Level2/parallax2.png", 50, 24);
 	  prx3 = new Parallax("Level2/parallax3.png", 150, 40);
 	  fundo = new Texture("Level2/city.png");
 	  fundo2 = new Texture("Level2/fundo.png");
@@ -77,6 +88,7 @@ public class Level2 extends ScreenAdapter {
 	  
 	  p1.rect.x = 50;
 	  p1.rect.y = 50;
+	  createEnemies();
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
@@ -86,17 +98,22 @@ public class Level2 extends ScreenAdapter {
 	  Gdx.input.setInputProcessor(new InputAdapter() {
           @Override
           public boolean keyDown(int keyCode) {
-              if (keyCode == Input.Keys.SPACE) {
+              if (keyCode == Input.Keys.L) {
+            	  camera.position.set(0, 0, 0);
                   game.setScreen(new TitleScreen(game));
               }
               else if(keyCode == Input.Keys.K) {
-              	camera.zoom = 2;
+              	  camera.zoom = 2;
               }
               else if(keyCode == Input.Keys.R) {
+            	  Player.vida = 100;
             	  game.setScreen(new Level2(game));
               }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  game.setScreen(new TitleScreen(game));
+              }
+              else if(keyCode == Input.Keys.Q) {
+            	  game.setScreen(new EndScreen(game));
               }
               p1.keyDown(keyCode);
               game.t1.keysDown(keyCode);
@@ -165,6 +182,7 @@ public class Level2 extends ScreenAdapter {
 	  }
 	  game.shapeRenderer.end();*/
 	  
+	  
 	  game.batch.setProjectionMatrix(camera.combined);
 	  game.batch.begin();
 	  game.batch.draw(fundo2, -900, -400, 4000, 1300);
@@ -172,18 +190,27 @@ public class Level2 extends ScreenAdapter {
 	  prx2.parallax(game, p1);
 	  prx1.parallax(game, p1);
 	  game.batch.draw(fundo, -225 , -180);
+	  for(int e=0; e < soldados.length; e++) {
+		  soldados[e].update(game.batch);
+	  }
 	  p1.draw(game.batch);
-	  game.batch.draw(p1.life, p1.rect.x - 300,  350, p1.vida, 30);
+	  game.batch.draw(p1.life, p1.rect.x - 300,  350, Player.vida, 30);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 
 	  
   }
   
+  public void createEnemies() {
+	  soldados = new Soldado[1];
+	  soldados[0] = new SoldadoAtirador(370, 27, 25, 35, 5, 10, 0, p1, platforms);
+  }
+  
   public void dispose() {
 	  Gdx.input.setInputProcessor(null);
 	  game.shapeRenderer.setProjectionMatrix(null);
 	  this.game.shapeRenderer.dispose();
+	  this.game.batch.dispose();
 	  
   }
   

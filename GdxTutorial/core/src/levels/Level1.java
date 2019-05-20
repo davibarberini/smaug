@@ -33,7 +33,6 @@ public class Level1 extends ScreenAdapter {
   
   FillViewport view;
   
-  //MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
   public Platform [] platforms;
@@ -45,8 +44,6 @@ public class Level1 extends ScreenAdapter {
 
   public Level1(MyGdxGame game) {
 	  this.game = game;
-	  //mapWriter = new MapFileWriter(mapLin, mapCol);
-	  //mapWriter.writeMap(map, "Level1");
 	  mapReader = new MapFileReader();
 	  try {
 		  System.out.println("Tamanho atual" + platforms.length);
@@ -103,7 +100,7 @@ public class Level1 extends ScreenAdapter {
 	  Gdx.input.setInputProcessor(new InputAdapter() {
           @Override
           public boolean keyDown(int keyCode) {
-              if (keyCode == Input.Keys.SPACE) {
+              if (keyCode == Input.Keys.L) {
             	  camera.position.set(0, 0, 0);
                   game.setScreen(new Level2(game));
               }
@@ -113,6 +110,7 @@ public class Level1 extends ScreenAdapter {
               else if(keyCode == Input.Keys.L) {
               }
               else if(keyCode == Input.Keys.R) {
+            	  Player.vida = 100;
             	  game.setScreen(new Level1(game));
               }
               else if(keyCode == Input.Keys.ESCAPE) {
@@ -200,22 +198,21 @@ public class Level1 extends ScreenAdapter {
 	  game.batch.begin();
 	  game.batch.draw(fundo, -288 , -210);
 	  //game.batch.draw(portaElevador, -129 , 100);
-	  
-	  game.batch.draw(vidro, 52 , 718);
 	  for(int e=0; e < cientistas.length; e++) {
 		  cientistas[e].update(game.batch);
 	  }
-	  game.batch.draw(p1.life, p1.rect.x - 300, p1.rect.y + 200, p1.vida, 30);
+	  p1.draw(game.batch);
+	  game.batch.draw(vidro, 52 , 718);
+	  game.batch.draw(p1.life, p1.rect.x - 300, p1.rect.y + 200, Player.vida, 30);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
-	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  /*game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
 	  //game.shapeRenderer.rect(p1.rect.x, p1.rect.y, p1.rect.width + p1.widthLimit, p1.rect.height);
 	  game.shapeRenderer.end();
 	  game.batch.begin();
-	  p1.draw(game.batch);
-	  game.batch.end();
+	  game.batch.end()*/;
 	  
 	  
 	  
@@ -236,6 +233,7 @@ public class Level1 extends ScreenAdapter {
 	  Gdx.input.setInputProcessor(null);
 	  game.shapeRenderer.setProjectionMatrix(null);
 	  this.game.shapeRenderer.dispose();
+	  this.game.batch.dispose();
 	  
   }
   
