@@ -1,5 +1,7 @@
 package levels;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -12,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
+import bancodedados.BancoMySQL;
 import entities.Player;
 import soundandmusic.MusicPlayer;
 
@@ -20,7 +23,7 @@ public class ScoreScreen extends ScreenAdapter {
     MyGdxGame game;
     OrthographicCamera camera;
     public int yourScore;
-    public int[] scores;
+    public ArrayList<Integer> scores = new ArrayList<Integer>();
     public int[] fa;
     public int[] menor;
     public int[] maior;
@@ -30,6 +33,7 @@ public class ScoreScreen extends ScreenAdapter {
     int linAmplitude = 30;
     int valorX = 130;
     int valorY = 100;
+    String nomePlayer = "Davi";
     int timesCount = 0;
     int altitude = 0;
     int altitudeAtual;
@@ -38,8 +42,11 @@ public class ScoreScreen extends ScreenAdapter {
     int countPosition = 1;
     float lowerScore, highestFa;
     public static boolean hasPassed = false;
+    BancoMySQL banco = new BancoMySQL();
+    
     public ScoreScreen(MyGdxGame game) {
         this.game = game;
+		banco.connect();
     }
 
     @Override
@@ -55,17 +62,21 @@ public class ScoreScreen extends ScreenAdapter {
     	}
     	yourScore = Player.score;
     	
-    	scores = new int[]{ 330, 450, 129, 600, 2000, 900, 200, 550, 340, 770, 802, 340, 175, 400, 700, 800, yourScore};
+    	if(banco.isConnected()) {
+    		banco.insertPlayer(nomePlayer , yourScore);
+			banco.listPlayers(scores);
+		}
+    	
     	fa = new int[colNum];
     	menor = new int[colNum];
     	maior = new int[colNum];
-    	for(int e=0; e < scores.length; e++) {
-    		if(scores[e] > higherScore) higherScore = scores[e];
+    	for(int e=0; e < scores.size(); e++) {
+    		if(scores.get(e) > higherScore) higherScore = scores.get(e);
     	}
     	
     	lowerScore = higherScore;
-    	for(int e=0; e < scores.length; e++) {
-    		if(scores[e] < lowerScore) lowerScore = scores[e];
+    	for(int e=0; e < scores.size(); e++) {
+    		if(scores.get(e) < lowerScore) lowerScore = scores.get(e);
     	}
     	
     	altitude = higherScore / colNum;
@@ -77,8 +88,8 @@ public class ScoreScreen extends ScreenAdapter {
     	for(int j=1; j < colNum + 1; j++) {
     		maxAltitude = altitude * j;
     		if(j == colNum) maxAltitude = higherScore;
-    		for(int i=0; i < scores.length; i++) {
-    			if(scores[i] > altitudeAtual && scores[i] <= maxAltitude) {
+    		for(int i=0; i < scores.size(); i++) {
+    			if(scores.get(i) > altitudeAtual && scores.get(i) <= maxAltitude) {
     				timesCount += 1;
     			}
         	}
@@ -109,8 +120,8 @@ public class ScoreScreen extends ScreenAdapter {
     	camera.position.set(0 + (Gdx.graphics.getWidth() / 2), 0 + (Gdx.graphics.getHeight() / 2), 0);
     	camera.update();
     	
-    	for(int e=0; e < scores.length; e++) {
-    		if(scores[e] > yourScore) countPosition += 1;
+    	for(int e=0; e < scores.size(); e++) {
+    		if(scores.get(e) > yourScore) countPosition += 1;
     	}
     	
     	if(game.t1 != null && game.t1.isAlive()) {

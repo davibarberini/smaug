@@ -1,0 +1,9 @@
+CREATE DATABASE offlife;
+USE offlife;
+CREATE TABLE player (
+	id INT NOT NULL AUTO_INCREMENT,
+	nome VARCHAR(50) NULL,
+	score INT NOT NULL,
+	PRIMARY KEY (id)
+);
+SELECT * FROM player;
