@@ -30,6 +30,7 @@ public class CientistaBurstFire extends Cientista {
 		tiros[2] = new TiroBurst(0, 0, 5, 5, 0, 0, ply, platforms);
 		
 		parado[0] = spriteSheet[3][0];
+		paradoAtirando[0] = spriteSheet[3][7];
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[3][e];
 		}
@@ -39,6 +40,7 @@ public class CientistaBurstFire extends Cientista {
 		
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
+		paradoAtirandoAnim = new Animation<TextureRegion>(0.06f, paradoAtirando);
 		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
 	}
 	
@@ -96,12 +98,17 @@ public class CientistaBurstFire extends Cientista {
 			}
 			else {
 				if(isNear) {
+					if(animState == "paradoAtirando") atirandoAnimCount += 1;
+					if(atirandoAnimCount > 10){
+						animState = "parado";
+						atirandoAnimCount = 0;
+					}
 					countBurst += 1;
 					for(int e=0; e < tiros.length; e++) {
-						tiros[e].drawFlash = true;
 						tiros[e].count += 1;
 						if(countBurst > e * 10) {
 							if(tiros[e].count >= waitUntilShoot && tiros[e].isAlive == false) {
+								animState = "paradoAtirando";
 								tiros[e].rect.x = rect.x;
 								tiros[e].rect.y = rect.y + 20;
 								tiros[e].velX = velTiroX;
@@ -115,9 +122,6 @@ public class CientistaBurstFire extends Cientista {
 				}
 					
 				else {
-					for(int e=0; e < tiros.length; e++) {
-						tiros[e].drawFlash = false;
-					}
 					rect.x += velX * Gdx.graphics.getDeltaTime();
 					walked += velX * Gdx.graphics.getDeltaTime();
 					if(walked >= toWalkRight) {
@@ -166,6 +170,18 @@ public class CientistaBurstFire extends Cientista {
 				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
+		else if(animState == "paradoAtirando") {
+			if(comingFrom == "direita") {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = paradoAtirandoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = paradoAtirandoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			}	
+		}
 		else if(animState == "morrendo") {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
@@ -185,9 +201,9 @@ public class CientistaBurstFire extends Cientista {
 	}
 	
 	public void checkNear() {
-		if(rect.y + 80 > ply.rect.y && ply.rect.y > rect.y - 40) {
+		if(rect.y + 100 > ply.rect.y && ply.rect.y > rect.y - 10) {
 			isNear = true;
-			animState = "parado";
+			if(animState != "paradoAtirando") animState = "parado";
 			if(rect.x > ply.rect.x) {
 				comingFrom = "esquerda";
 				velTiroX = -400;

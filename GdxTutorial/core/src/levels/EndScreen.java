@@ -18,7 +18,7 @@ public class EndScreen extends ScreenAdapter {
     MyGdxGame game;
     Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
     TextureRegion[][] roboSheet = TextureRegion.split(robo, 80, 80);
-    TextureRegion death = new TextureRegion(roboSheet[1][3]);
+    TextureRegion death = new TextureRegion(roboSheet[6][0]);
     OrthographicCamera camera;
     float rotation = 0;
     float rotated = 0;
@@ -64,7 +64,7 @@ public class EndScreen extends ScreenAdapter {
                     game.setScreen(new TitleScreen(game));
                 }
                 else if(keyCode == Input.Keys.ESCAPE) {
-                	System.exit(0);
+                	game.setScreen(new TitleScreen(game));
                 }
                 else if(keyCode == Input.Keys.C) {
                 	game.setScreen(new ScoreScreen(game));

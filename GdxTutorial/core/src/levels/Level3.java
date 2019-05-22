@@ -77,9 +77,9 @@ public class Level3 extends ScreenAdapter {
       game.t1.start(); 
 	  
 	  p1 = new Player(0, 0, 35, 35, 0, 0, 0, platforms);
-	  prx1 = new Parallax("Level3/parallax1.png", 0, 8);
-	  prx2 = new Parallax("Level3/parallax2.png", 50, 24);
-	  prx3 = new Parallax("Level3/parallax3.png", 150, 40);
+	  prx1 = new Parallax("Parallax/parallax1.png", 24, 8);
+	  prx2 = new Parallax("Parallax/parallax2.png", 50, 24);
+	  prx3 = new Parallax("Parallax/parallax3.png", 150, 40);
 	  fundo = new Texture("Level3/city.png");
 	  fundo2 = new Texture("Level3/fundo.png");
 	  

@@ -21,12 +21,10 @@ public class TiroBurst extends TiroNormal{
 	public TiroBurst(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
 		super(x, y, w, h, velX, velY, ply, platforms);
 		
-		flash[0] = spriteSheet[2][0];
 		for(int e=0; e < 3; e++) {
 			projetil[e] = spriteSheet[2][e + 1];
 		}
 		
-		flashAnim = new Animation<TextureRegion>(0.06f, flash);
 		projetilAnim = new Animation<TextureRegion>(0.06f, projetil);
 	}
 	
@@ -57,20 +55,12 @@ public class TiroBurst extends TiroNormal{
 			stateTime += Gdx.graphics.getDeltaTime();
 			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
 			sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
-			if(drawFlash) {
-				currentFrame = flashAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, fixedX  + pCorrectX, fixedY + pCorrectY, spriteLargura, spriteAltura);
-			}
 			
 		}
 		else{
 			stateTime += Gdx.graphics.getDeltaTime();
 			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
 			sb.draw(currentFrame, rect.x + this.rect.width, rect.y + pCorrectY, -spriteLargura, spriteAltura);
-			if(drawFlash) {
-				currentFrame = flashAnim.getKeyFrame(stateTime, true);
-				sb.draw(currentFrame, fixedX + this.rect.width, fixedY + pCorrectY, -spriteLargura, spriteAltura);
-			}
 			
 		}
 	}

@@ -141,7 +141,7 @@ public class CientistaEscudo extends Cientista {
 	}
 	
 	public void checkNear() {
-		if(rect.y + 80 > ply.rect.y && ply.rect.y > rect.y - 40) {
+		if(rect.y + 100 > ply.rect.y && ply.rect.y > rect.y - 10) {
 			isNear = true;
 			animState = "parado";
 			if(rect.x > ply.rect.x) {

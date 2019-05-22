@@ -29,7 +29,9 @@ public class TitleScreen extends ScreenAdapter{
 
     @Override	
     public void show(){
-    	MyGdxGame.initTime = System.currentTimeMillis();
+    	Player.swordKills = 0;
+    	Player.cannonKills = 0;
+    	Player.score = 10000;
     	EndScreen.hasPassed = false;
     	ScoreScreen.hasPassed = false;
     	
@@ -68,7 +70,7 @@ public class TitleScreen extends ScreenAdapter{
                     	Player.vida = 100;
                     	game.setScreen(new Level1(game));
                     } 
-                    else if(selected == "editor") game.setScreen(new MapEditor(game));
+                    else if(selected == "tutorial") game.setScreen(new Tutorial(game));
                     else if(selected == "exit") System.exit(1);
                     return true;
                 }
@@ -78,13 +80,13 @@ public class TitleScreen extends ScreenAdapter{
                 }
                 else if(keyCode == Input.Keys.UP || keyCode == Input.Keys.W) {
                 	if(selected == "play") selected = "exit";
-                	else if (selected == "editor") selected = "play";
-                	else if (selected == "exit") selected = "editor";
+                	else if (selected == "tutorial") selected = "play";
+                	else if (selected == "exit") selected = "tutorial";
                 	return true;
                 }
                 else if(keyCode == Input.Keys.DOWN || keyCode == Input.Keys.S) {
-                	if(selected == "play") selected = "editor";
-                	else if (selected == "editor") selected = "exit";
+                	if(selected == "play") selected = "tutorial";
+                	else if (selected == "tutorial") selected = "exit";
                 	else if (selected == "exit") selected = "play";
                 	return true;
                 }
@@ -111,13 +113,13 @@ public class TitleScreen extends ScreenAdapter{
     	game.batch.draw(fundo, 0, 0, 640, 480);
     	
     	if(selected == "play") game.batch.draw(select, 130, 270, 40, 40);
-        else if(selected == "editor") game.batch.draw(select, 130, 170, 40, 40);
+        else if(selected == "tutorial") game.batch.draw(select, 130, 170, 40, 40);
         else if(selected == "exit") game.batch.draw(select, 130, 70, 40, 40);
     	
     	game.titlefont.draw(game.batch, "OFF-LIFE", 170, 430);
     	//game.batch.draw(title, 155, 345);
     	game.font.draw(game.batch, "Play Game", 190, 310);
-    	game.font.draw(game.batch, "Map Editor", 190, 210);
+    	game.font.draw(game.batch, "Tutorial", 190, 210);
     	game.font.draw(game.batch, "Exit", 190, 110);
     	
         game.batch.end();

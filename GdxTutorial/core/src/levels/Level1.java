@@ -63,6 +63,7 @@ public class Level1 extends ScreenAdapter {
   
   @Override
   public void show() {
+	  MyGdxGame.initTime = System.currentTimeMillis();
 	  //Parando a thread anterior se existir.
 	  if(game.t1 != null && game.t1.isAlive()) {
   		game.t1.toStop = true;

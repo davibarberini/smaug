@@ -33,11 +33,13 @@ public class Soldado extends Sprite {
 	public boolean isAlive = true;
 	public boolean vulnerable = true;
 	public int vulnerableCount = 0;
+	public int atirandoAnimCount = 0;
 	public Player ply;
 	public int deathCount = 0;
 	Rectangle p1Rect;
 	
 	Animation<TextureRegion> paradoAnim;
+	Animation<TextureRegion> paradoAtirandoAnim;
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> morrendoAnim;
 	
@@ -47,6 +49,7 @@ public class Soldado extends Sprite {
 	
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	TextureRegion[] parado = new TextureRegion[1];
+	TextureRegion[] paradoAtirando = new TextureRegion[1];
 	TextureRegion[] correndo = new TextureRegion[4];
 	TextureRegion[] morrendo = new TextureRegion[3];
 
@@ -60,6 +63,7 @@ public class Soldado extends Sprite {
 		toWalkLeft = pixelsToWalkLeft;
 		
 		parado[0] = spriteSheet[4][0];
+		paradoAtirando[0] = spriteSheet[4][7];
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[4][e];
 		}
@@ -68,6 +72,7 @@ public class Soldado extends Sprite {
 			morrendo[i] = spriteSheet[4][i + 4];
 		}
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
+		paradoAtirandoAnim = new Animation<TextureRegion>(0.06f, paradoAtirando);
 		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		

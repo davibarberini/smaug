@@ -14,6 +14,7 @@ import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
+import bancodedados.BancoDerby;
 import bancodedados.BancoMySQL;
 import entities.Player;
 import soundandmusic.MusicPlayer;
@@ -41,8 +42,9 @@ public class ScoreScreen extends ScreenAdapter {
     int higherScore = 0;
     int countPosition = 1;
     float lowerScore, highestFa;
+    boolean conectado = false;
     public static boolean hasPassed = false;
-    BancoMySQL banco = new BancoMySQL();
+    BancoDerby banco = new BancoDerby();
     
     public ScoreScreen(MyGdxGame game) {
         this.game = game;
@@ -51,6 +53,7 @@ public class ScoreScreen extends ScreenAdapter {
 
     @Override
     public void show(){
+    	
     	if(!hasPassed) {
     		double timePassed = MyGdxGame.endTime - MyGdxGame.initTime;
         	Player.score -= (timePassed / 1000) * 5;
@@ -58,14 +61,17 @@ public class ScoreScreen extends ScreenAdapter {
         	Player.score += Player.cannonKills * 50;
         	if(Player.vida < 0) Player.vida = 10 ;
         	Player.score = (int)(Player.score * (Player.vida / 100));
-        	hasPassed = true;
     	}
     	yourScore = Player.score;
     	
+    	if(!hasPassed) {
+    		if(banco.isConnected()) banco.insertPlayer(nomePlayer , yourScore);
+    		hasPassed = true;
+    	}
     	if(banco.isConnected()) {
-    		banco.insertPlayer(nomePlayer , yourScore);
+    		conectado = true;
 			banco.listPlayers(scores);
-		}
+		} else conectado = false;
     	
     	fa = new int[colNum];
     	menor = new int[colNum];
@@ -152,6 +158,9 @@ public class ScoreScreen extends ScreenAdapter {
                 else if(keyCode == Input.Keys.ESCAPE) {
                 	System.exit(0);
                 }
+                else if(keyCode == Input.Keys.R) {
+                	banco.resetAllScores();
+                }
                 game.t1.keysDown(keyCode);
                 return true;
             }
@@ -160,55 +169,72 @@ public class ScoreScreen extends ScreenAdapter {
 
     @Override
     public void render(float delta) {
-        Gdx.gl.glClearColor(0, 0, 0, 1);
+    	if(conectado) this.draw();
+    	else this.noConectionDraw();
+        camera.update();
+        
+    }
+    
+    public void noConectionDraw() {
+    	Gdx.gl.glClearColor(0, 0, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
         
-        camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        
         game.fontSmaller.draw(game.batch, "Your Score: " + String.valueOf(yourScore), 30, 430);
-        
-        //Posição em que o jogador ficou
-        if(countPosition == 1) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "st", 30, 400);
-        else if(countPosition == 2) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "nd", 30, 400);
-        else if(countPosition == 3) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "rd", 30, 400);
-        else game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "th", 30, 400);
-//        else if(countPosition < )
-        
-        //Numeros para identificação das colunas
-        for(int e=0; e < colNum; e++) {
-        	if(menor[e] / 100 > 0) game.scoreFont.draw(game.batch, String.valueOf(menor[e]), ((valorX - 28) / escala) + ((32 * escala) * e), valorY - 10);
-        	else game.scoreFont.draw(game.batch, String.valueOf(menor[e]), ((valorX - 15) / escala) + ((32 * escala) * e), valorY - 10);
-        }
-        for(int e=0; e < linNum + 1; e++) {
-        	game.scoreFont.draw(game.batch, String.valueOf(e * valorLin), ((valorX - 70) / escala), (valorY + 12) + (e * 57));
-        }
-        game.scoreFont.draw(game.batch, String.valueOf(higherScore), ((valorX - 15) / escala) + ((32 * escala) * colNum), valorY - 10);
+        game.fontSmaller.draw(game.batch, "Could'nt connect to the Database", 90, 250);
         game.batch.end();
-        game.shapeRenderer.setProjectionMatrix(camera.combined);
-        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
         
-        //Colunas vermelhas e verdes
-        for(int e=0; e < colNum; e++) {
-        	if(e == colNum - 1) {
-        		if(yourScore > menor[e] && yourScore <= higherScore ) game.shapeRenderer.setColor(0, 1, 0, 1);
-        		else game.shapeRenderer.setColor(1, 0, 0, 1);
-        	}
-        	else {
-        		if(yourScore > menor[e] && yourScore <= menor[e + 1]) game.shapeRenderer.setColor(0, 1, 0, 1);
-        		else game.shapeRenderer.setColor(1, 0, 0, 1);
-        	}
-        	game.shapeRenderer.rect((valorX / escala) + ((32 * escala) * e), valorY, (30 * escala), (fa[e] * (linAmplitude * escala)) / valorLin);
-        }
         
-        //Linhas em branco para mostrar o grafico
-        game.shapeRenderer.setColor(1, 1, 1, 1);
-        game.shapeRenderer.rect((valorX / escala), valorY, ((32 * escala) * colNum) - 3, 1);
-        game.shapeRenderer.rect((valorX / escala), valorY, 1, 200);
-        game.shapeRenderer.end();
-    }
+	}
 
+	public void draw() {
+    	 Gdx.gl.glClearColor(0, 0, 0, 1);
+         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
+         game.batch.setProjectionMatrix(camera.combined);
+         game.batch.begin();
+         
+         game.fontSmaller.draw(game.batch, "Your Score: " + String.valueOf(yourScore), 30, 430);
+         
+         //Posição em que o jogador ficou
+         if(countPosition == 1) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "st", 30, 400);
+         else if(countPosition == 2) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "nd", 30, 400);
+         else if(countPosition == 3) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "rd", 30, 400);
+         else game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "th", 30, 400);
+//         else if(countPosition < )
+         
+         //Numeros para identificação das colunas
+         for(int e=0; e < colNum; e++) {
+         	if(menor[e] / 100 > 0) game.scoreFont.draw(game.batch, String.valueOf(menor[e]), ((valorX - 28) / escala) + ((32 * escala) * e), valorY - 10);
+         	else game.scoreFont.draw(game.batch, String.valueOf(menor[e]), ((valorX - 15) / escala) + ((32 * escala) * e), valorY - 10);
+         }
+         for(int e=0; e < linNum + 1; e++) {
+         	game.scoreFont.draw(game.batch, String.valueOf(e * valorLin), ((valorX - 70) / escala), (valorY + 12) + (e * 57));
+         }
+         game.scoreFont.draw(game.batch, String.valueOf(higherScore), ((valorX - 15) / escala) + ((32 * escala) * colNum), valorY - 10);
+         game.batch.end();
+         game.shapeRenderer.setProjectionMatrix(camera.combined);
+         game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+         
+         //Colunas vermelhas e verdes
+         for(int e=0; e < colNum; e++) {
+         	if(e == colNum - 1) {
+         		if(yourScore > menor[e] && yourScore <= higherScore ) game.shapeRenderer.setColor(0, 1, 0, 1);
+         		else game.shapeRenderer.setColor(1, 0, 0, 1);
+         	}
+         	else {
+         		if(yourScore > menor[e] && yourScore <= menor[e + 1]) game.shapeRenderer.setColor(0, 1, 0, 1);
+         		else game.shapeRenderer.setColor(1, 0, 0, 1);
+         	}
+         	game.shapeRenderer.rect((valorX / escala) + ((32 * escala) * e), valorY, (30 * escala), (fa[e] * (linAmplitude * escala)) / valorLin);
+         }
+         
+         //Linhas em branco para mostrar o grafico
+         game.shapeRenderer.setColor(1, 1, 1, 1);
+         game.shapeRenderer.rect((valorX / escala), valorY, ((32 * escala) * colNum) - 3, 1);
+         game.shapeRenderer.rect((valorX / escala), valorY, 1, 200);
+         game.shapeRenderer.end();
+    }
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);

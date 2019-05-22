@@ -34,10 +34,12 @@ public class Cientista extends Sprite {
 	public boolean vulnerable = true;
 	public int vulnerableCount = 0;
 	public Player ply;
+	public int atirandoAnimCount = 0;
 	public int deathCount = 0;
 	Rectangle p1Rect;
 	
 	Animation<TextureRegion> paradoAnim;
+	Animation<TextureRegion> paradoAtirandoAnim;
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> morrendoAnim;
 	
@@ -47,6 +49,7 @@ public class Cientista extends Sprite {
 	
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	TextureRegion[] parado = new TextureRegion[1];
+	TextureRegion[] paradoAtirando = new TextureRegion[1];
 	TextureRegion[] correndo = new TextureRegion[4];
 	TextureRegion[] morrendo = new TextureRegion[3];
 

@@ -30,6 +30,7 @@ public class SoldadoAtirador extends Soldado {
 		
 		this.platforms = platforms;
 		parado[0] = spriteSheet[0][0];
+		paradoAtirando[0] = spriteSheet[0][7];
 		for(int e=0; e < 4; e++) {
 			correndo[e] = spriteSheet[0][e];
 		}
@@ -39,6 +40,7 @@ public class SoldadoAtirador extends Soldado {
 		
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
+		paradoAtirandoAnim = new Animation<TextureRegion>(0.06f, paradoAtirando);
 		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
 		
 	}
@@ -113,9 +115,14 @@ public class SoldadoAtirador extends Soldado {
 			}
 			else {
 				if(isNear) {
-					tiro.drawFlash = true;
+					if(animState == "paradoAtirando") atirandoAnimCount += 1;
+					if(atirandoAnimCount > 10){
+						animState = "parado";
+						atirandoAnimCount = 0;
+					}
 					tiro.count += 1;
 					if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
+						animState = "paradoAtirando";
 						tiro.rect.x = rect.x;
 						tiro.rect.y = rect.y + 20;
 						tiro.velX = velTiroX;
@@ -125,7 +132,6 @@ public class SoldadoAtirador extends Soldado {
 					}
 				}
 				else {
-					tiro.drawFlash = false;
 					rect.x += velX * Gdx.graphics.getDeltaTime();
 					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
 						  if(platforms[k] != null) {
@@ -180,6 +186,18 @@ public class SoldadoAtirador extends Soldado {
 				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
+		else if(animState == "paradoAtirando") {
+			if(comingFrom == "direita") {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = paradoAtirandoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = paradoAtirandoAnim.getKeyFrame(stateTime, true);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			}	
+		}
 		else if(animState == "morrendo") {
 			if(velX > 0) {
 				stateTime += Gdx.graphics.getDeltaTime();
@@ -199,9 +217,9 @@ public class SoldadoAtirador extends Soldado {
 	}
 	
 	public void checkNear() {
-		if(rect.y + 80 > ply.rect.y && ply.rect.y > rect.y - 40 && ply.rect.x > rect.x - 300 && ply.rect.x < rect.x + 300) {
+		if(rect.y + 120 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 300 && ply.rect.x < rect.x + 300) {
 			isNear = true;
-			animState = "parado";
+			if(animState != "paradoAtirando") animState = "parado";
 			if(rect.x > ply.rect.x) {
 				comingFrom = "esquerda";
 				velTiroX = -400;

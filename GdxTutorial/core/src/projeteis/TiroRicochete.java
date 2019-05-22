@@ -22,12 +22,10 @@ public class TiroRicochete extends TiroNormal{
 	
 	public TiroRicochete(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
 		super(x, y, w, h, velX, velY, ply, platforms);
-		flash[0] = spriteSheet[1][0];
 		for(int e=0; e < 4; e++) {
 			projetil[e] = spriteSheet[1][e + 1];
 		}
 		
-		flashAnim = new Animation<TextureRegion>(0.06f, flash);
 		projetilAnim = new Animation<TextureRegion>(0.1f, projetil);
 	}
 	
@@ -68,14 +66,6 @@ public class TiroRicochete extends TiroNormal{
 			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
 			sb.draw(currentFrame, rect.x + this.rect.width  + pCorrectX, rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			
-		}
-		if(fixedVelX > 0 && drawFlash) {
-			currentFrame = flashAnim.getKeyFrame(stateTime, true);
-			sb.draw(currentFrame, fixedX, fixedY + pCorrectY, spriteLargura, spriteAltura);
-		}
-		else if(drawFlash){
-			currentFrame = flashAnim.getKeyFrame(stateTime, true);
-			sb.draw(currentFrame, fixedX + this.rect.width, fixedY + pCorrectY, -spriteLargura, spriteAltura);
 		}
 	}	
 }
