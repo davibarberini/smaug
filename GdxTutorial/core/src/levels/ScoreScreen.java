@@ -55,12 +55,13 @@ public class ScoreScreen extends ScreenAdapter {
     public void show(){
     	
     	if(!hasPassed) {
+    		if(Player.vida < 0) Player.vida = 10 ;
     		double timePassed = MyGdxGame.endTime - MyGdxGame.initTime;
+    		System.out.println((int)(Player.score * (Player.vida / 100)));
+    		Player.score = (int)(Player.score * (Player.vida / 100));
         	Player.score -= (timePassed / 1000) * 5;
         	Player.score += Player.swordKills * 200;
         	Player.score += Player.cannonKills * 50;
-        	if(Player.vida < 0) Player.vida = 10 ;
-        	Player.score = (int)(Player.score * (Player.vida / 100));
     	}
     	yourScore = Player.score;
     	

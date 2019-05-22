@@ -23,6 +23,7 @@ public class Hole extends Platform{
 	
 	public boolean platCollisionX(double velocidadeX, Player ply) {
 		if(ply.rect.overlaps(rect)) {
+			Player.vida = 10;
 			game.setScreen(new EndScreen(game));
 			return true;
 		}
@@ -32,6 +33,7 @@ public class Hole extends Platform{
 	}
 	public boolean platCollisionY(double velocidadeY, Player ply) {
 		if(ply.rect.overlaps(rect)) {
+			Player.vida = 10;
 			game.setScreen(new EndScreen(game));
 			return true;
 		}
