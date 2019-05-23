@@ -22,7 +22,6 @@ import platforms.Teleporter2;
 import soundandmusic.MusicPlayer;
 
 import java.util.ArrayList;
-import java.util.List;
 
 
 public class MapEditor extends ScreenAdapter {
@@ -81,7 +80,7 @@ public class MapEditor extends ScreenAdapter {
 	  if(levelToEdit == "Level1/Level1") fundo = new Texture("Level1/lab.png");
 	  else if(levelToEdit == "Level2/Level2") fundo = new Texture("Level2/city.png");
 	  else if(levelToEdit == "Level3/Level3") fundo = new Texture("Level3/city.png");
-	  else if(levelToEdit == "Tutorial/Tutorial") fundo = new Texture("Level3/city.png");
+	  else if(levelToEdit == "Tutorial/Tutorial") fundo = new Texture("Tutorial/fundo.png");
 	  
 	  x = 0;
 	  y = 900;
@@ -326,7 +325,7 @@ public class MapEditor extends ScreenAdapter {
 	  if(levelToEdit == "Level1/Level1") game.batch.draw(fundo, -288, -210);
 	  else if(levelToEdit == "Level2/Level2") game.batch.draw(fundo, -225 , -180);
 	  else if(levelToEdit == "Level3/Level3") game.batch.draw(fundo, -225 , -180);
-	  else if(levelToEdit == "Tutorial/Tutorial") game.batch.draw(fundo, -225 , -180);
+	  else if(levelToEdit == "Tutorial/Tutorial") game.batch.draw(fundo, -259, -329, fundo.getWidth() - 235, fundo.getHeight() - 235);
 	  game.batch.end();
 	  
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);

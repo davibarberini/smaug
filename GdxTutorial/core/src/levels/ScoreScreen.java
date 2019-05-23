@@ -8,14 +8,10 @@ import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
-import com.badlogic.gdx.graphics.Texture;
-import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
-import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
 import bancodedados.BancoDerby;
-import bancodedados.BancoMySQL;
 import entities.Player;
 import soundandmusic.MusicPlayer;
 
@@ -25,7 +21,7 @@ public class ScoreScreen extends ScreenAdapter {
     OrthographicCamera camera;
     public int yourScore;
     public ArrayList<Integer> scores = new ArrayList<Integer>();
-    public int[] fa;
+    public float[] fa;
     public int[] menor;
     public int[] maior;
     int colNum = 8;
@@ -41,6 +37,7 @@ public class ScoreScreen extends ScreenAdapter {
     int escala = 2;
     int higherScore = 0;
     int countPosition = 1;
+    float frPorcento;
     float lowerScore, highestFa;
     boolean conectado = false;
     public static boolean hasPassed = false;
@@ -74,7 +71,7 @@ public class ScoreScreen extends ScreenAdapter {
 			banco.listPlayers(scores);
 		} else conectado = false;
     	
-    	fa = new int[colNum];
+    	fa = new float[colNum];
     	menor = new int[colNum];
     	maior = new int[colNum];
     	for(int e=0; e < scores.size(); e++) {
@@ -112,6 +109,19 @@ public class ScoreScreen extends ScreenAdapter {
     		
     	}
     	
+    	 for(int e=0; e < colNum; e++) {
+          	if(e == colNum - 1) {
+          		if(yourScore > menor[e] && yourScore <= higherScore ) {
+          			frPorcento = (fa[e] / scores.size()) * 100;
+          		}
+          	}
+          	else {
+          		if(yourScore > menor[e] && yourScore <= menor[e + 1]) {
+          			System.out.println(fa[e]);
+          			frPorcento = (fa[e] / scores.size()) * 100;
+          		} 
+          	}
+    	}
     	
     	linNum = 3;
 //    	System.out.println(highestFa / linNum);
@@ -150,14 +160,11 @@ public class ScoreScreen extends ScreenAdapter {
         Gdx.input.setInputProcessor(new InputAdapter() {
             @Override
             public boolean keyDown(int keyCode) {
-                if (keyCode == Input.Keys.F || keyCode == Input.Keys.ENTER) {
+                if (keyCode == Input.Keys.F || keyCode == Input.Keys.ENTER || keyCode == Input.Keys.C) {
                     game.setScreen(new TitleScreen(game));
                 }
-                else if (keyCode == Input.Keys.C) {
-                    game.setScreen(new EndScreen(game));
-                }
                 else if(keyCode == Input.Keys.ESCAPE) {
-                	System.exit(0);
+                	game.setScreen(new TitleScreen(game));
                 }
                 else if(keyCode == Input.Keys.R) {
                 	banco.resetAllScores();
@@ -202,7 +209,8 @@ public class ScoreScreen extends ScreenAdapter {
          else if(countPosition == 2) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "nd", 30, 400);
          else if(countPosition == 3) game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "rd", 30, 400);
          else game.fontSmaller.draw(game.batch, "Your Rank: " + String.valueOf(countPosition) + "th", 30, 400);
-//         else if(countPosition < )
+         game.fontSmaller.draw(game.batch, "Fr/100: " + String.valueOf(frPorcento), 30, 370);
+         
          
          //Numeros para identificação das colunas
          for(int e=0; e < colNum; e++) {
@@ -216,7 +224,7 @@ public class ScoreScreen extends ScreenAdapter {
          game.batch.end();
          game.shapeRenderer.setProjectionMatrix(camera.combined);
          game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
-         
+        
          //Colunas vermelhas e verdes
          for(int e=0; e < colNum; e++) {
          	if(e == colNum - 1) {
@@ -227,14 +235,23 @@ public class ScoreScreen extends ScreenAdapter {
          		if(yourScore > menor[e] && yourScore <= menor[e + 1]) game.shapeRenderer.setColor(0, 1, 0, 1);
          		else game.shapeRenderer.setColor(1, 0, 0, 1);
          	}
-         	game.shapeRenderer.rect((valorX / escala) + ((32 * escala) * e), valorY, (30 * escala), (fa[e] * (linAmplitude * escala)) / valorLin);
+         	float y = (fa[e] * (linAmplitude * escala)) / valorLin;
+         	game.shapeRenderer.rect((valorX / escala) + ((32 * escala) * e), valorY, (30 * escala), y);
          }
-         
          //Linhas em branco para mostrar o grafico
          game.shapeRenderer.setColor(1, 1, 1, 1);
          game.shapeRenderer.rect((valorX / escala), valorY, ((32 * escala) * colNum) - 3, 1);
          game.shapeRenderer.rect((valorX / escala), valorY, 1, 200);
          game.shapeRenderer.end();
+         game.batch.begin();
+         for(int e=0; e < colNum; e++) {
+        	 int plusX = 20;
+        	 if(fa[e] / 1 < 10) plusX = 24;
+        	 else if(fa[e] / 10 < 10) plusX = 20;
+        	 else if(fa[e] / 100 < 10) plusX = 10;
+        	 if(fa[e] > 0) game.scoreFont.draw(game.batch, String.valueOf((int)fa[e]), (valorX / escala) + ((32 * escala) * e) + plusX, valorY + ((fa[e] * (linAmplitude * escala)) / valorLin)  + 14);
+         }
+         game.batch.end();
     }
     @Override
     public void hide(){

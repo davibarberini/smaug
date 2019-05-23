@@ -31,6 +31,7 @@ public class MusicPlayer extends Thread
     	   }
     	   if(this.toStop) {
         	   this.music.stop();
+        	   this.music.dispose();
         	   this.interrupt();
         	   this.toStop = false;
         	   running = false;

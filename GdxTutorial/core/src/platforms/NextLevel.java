@@ -1,6 +1,5 @@
 package platforms;
 
-import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.Color;
 import com.mygdx.game.MyGdxGame;
 
@@ -12,8 +11,8 @@ import projeteis.TiroNormal;
 import projeteis.TiroRicochete;
 
 public class NextLevel extends Platform{
-	public static MyGdxGame game;
-	public static String nextLevel;
+	public MyGdxGame game;
+	public String nextLevel;
 	public boolean collideX = false, collideY = false;
 
 	

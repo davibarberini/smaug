@@ -4,7 +4,6 @@ import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
-import entities.soldados.Soldado;
 import projeteis.TiroNormal;
 import projeteis.TiroPlayer;
 import projeteis.TiroRicochete;

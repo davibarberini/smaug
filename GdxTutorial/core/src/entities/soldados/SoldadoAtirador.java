@@ -1,7 +1,6 @@
 package entities.soldados;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,7 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import entities.Player;
 import platforms.Platform;
 import projeteis.TiroAtravessa;
-import projeteis.TiroNormal;
 
 public class SoldadoAtirador extends Soldado {
 	

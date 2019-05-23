@@ -4,7 +4,6 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
 import platforms.Platform;
@@ -42,7 +41,7 @@ public class TiroRicochete extends TiroNormal{
 			moved += velY * Gdx.graphics.getDeltaTime();
 			if(rect.overlaps(ply.rect)) {
 				isAlive = false;
-				ply.vida -= 10;
+				Player.vida -= 10;
 				count = 0;
 			}
 			if(count > wait) {

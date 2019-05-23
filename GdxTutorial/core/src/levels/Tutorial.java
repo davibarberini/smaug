@@ -11,6 +11,7 @@ import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
 import editor.MapFileReader;
+import entities.CientistaDePancada;
 import entities.Player;
 import entities.cientistas.Cientista;
 import platforms.Platform;
@@ -22,8 +23,11 @@ public class Tutorial extends ScreenAdapter {
 	  public static int HEIGHT;
 	  
 	  public int reviveCount = 0;
+	  int cameraX = 138;
+	  boolean cameraTransition = false;
 	  
 	  public Cientista cientista;
+	  CientistaDePancada saco;
 	  
 	  FillViewport view;
 	  
@@ -73,8 +77,9 @@ public class Tutorial extends ScreenAdapter {
 	      game.t1.start(); 
 	      
 		  p1 = new Player(0, 0, 35, 35, 0.0, 0.0, 0.0, platforms);
-		  cientista = new Cientista(270, 55, 25, 35, 50, 0, 100, p1);
-		  fundo = new Texture("Level3/city.png");
+		  saco = new CientistaDePancada(830, 45f, 40, 80, p1);
+		  //cientista = new Cientista(270, 55, 32, 32, 50, 0, 100, p1);
+		  fundo = new Texture("Tutorial/fundo.png");
 		  
 		  WIDTH = Gdx.graphics.getWidth();
 		  HEIGHT = Gdx.graphics.getHeight();
@@ -90,10 +95,7 @@ public class Tutorial extends ScreenAdapter {
 		  Gdx.input.setInputProcessor(new InputAdapter() {
 	          @Override
 	          public boolean keyDown(int keyCode) {
-	              if(keyCode == Input.Keys.K) {
-	              	camera.zoom = 2;
-	              }
-	              else if(keyCode == Input.Keys.L) {
+	              if(keyCode == Input.Keys.L) {
 	              }
 	              else if(keyCode == Input.Keys.R) {
 	            	  Player.vida = 100;
@@ -107,9 +109,6 @@ public class Tutorial extends ScreenAdapter {
 	              return true;
 	          }
 	          public boolean keyUp(int keyCode) {
-	        	  if(keyCode == Input.Keys.K) {
-	                	camera.zoom = 1;
-	              }
 	        	  p1.keyUp(keyCode);
 	        	  return true;
 	          }
@@ -138,18 +137,32 @@ public class Tutorial extends ScreenAdapter {
 				  
 			}
 			p1.update(game);
+			saco.update();
 			
-			if(!cientista.isAlive) {
-				reviveCount += 1;
-				if(reviveCount > 20) {
-					cientista = new Cientista(270, 55, 25, 35, 50, 0, 100, p1);
-					reviveCount = 0;
+			if(cientista != null) {
+				if(!cientista.isAlive) {
+					reviveCount += 1;
+					if(reviveCount > 20) {
+						cientista = new Cientista(270, 55, 25, 35, 50, 0, 100, p1);
+						reviveCount = 0;
+					}
 				}
 			}
 			
-			camera.position.set(145, 200, 0);
+			camera.position.set(cameraX, 150, 0);
 			camera.update();
-			
+			if(p1.rect.x > 450) {
+				cameraTransition = true;
+			}
+			else if(p1.rect.x < 450) {
+				cameraTransition = false;
+			}
+			if(cameraTransition && cameraX < 600) {
+				cameraX += 10;
+			}
+			else if(!cameraTransition && cameraX > 138) {
+				cameraX -= 10;
+			}
 			this.draw();
 		  
 		  }
@@ -158,10 +171,13 @@ public class Tutorial extends ScreenAdapter {
 		  Gdx.gl.glClearColor(0, 0, 1, 1);
 		  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		  
+		  //saco.drawTest(game.shapeRenderer, camera);
+		  
 		  game.batch.setProjectionMatrix(camera.combined);
 		  game.batch.begin();
-		  game.batch.draw(fundo, -225 , -180);
-		  cientista.update(game.batch);
+		  game.batch.draw(fundo, -259, -329, fundo.getWidth() - 235, fundo.getHeight() - 235);
+		  //if(cientista != null) cientista.update(game.batch);
+		  saco.draw(game.batch);
 		  p1.draw(game.batch);
 		  game.batch.end();
 		  

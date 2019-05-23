@@ -1,11 +1,9 @@
 package projeteis;
 
 import com.badlogic.gdx.Gdx;
-import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
-import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
 import platforms.Platform;
@@ -37,7 +35,7 @@ public class TiroBurst extends TiroNormal{
 			}
 			if(rect.overlaps(ply.rect)) {
 				isAlive = false;
-				ply.vida -= 10;
+				Player.vida -= 10;
 				count = 0;
 			}
 			if(count > wait) {

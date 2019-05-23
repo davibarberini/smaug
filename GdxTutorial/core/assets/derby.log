@@ -1,11 +1,11 @@
 ----------------------------------------------------------------
-Wed May 22 10:36:33 BRT 2019:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-016a-dfc1-fae4-000007078790 
-on database directory C:\Users\Davi Barberini\Desktop\Smaug_padrao\libgdx\Fixed\GdxTutorial\core\assets\offlife with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
-Loaded from file:/C:/Users/Davi%20Barberini/Desktop/Smaug_padrao/libgdx/Fixed/GdxTutorial/core/assets/DerbyDB/derby.jar
+Wed May 22 20:59:07 BRT 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-016a-e1fb-f583-000005cc82f0 
+on database directory C:\Users\SempreIT\smaug\smaug\GdxTutorial\core\assets\offlife with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Loaded from file:/C:/Users/SempreIT/smaug/smaug/GdxTutorial/core/assets/DerbyDB/derby.jar
 java.vendor=Oracle Corporation
-java.runtime.version=1.8.0_181-b13
-user.dir=C:\Users\Davi Barberini\Desktop\Smaug_padrao\libgdx\Fixed\GdxTutorial\core\assets
+java.runtime.version=1.8.0_201-b09
+user.dir=C:\Users\SempreIT\smaug\smaug\GdxTutorial\core\assets
 os.name=Windows 10
 os.arch=amd64
 os.version=10.0

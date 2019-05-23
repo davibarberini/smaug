@@ -54,7 +54,7 @@ public class TiroAtravessa {
 			rect.y += velY * Gdx.graphics.getDeltaTime();
 			if(rect.overlaps(ply.rect)) {
 				isAlive = false;
-				ply.vida -= 10;
+				Player.vida -= 10;
 				count = 0;
 			}
 			if(count > wait) {
