@@ -33,6 +33,7 @@ public class TitleScreen extends ScreenAdapter{
     	Player.score = 10000;
     	EndScreen.hasPassed = false;
     	ScoreScreen.hasPassed = false;
+    	game.paused = false;
     	
     	//Parando a thread anterior
     	if(game.t1 != null && game.t1.isAlive()) {

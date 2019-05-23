@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
+import levels.PauseScreen;
 import levels.TitleScreen;
 import soundandmusic.MusicPlayer;
 
@@ -18,6 +19,7 @@ public class MyGdxGame extends Game {
   public BitmapFont font, titlefont, fontSmaller, scoreFont;
   public MusicPlayer t1;
   public static double initTime, endTime;
+  public boolean paused = false;
 
   @Override
   public void create () {

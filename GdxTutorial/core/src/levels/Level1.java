@@ -31,6 +31,8 @@ public class Level1 extends ScreenAdapter {
   FillViewport view;
   
   MapFileReader mapReader;
+  
+  PauseScreen pause;
 	
   public Platform [] platforms;
   
@@ -94,6 +96,7 @@ public class Level1 extends ScreenAdapter {
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
 	  view = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	  camera.update();
+	  pause = new PauseScreen(game, camera);
 	  
 	  Gdx.input.setInputProcessor(new InputAdapter() {
           @Override
@@ -111,8 +114,16 @@ public class Level1 extends ScreenAdapter {
             	  Player.vida = 100;
             	  game.setScreen(new Level1(game));
               }
+              else if (keyCode == Input.Keys.ENTER) {
+            	  if(game.paused) {
+            		  game.setScreen(new TitleScreen(game));
+            	  }
+              }
               else if(keyCode == Input.Keys.ESCAPE) {
-            	  game.setScreen(new TitleScreen(game));
+            	  if(game.paused) {
+            		  game.paused = false;
+            	  }
+            	  else game.paused = true;
               }
               else if(keyCode == Input.Keys.Q) {
             	  game.setScreen(new EndScreen(game));
@@ -135,47 +146,52 @@ public class Level1 extends ScreenAdapter {
   
   @Override
   public void render(float delta) {
-	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
-	
-	p1.rect.y += p1.gravity * delta;
-	if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
-		cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
+	if(!game.paused) {
+		updateUnpaused(delta);
 	}
-	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
-		  if(platforms[k] != null) {
-			  Platform plat = platforms[k];
-			  plat.platCollisionY(p1.gravity, p1);
-		  }  
+	else {
+		pause.update();
 	}
-	
-	
-	p1.rect.x += p1.velX * delta;
-	if(cientistas[3].getEscudo().isAlive) {
-		cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
-	}
-	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-		  if(platforms[k] != null) {
-			  Platform plat = platforms[k];
-			  plat.platCollisionX(p1.velX, p1);
-		  }
-		  
-	}
-	//if(p1.rect.overlaps()
-	p1.update(game);
-	
-	camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
-	camera.update();
-	
-	this.draw();
-  
   }
   
-  public void draw() {
+  public void updateUnpaused(float delta) {
+	  game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
+		
+		p1.rect.y += p1.gravity * delta;
+		if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
+			cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
+		}
+		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionY(p1.gravity, p1);
+			  }  
+		}
+		
+		
+		p1.rect.x += p1.velX * delta;
+		if(cientistas[3].getEscudo().isAlive) {
+			cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
+		}
+		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionX(p1.velX, p1);
+			  }
+			  
+		}
+		//if(p1.rect.overlaps()
+		p1.update(game);
+		
+		camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
+		camera.update();
+		
+		this.drawUnpaused();
+	  
+  }
+  public void drawUnpaused() {
 	  Gdx.gl.glClearColor(0, 0, 1, 1);
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	  
-	 
-	  
 	  /*
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
@@ -211,11 +227,6 @@ public class Level1 extends ScreenAdapter {
 	  game.shapeRenderer.end();
 	  game.batch.begin();
 	  game.batch.end()*/;
-	  
-	  
-	  
-	 
-	  
   }
   
   public void createEnemies() {

@@ -51,6 +51,22 @@ public class CientistaAtirador extends Cientista {
 						stateTime = 0;
 						animState = "morrendo";
 						Player.swordKills += 1;
+						if(ply.animState == "attacking") {
+							Player.attack1Kills += 1;
+							System.out.println(Player.attack1Kills);
+						}
+						else if(ply.animState == "attacking2") {
+							Player.attack2Kills += 1;
+							System.out.println(Player.attack2Kills);
+						}
+						else if(ply.animState == "attacking3") {
+							Player.attack3Kills += 1;
+							System.out.println(Player.attack3Kills);
+						}
+						else if(ply.animState == "airAttack") {
+							Player.airAttackKills += 1;
+							System.out.println(Player.airAttackKills);
+						}
 					} else {
 						vulnerable = false;
 						velX = 0;

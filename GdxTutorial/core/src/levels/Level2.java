@@ -26,6 +26,8 @@ public class Level2 extends ScreenAdapter {
   public Soldado[] soldados;
   
   MapFileReader mapReader;
+  
+  PauseScreen pause;
 	
   public Platform [] platforms;
   
@@ -52,6 +54,7 @@ public class Level2 extends ScreenAdapter {
 		  
 	  }
 	  platforms = mapReader.readMapToLevel("Level2/Level2", game, "Level3");
+	  
 	  
 
   }
@@ -92,6 +95,7 @@ public class Level2 extends ScreenAdapter {
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
 	  view = new FillViewport(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
 	  camera.update();
+	  pause = new PauseScreen(game, camera);
 	  
 	  Gdx.input.setInputProcessor(new InputAdapter() {
           @Override
@@ -107,8 +111,16 @@ public class Level2 extends ScreenAdapter {
             	  Player.vida = 100;
             	  game.setScreen(new Level2(game));
               }
+              else if (keyCode == Input.Keys.ENTER) {
+            	  if(game.paused) {
+            		  game.setScreen(new TitleScreen(game));
+            	  }
+              }
               else if(keyCode == Input.Keys.ESCAPE) {
-            	  game.setScreen(new TitleScreen(game));
+            	  if(game.paused) {
+            		  game.paused = false;
+            	  }
+            	  else game.paused = true;
               }
               else if(keyCode == Input.Keys.Q) {
             	  game.setScreen(new EndScreen(game));
@@ -131,40 +143,41 @@ public class Level2 extends ScreenAdapter {
   
   @Override
   public void render(float delta) {
-    
-	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
-	p1.rect.y += p1.gravity * delta;
-	for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
-		  if(platforms[k] != null) {
-			  Platform plat = platforms[k];
-			  plat.platCollisionY(p1.gravity, p1);
-		  }  
-	}
+	  if(!game.paused) updateUnpaused(delta);
+	  else pause.update();
 	
-	p1.rect.x += p1.velX * delta;
-	for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-		  if(platforms[k] != null) {
-			  Platform plat = platforms[k];
-			  plat.platCollisionX(p1.velX, p1);
-		  }
-		  
-	}
-	p1.update(game);
-	
-    camera.position.set(p1.rect.x + (p1.rect.width / 2) + 100 ,  220, 0);
-	//camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
-	camera.update();
-	
-	this.draw();
-  
   }
   
-  public void draw() {
+  public void updateUnpaused(float delta) {
+	  game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
+		p1.rect.y += p1.gravity * delta;
+		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionY(p1.gravity, p1);
+			  }  
+		}
+		
+		p1.rect.x += p1.velX * delta;
+		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionX(p1.velX, p1);
+			  }
+			  
+		}
+		p1.update(game);
+		
+	    camera.position.set(p1.rect.x + (p1.rect.width / 2) + 100 ,  220, 0);
+		//camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
+		camera.update();
+		
+		this.drawUnpaused();
+	  
+  }
+  public void drawUnpaused() {
 	  Gdx.gl.glClearColor(0, 0, 1, 1);
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-	  
-	 
-	  
 	  /*game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 1, 0, 1);
@@ -196,7 +209,7 @@ public class Level2 extends ScreenAdapter {
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 
-	  
+	
   }
   
   public void createEnemies() {

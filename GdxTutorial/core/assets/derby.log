@@ -1,7 +1,7 @@
 ----------------------------------------------------------------
-Wed May 22 20:59:07 BRT 2019:
-Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-016a-e1fb-f583-000005cc82f0 
-on database directory C:\Users\SempreIT\smaug\smaug\GdxTutorial\core\assets\offlife with class loader sun.misc.Launcher$AppClassLoader@73d16e93 
+Thu May 23 13:14:06 BRT 2019:
+Booting Derby version The Apache Software Foundation - Apache Derby - 10.12.1.1 - (1704137): instance a816c00e-016a-e578-9677-000006eb1c70 
+on database directory C:\Users\SempreIT\smaug\smaug\GdxTutorial\core\assets\offlife with class loader sun.misc.Launcher$AppClassLoader@18b4aac2 
 Loaded from file:/C:/Users/SempreIT/smaug/smaug/GdxTutorial/core/assets/DerbyDB/derby.jar
 java.vendor=Oracle Corporation
 java.runtime.version=1.8.0_201-b09

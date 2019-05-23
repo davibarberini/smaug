@@ -38,6 +38,10 @@ public class Player extends Sprite {
 	public static int score = 10000;
 	public static int swordKills = 0;
 	public static int cannonKills = 0;
+	public static int attack1Kills = 0;
+	public static int attack2Kills = 0;
+	public static int attack3Kills = 0;
+	public static int airAttackKills = 0;
 	public float actualWidth;
 	public int deathCount = 0;
 	public TiroPlayer tiro;

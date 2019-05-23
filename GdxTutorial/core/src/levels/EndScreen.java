@@ -46,7 +46,7 @@ public class EndScreen extends ScreenAdapter {
     @Override
     public void show(){
     	
-    	fundo = new Animation<TextureRegion>(0.1f, fundoTXT);
+    	fundo = new Animation<TextureRegion>(0.2f, fundoTXT);
     	
     	
     	if(!hasPassed) {
