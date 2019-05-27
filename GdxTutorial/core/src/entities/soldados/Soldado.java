@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import java.util.Random;
 
 import entities.Player;
 import projeteis.Escudo;
@@ -35,6 +36,7 @@ public class Soldado extends Sprite {
 	public Player ply;
 	public int deathCount = 0;
 	Rectangle p1Rect;
+	Random rand = new Random();
 	
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> paradoAtirandoAnim;
@@ -205,6 +207,14 @@ public class Soldado extends Sprite {
 		}
 		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
 		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
+	}
+	
+	public void ganhaVida() {
+		int n = rand.nextInt(5);
+		if(n == 1) {
+			Player.vida += 10;
+			if(Player.vida > 100) Player.vida = 100;
+		}
 	}
 	
 }

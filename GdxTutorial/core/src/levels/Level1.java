@@ -217,7 +217,8 @@ public class Level1 extends ScreenAdapter {
 	  }
 	  p1.draw(game.batch);
 	  game.batch.draw(vidro, 52 , 718);
-	  game.batch.draw(p1.life, p1.rect.x - 300, p1.rect.y + 200, Player.vida, 30);
+	  //game.batch.draw(p1.life, p1.rect.x - 300, p1.rect.y + 200, Player.vida, 30);
+	  p1.drawVida(game.batch, p1.rect.x - 300, p1.rect.y + 200);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	  /*game.shapeRenderer.setProjectionMatrix(camera.combined);

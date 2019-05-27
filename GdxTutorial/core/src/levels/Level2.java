@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
@@ -24,6 +25,12 @@ public class Level2 extends ScreenAdapter {
   public static int WIDTH;
   public static int HEIGHT;
   public Soldado[] soldados;
+  
+  TextureRegion[] aguaTXT = new TextureRegion[] {
+  		new TextureRegion(new Texture("Level2/AGUA1.png")),
+  		new TextureRegion(new Texture("Level2/AGUA2.png")),
+  		new TextureRegion(new Texture("Level2/AGUA3.png")),
+  		new TextureRegion(new Texture("Level2/AGUA4.png"))};
   
   MapFileReader mapReader;
   
@@ -205,7 +212,8 @@ public class Level2 extends ScreenAdapter {
 		  soldados[e].update(game.batch);
 	  }
 	  p1.draw(game.batch);
-	  game.batch.draw(p1.life, p1.rect.x - 300,  350, Player.vida, 30);
+	  //game.batch.draw(p1.life, p1.rect.x - 200,  400, Player.vida, 30);
+	  p1.drawVida(game.batch, p1.rect.x - 200, 400);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 

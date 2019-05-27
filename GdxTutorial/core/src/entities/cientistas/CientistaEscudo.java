@@ -47,6 +47,7 @@ public class CientistaEscudo extends Cientista {
 					animState = "morrendo";
 					stateTime = 0;
 					Player.swordKills += 1;
+					ganhaVida();
 					if(ply.animState == "attacking") {
 						Player.attack1Kills += 1;
 						System.out.println(Player.attack1Kills);

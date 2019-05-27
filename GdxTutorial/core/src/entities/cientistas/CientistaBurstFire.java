@@ -52,6 +52,7 @@ public class CientistaBurstFire extends Cientista {
 					if(vida <= 0) {
 						stateTime = 0;
 						animState = "morrendo";
+						ganhaVida();
 						Player.swordKills += 1;
 						if(ply.animState == "attacking") {
 							Player.attack1Kills += 1;

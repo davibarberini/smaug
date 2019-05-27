@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.g2d.Sprite;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
 import com.badlogic.gdx.math.Rectangle;
+import java.util.Random;
 
 import entities.Player;
 import projeteis.Escudo;
@@ -35,6 +36,7 @@ public class Cientista extends Sprite {
 	public int atirandoAnimCount = 0;
 	public int deathCount = 0;
 	Rectangle p1Rect;
+	Random rand = new Random();
 	
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> paradoAtirandoAnim;
@@ -83,6 +85,7 @@ public class Cientista extends Sprite {
 					if(vida <= 0) {
 						stateTime = 0;
 						animState = "morrendo";
+						ganhaVida();
 						Player.swordKills += 1;
 						if(ply.animState == "attacking") {
 							Player.attack1Kills += 1;
@@ -203,6 +206,14 @@ public class Cientista extends Sprite {
 		}
 		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
 		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
+	}
+	
+	public void ganhaVida() {
+		int n = rand.nextInt(5);
+		if(n == 1) {
+			Player.vida += 10;
+			if(Player.vida > 100) Player.vida = 100;
+		}
 	}
 	
 }

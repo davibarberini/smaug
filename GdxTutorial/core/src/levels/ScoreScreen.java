@@ -57,7 +57,7 @@ public class ScoreScreen extends ScreenAdapter {
     	if(!hasPassed) {
     		if(Player.vida < 0) Player.vida = 10 ;
     		double timePassed = MyGdxGame.endTime - MyGdxGame.initTime;
-    		System.out.println((int)(Player.score * (Player.vida / 100)));
+    		//System.out.println((int)(Player.score * (Player.vida / 100)));
     		Player.score = (int)(Player.score * (Player.vida / 100));
         	Player.score -= (timePassed / 1000) * 5;
         	Player.score += Player.swordKills * 200;
@@ -120,7 +120,7 @@ public class ScoreScreen extends ScreenAdapter {
           	}
           	else {
           		if(yourScore > menor[e] && yourScore <= menor[e + 1]) {
-          			System.out.println(fa[e]);
+          			//System.out.println(fa[e]);
           			frPorcento = (fa[e] / scores.size()) * 100;
           		} 
           	}

@@ -71,8 +71,8 @@ public class BancoDerby {
 			this.resultSet = this.statement.executeQuery(query);
 			//this.statement = this.connection.createStatement();
 			while(this.resultSet.next()) {
-				System.out.println(" Nome: " + this.resultSet.getString("nome")
-						+ " Score: " + this.resultSet.getString("score"));
+				//System.out.println(" Nome: " + this.resultSet.getString("nome")
+						//+ " Score: " + this.resultSet.getString("score"));
 				scoreList.add(Integer.parseInt(this.resultSet.getString("score")));
 			}
 		} catch(Exception e) {
@@ -83,7 +83,7 @@ public class BancoDerby {
 	public void insertPlayer(String nome, int score) {
 		try {
 			String query = "INSERT INTO PLAYER VALUES ('" + nome + "', '" + score + "')";
-			System.out.println(query);
+			//System.out.println(query);
 			this.statement.executeUpdate(query);
 		} catch(Exception e) {
 			System.out.println("Error: " + e.getMessage());

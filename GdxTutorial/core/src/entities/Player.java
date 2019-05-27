@@ -1,5 +1,7 @@
 package entities;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -21,8 +23,10 @@ public class Player extends Sprite {
 	public int jumpCount = 0;
 	public int spriteLargura = 85;
 	public int spriteAltura = 85;
+	Texture vidaTXT = new Texture("Player/bateria.png");
 	public int spriteAdjustmentY = -25;
 	public int spriteAdjustmentX = -18;
+	public boolean canTeleport = false;
 	public String animState = "parado";
 	public float stateTime;
 	public int attackLimit = 40;
@@ -565,5 +569,12 @@ public class Player extends Sprite {
 		widthLimit = 0;
 		heightLimit = 0;
 		attackCount = 0;
+	}
+	
+	public void drawVida(SpriteBatch sb, float x, float y) {
+		float qntVida = (vida / 10);
+		for(int v=0; v <qntVida; v++) {
+			sb.draw(vidaTXT, x + (v * 23), y, vidaTXT.getWidth(), vidaTXT.getHeight());
+		}
 	}
 }
