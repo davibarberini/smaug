@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.math.Matrix4;
 import com.badlogic.gdx.math.Quaternion;
 import com.badlogic.gdx.math.Vector3;
@@ -13,10 +14,14 @@ public class PauseScreen {
 	
 	MyGdxGame game;
 	OrthographicCamera camera;
+	public static String selected = "return";
+	
+	Texture select = new Texture("TitleScreen/icon.png");
 	
 	public PauseScreen(MyGdxGame game, OrthographicCamera camera) {
 		this.game = game;
 		this.camera = camera;
+		selected = "return";
 	}
 	
 	public void update() {
@@ -30,9 +35,14 @@ public class PauseScreen {
 		Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 		game.batch.setProjectionMatrix(camera.combined);
 		game.batch.begin();
-		game.fontSmaller.draw(game.batch, "Press Enter to return to the MainMenu", -255, 0);
-		game.fontSmaller.draw(game.batch, "Press Escape to return to the Game", -237, -50);
+		game.fontSmaller.draw(game.batch, "Return to Game", -120, 0);
+		game.fontSmaller.draw(game.batch, "Return to Main Menu", -120, -50);
+		game.fontSmaller.draw(game.batch, "Exit Game", -120, -100);
 		game.titlefont.draw(game.batch, "Paused", -145, 150);
+		if(selected == "return") game.batch.draw(select, -145, -18, 20, 20);
+        else if(selected == "mainmenu") game.batch.draw(select, -145, -68, 20, 20);
+        else if(selected == "exit") game.batch.draw(select, -145, -118, 20, 20);
+    	
 		game.batch.end();
 	}
 }

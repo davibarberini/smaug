@@ -13,6 +13,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 
 import levels.EndScreen;
+import levels.PauseScreen;
 import platforms.Platform;
 import projeteis.TiroPlayer;
 
@@ -36,6 +37,7 @@ public class Player extends Sprite {
 	public String weapon = "espada";
 	public boolean isColliding = false;
 	public boolean isAttacking = false;
+	public boolean isShooting = false;
 	public int attackCount = 0;
 	public int tiroCooldown = 0;
 	public static float vida = 100;
@@ -48,6 +50,7 @@ public class Player extends Sprite {
 	public static int airAttackKills = 0;
 	public float actualWidth;
 	public int deathCount = 0;
+	public boolean paused = false;
 	public TiroPlayer tiro;
 	
 	Animation<TextureRegion> correndoAnim;
@@ -105,9 +108,9 @@ public class Player extends Sprite {
 	TextureRegion[] attacking2 = new TextureRegion[5];
 	TextureRegion[] attacking3 = new TextureRegion[4];
 	
-	TextureRegion[] atirandoMeio = new TextureRegion[3];
-	TextureRegion[] atirandoCima = new TextureRegion[3];
-	TextureRegion[] atirandoDiagonal = new TextureRegion[3];
+	TextureRegion[] atirandoMeio = new TextureRegion[1];
+	TextureRegion[] atirandoCima = new TextureRegion[1];
+	TextureRegion[] atirandoDiagonal = new TextureRegion[1];
 	
 	TextureRegion[] airAttack = new TextureRegion[4];
 
@@ -152,6 +155,9 @@ public class Player extends Sprite {
 		paradoCanhaoM[0] = roboSheet[7][1];
 		paradoCanhaoD[0] = roboSheet[9][1];
 		paradoCanhaoC[0] = roboSheet[11][1];
+		atirandoMeio[0] = roboSheet[7][6];
+		atirandoCima[0] = roboSheet[12][6];
+		atirandoDiagonal[0] = roboSheet[10][6];
 		
 		correndoAnim = new Animation<TextureRegion>(0.09f, correndo);
 		correndoCanhaoMAnim = new Animation<TextureRegion>(0.09f, correndoCanhaoM);
@@ -174,6 +180,10 @@ public class Player extends Sprite {
 		attackingAnim2 = new Animation<TextureRegion>(0.06f, attacking2);
 		attackingAnim3 = new Animation<TextureRegion>(0.08f, attacking3);
 		
+		atirandoMeioAnim = new Animation<TextureRegion>(0.06f, atirandoMeio);
+		atirandoDiagonalAnim = new Animation<TextureRegion>(0.06f, atirandoDiagonal);
+		atirandoCimaAnim = new Animation<TextureRegion>(0.08f, atirandoCima);
+		
 		airAttackAnim = new Animation<TextureRegion>(0.05f, airAttack);
 		
 	}
@@ -183,6 +193,7 @@ public class Player extends Sprite {
 			animState = "jumping";
 			stateTime = 90f;
 		}
+		if(tiroCooldown > 10) isShooting = false;
 		if(facing == "direita") tiro.fixedX = rect.x + 15;
 		if(facing == "esquerda") tiro.fixedX = rect.x;
 		tiro.fixedY = rect.y + 5;
@@ -235,36 +246,42 @@ public class Player extends Sprite {
 			else if(weapon == "canhaoM") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = paradoCanhaoMAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoMeioAnim.getKeyFrame(stateTime, false);
+					else currentFrame = paradoCanhaoMAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = paradoCanhaoMAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoMeioAnim.getKeyFrame(stateTime, false);
+					else currentFrame = paradoCanhaoMAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
 			else if(weapon == "canhaoC") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = paradoCanhaoCAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoCimaAnim.getKeyFrame(stateTime, false);
+					else currentFrame = paradoCanhaoCAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = paradoCanhaoCAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoCimaAnim.getKeyFrame(stateTime, false);
+					else currentFrame = paradoCanhaoCAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
 			else if(weapon == "canhaoD") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = paradoCanhaoDAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoDiagonalAnim.getKeyFrame(stateTime, false);
+					else currentFrame = paradoCanhaoDAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = paradoCanhaoDAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoDiagonalAnim.getKeyFrame(stateTime, false);
+					else currentFrame = paradoCanhaoDAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
@@ -286,36 +303,42 @@ public class Player extends Sprite {
 			else if(weapon == "canhaoM") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = jumpingCanhaoMAnim.getKeyFrame(stateTime, false);
+					if(isShooting) currentFrame = atirandoMeioAnim.getKeyFrame(stateTime, false);
+					else currentFrame = jumpingCanhaoMAnim.getKeyFrame(stateTime, false);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = jumpingCanhaoMAnim.getKeyFrame(stateTime, false);
+					if(isShooting) currentFrame = atirandoMeioAnim.getKeyFrame(stateTime, false);
+					else currentFrame = jumpingCanhaoMAnim.getKeyFrame(stateTime, false);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
 			else if(weapon == "canhaoC") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = jumpingCanhaoCAnim.getKeyFrame(stateTime, false);
+					if(isShooting) currentFrame = atirandoCimaAnim.getKeyFrame(stateTime, false);
+					else currentFrame = jumpingCanhaoCAnim.getKeyFrame(stateTime, false);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = jumpingCanhaoCAnim.getKeyFrame(stateTime, false);
+					if(isShooting) currentFrame = atirandoCimaAnim.getKeyFrame(stateTime, false);
+					else currentFrame = jumpingCanhaoCAnim.getKeyFrame(stateTime, false);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
 			else if(weapon == "canhaoD") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = jumpingCanhaoDAnim.getKeyFrame(stateTime, false);
+					if(isShooting) currentFrame = atirandoDiagonalAnim.getKeyFrame(stateTime, false);
+					else currentFrame = jumpingCanhaoDAnim.getKeyFrame(stateTime, false);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = jumpingCanhaoDAnim.getKeyFrame(stateTime, false);
+					if(isShooting) currentFrame = atirandoDiagonalAnim.getKeyFrame(stateTime, false);
+					else currentFrame = jumpingCanhaoDAnim.getKeyFrame(stateTime, false);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
@@ -338,36 +361,42 @@ public class Player extends Sprite {
 			else if(weapon == "canhaoM") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = correndoCanhaoMAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoMeioAnim.getKeyFrame(stateTime, false);
+					else currentFrame = correndoCanhaoMAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else{
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = correndoCanhaoMAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoMeioAnim.getKeyFrame(stateTime, false);
+					else currentFrame = correndoCanhaoMAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
 			else if(weapon == "canhaoC") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = correndoCanhaoCAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoCimaAnim.getKeyFrame(stateTime, false);
+					else currentFrame = correndoCanhaoCAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else{
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = correndoCanhaoCAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoCimaAnim.getKeyFrame(stateTime, false);
+					else currentFrame = correndoCanhaoCAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
 			else if(weapon == "canhaoD") {
 				if(facing == "direita") {
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = correndoCanhaoDAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoDiagonalAnim.getKeyFrame(stateTime, false);
+					else currentFrame = correndoCanhaoDAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + spriteAdjustmentX, this.rect.y + spriteAdjustmentY, spriteLargura, spriteAltura);
 				}
 				else{
 					stateTime += Gdx.graphics.getDeltaTime();
-					currentFrame = correndoCanhaoDAnim.getKeyFrame(stateTime, true);
+					if(isShooting) currentFrame = atirandoDiagonalAnim.getKeyFrame(stateTime, false);
+					else currentFrame = correndoCanhaoDAnim.getKeyFrame(stateTime, true);
 					sb.draw(currentFrame, this.rect.x + this.rect.width - spriteAdjustmentX, this.rect.y + spriteAdjustmentY, -spriteLargura, spriteAltura);
 				}
 			}
@@ -438,21 +467,32 @@ public class Player extends Sprite {
 	}
 	
 	public void keyDown(int keyCode) {
-		if((keyCode == Input.Keys.W || keyCode == Input.Keys.SPACE) && jumpCount < 2) {
+		if((keyCode == Input.Keys.W || keyCode == Input.Keys.SPACE || keyCode == Input.Keys.UP) && jumpCount < 2) {
 			//System.out.println("here");
-			stateTime = 0;
-            this.gravity = 600;
-            animState = "jumping";
-            jumpCount += 1;
-            resetAttack();
+			if(paused) {
+				if(PauseScreen.selected == "return") PauseScreen.selected = "exit";
+            	else if (PauseScreen.selected == "mainmenu") PauseScreen.selected = "return";
+            	else if (PauseScreen.selected == "exit") PauseScreen.selected = "mainmenu";
+			}else {
+				stateTime = 0;
+	            this.gravity = 600;
+	            animState = "jumping";
+	            jumpCount += 1;
+	            resetAttack();
+			}
         }
-        else if(keyCode == Input.Keys.D) {
+		else if((keyCode == Input.Keys.DOWN || keyCode == Input.Keys.S) && paused) {
+			if(PauseScreen.selected == "return") PauseScreen.selected = "mainmenu";
+        	else if (PauseScreen.selected == "mainmenu") PauseScreen.selected = "exit";
+        	else if (PauseScreen.selected == "exit") PauseScreen.selected = "return";
+		}
+        else if(keyCode == Input.Keys.D || keyCode == Input.Keys.RIGHT) {
         	if(this.velX < 0) velX = 0;
         	this.aceX = 1000;
         	if(animState == "parado") animState = "running";
         	facing = "direita";
         }
-        else if(keyCode == Input.Keys.A) {
+        else if(keyCode == Input.Keys.A || keyCode == Input.Keys.LEFT) {
         	if(this.velX > 0) velX = 0;
         	this.aceX = -1000;
         	if(animState == "parado") animState = "running";
@@ -501,6 +541,7 @@ public class Player extends Sprite {
         }
         else if(keyCode == Input.Keys.I) {
         	if(weapon == "canhaoC") {
+        		isShooting = true;
         		if(!tiro.isAlive && tiroCooldown > 60) {
             		tiro.rect.x = rect.x;
                 	tiro.rect.y = rect.y + 10;
@@ -516,6 +557,7 @@ public class Player extends Sprite {
         }
         else if(keyCode == Input.Keys.J) {
         	if(weapon == "canhaoD") {
+        		isShooting = true;
         		if(!tiro.isAlive && tiroCooldown > 60) {
             		tiro.rect.x = rect.x;
                 	tiro.rect.y = rect.y + 10;
@@ -532,9 +574,10 @@ public class Player extends Sprite {
         }
         else if(keyCode == Input.Keys.N) {
         	if(weapon == "canhaoM") {
+        		isShooting = true;
         		if(!tiro.isAlive && tiroCooldown > 60) {
             		tiro.rect.x = rect.x;
-                	tiro.rect.y = rect.y + 10;
+                	tiro.rect.y = rect.y;
                 	if(facing == "direita") tiro.velX = 400;
                 	if(facing == "esquerda") tiro.velX = -400;
                 	tiro.velY = 0;

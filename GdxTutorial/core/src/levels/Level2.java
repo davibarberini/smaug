@@ -119,15 +119,19 @@ public class Level2 extends ScreenAdapter {
             	  game.setScreen(new Level2(game));
               }
               else if (keyCode == Input.Keys.ENTER) {
-            	  if(game.paused) {
-            		  game.setScreen(new TitleScreen(game));
-            	  }
+            	  if(PauseScreen.selected == "return") game.paused = false;
+            	  else if(PauseScreen.selected == "mainmenu") game.setScreen(new TitleScreen(game));
+            	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
               }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  if(game.paused) {
             		  game.paused = false;
+            		  p1.paused = false;
             	  }
-            	  else game.paused = true;
+            	  else {
+            		  p1.paused = true;
+            		  game.paused = true;
+            	  }
               }
               else if(keyCode == Input.Keys.Q) {
             	  game.setScreen(new EndScreen(game));
@@ -213,7 +217,7 @@ public class Level2 extends ScreenAdapter {
 	  }
 	  p1.draw(game.batch);
 	  //game.batch.draw(p1.life, p1.rect.x - 200,  400, Player.vida, 30);
-	  p1.drawVida(game.batch, p1.rect.x - 200, 400);
+	  p1.drawVida(game.batch, p1.rect.x - 190, 410);
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 

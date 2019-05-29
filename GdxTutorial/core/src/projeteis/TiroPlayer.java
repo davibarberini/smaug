@@ -24,14 +24,12 @@ public class TiroPlayer{
 	public float stateTime = 0;
 	public Platform[] platforms;
 	
-	Animation<TextureRegion> flashAnim;
 	Animation<TextureRegion> projetilAnim;
 	
 	TextureRegion currentFrame;
-	Texture sprite = new Texture(Gdx.files.internal("Cientista/projeteis.png"));
+	Texture sprite = new Texture(Gdx.files.internal("Player/tiro.png"));
 	
-	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 20, 20);
-	TextureRegion[] flash = new TextureRegion[1];
+	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 30, 30);
 	TextureRegion[] projetil = new TextureRegion[4];
 	
 	public TiroPlayer(float x, float y, float w, float h, float velX, float velY, Platform[] platforms) {
@@ -42,12 +40,10 @@ public class TiroPlayer{
 		this.velY = velY;
 		this.platforms = platforms;
 		
-		flash[0] = spriteSheet[1][0];
 		for(int e=0; e < 4; e++) {
-			projetil[e] = spriteSheet[1][e + 1];
+			projetil[e] = spriteSheet[0][e];
 		}
 		
-		flashAnim = new Animation<TextureRegion>(0.06f, flash);
 		projetilAnim = new Animation<TextureRegion>(0.1f, projetil);
 	}
 	
@@ -74,14 +70,6 @@ public class TiroPlayer{
 			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
 			sb.draw(currentFrame, rect.x + this.rect.width  + pCorrectX, rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			
-		}
-		if(facing == "direita" && drawFlash) {
-			currentFrame = flashAnim.getKeyFrame(stateTime, true);
-			sb.draw(currentFrame, fixedX, fixedY + pCorrectY, spriteLargura, spriteAltura);
-		}
-		else if(drawFlash){
-			currentFrame = flashAnim.getKeyFrame(stateTime, true);
-			sb.draw(currentFrame, fixedX + this.rect.width, fixedY + pCorrectY, -spriteLargura, spriteAltura);
 		}
 	}	
 }
