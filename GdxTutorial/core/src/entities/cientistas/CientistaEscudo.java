@@ -19,6 +19,8 @@ public class CientistaEscudo extends Cientista {
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
 	public int waitUntilShoot = 50;
+	public Thread thread;
+	public boolean runningThread;
 
 	public CientistaEscudo(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply) {
@@ -40,37 +42,10 @@ public class CientistaEscudo extends Cientista {
 	}
 	
 	public void update(SpriteBatch sb) {
-		if(!escudo.isAlive && animState != "morrendo") {
-			if(ply.isAttacking) {
-				collisionPlayer(sb);
-				if(rect.overlaps(p1Rect)) {
-					animState = "morrendo";
-					stateTime = 0;
-					Player.swordKills += 1;
-					ganhaVida();
-					if(ply.animState == "attacking") {
-						Player.attack1Kills += 1;
-						System.out.println(Player.attack1Kills);
-					}
-					else if(ply.animState == "attacking2") {
-						Player.attack2Kills += 1;
-						System.out.println(Player.attack2Kills);
-					}
-					else if(ply.animState == "attacking3") {
-						Player.attack3Kills += 1;
-						System.out.println(Player.attack3Kills);
-					}
-					else if(ply.animState == "airAttack") {
-						Player.airAttackKills += 1;
-						System.out.println(Player.airAttackKills);
-					}
-				}
-			}
-			if(ply.tiro.rect.overlaps(rect)) {
-				animState = "morrendo";
-				stateTime = 0;
-				Player.cannonKills += 1;
-			}
+		if(!runningThread) {
+			thread = new Thread(this);
+			thread.start();
+			runningThread = true;
 		}
 		
 		if(isAlive) {
@@ -179,7 +154,7 @@ public class CientistaEscudo extends Cientista {
 		return escudo;
 		
 	}
-	public void collisionPlayer(SpriteBatch sb) {
+	public void collisionPlayer() {
 		p1Rect = new Rectangle(ply.rect);
 		p1Rect.width = ply.rect.width + ply.widthLimit;
 		p1Rect.height = ply.rect.height + ply.heightLimit;
@@ -189,6 +164,55 @@ public class CientistaEscudo extends Cientista {
 		}
 		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
 		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
+	}
+	@Override
+	public void run() {
+		while(runningThread) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(!escudo.isAlive && animState != "morrendo") {
+				if(ply.isAttacking) {
+					collisionPlayer();
+					if(rect.overlaps(p1Rect)) {
+						animState = "morrendo";
+						stateTime = 0;
+						Player.swordKills += 1;
+						ganhaVida();
+						if(ply.animState == "attacking") {
+							Player.attack1Kills += 1;
+							System.out.println(Player.attack1Kills);
+						}
+						else if(ply.animState == "attacking2") {
+							Player.attack2Kills += 1;
+							System.out.println(Player.attack2Kills);
+						}
+						else if(ply.animState == "attacking3") {
+							Player.attack3Kills += 1;
+							System.out.println(Player.attack3Kills);
+						}
+						else if(ply.animState == "airAttack") {
+							Player.airAttackKills += 1;
+							System.out.println(Player.airAttackKills);
+						}
+						this.dispose();
+					}
+				}
+				if(ply.tiro.rect.overlaps(rect)) {
+					animState = "morrendo";
+					stateTime = 0;
+					Player.cannonKills += 1;
+				}
+			}
+			
+		}
+	}
+	public void dispose() {
+		this.runningThread = false;
+		this.thread.interrupt();
 	}
 
 }

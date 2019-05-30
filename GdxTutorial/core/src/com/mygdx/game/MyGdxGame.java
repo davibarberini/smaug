@@ -20,6 +20,7 @@ public class MyGdxGame extends Game {
   public MusicPlayer t1;
   public static double initTime, endTime;
   public boolean paused = false;
+  public static String actualLevel = "Level1";
 
   @Override
   public void create () {

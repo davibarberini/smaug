@@ -1,7 +1,5 @@
 package entities;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.graphics.Texture;
@@ -51,8 +49,9 @@ public class Player extends Sprite implements Runnable{
 	public float actualWidth;
 	public int deathCount = 0;
 	public boolean paused = false;
-	boolean runningThread = false;
+	public boolean runningThread = false;
 	public TiroPlayer tiro;
+	public Thread thread;
 	
 	int countMain = 0;
 	int countThread = 0;
@@ -193,8 +192,35 @@ public class Player extends Sprite implements Runnable{
 	}
  
 	public void update(MyGdxGame game) {
-		Thread thread = new Thread(this);
-		thread.start();
+		if(!runningThread) {
+			thread = new Thread(this);
+			thread.start();
+			runningThread = true;
+		}
+		
+		tiroCooldown += 1;
+		if (vida <= 0) {
+			if(deathCount == 0)stateTime = 0;
+			animState = "morrendo";
+			deathCount += 1;
+			if(deathCount > 60) {
+				deathCount = 0;
+				MyGdxGame.endTime = System.currentTimeMillis();
+				this.dispose();
+				game.setScreen(new EndScreen(game));
+			}
+		}
+		gravity += (-2000 * Gdx.graphics.getDeltaTime());
+		velX += (aceX * Gdx.graphics.getDeltaTime());
+		
+		if(isAttacking) {
+			attackCount++;
+			if(attackCount > attackLimit) {
+				resetAttack();
+			}
+		}
+		if(tiro.isAlive) tiro.count += 1;
+	
 		
 	}
 	
@@ -603,40 +629,32 @@ public class Player extends Sprite implements Runnable{
 
 	@Override
 	public void run() {
-		if(gravity < -100 && !isAttacking) {
-			animState = "jumping";
-			stateTime = 90f;
-		}
-		if(tiroCooldown > 10) isShooting = false;
-		if(facing == "direita") tiro.fixedX = rect.x + 15;
-		if(facing == "esquerda") tiro.fixedX = rect.x;
-		tiro.fixedY = rect.y + 5;
-		tiro.facing = facing;
-		tiroCooldown += 1;
-		if (vida <= 0) {
-			if(deathCount == 0)stateTime = 0;
-			animState = "morrendo";
-			deathCount += 1;
-			if(deathCount > 60) {
-				deathCount = 0;
-				MyGdxGame.endTime = System.currentTimeMillis();
+		while(runningThread) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(gravity < -100 && !isAttacking) {
+				animState = "jumping";
+				stateTime = 90f;
+			}
+			if(tiroCooldown > 10) isShooting = false;
+			if(facing == "direita") tiro.fixedX = rect.x + 15;
+			if(facing == "esquerda") tiro.fixedX = rect.x;
+			tiro.fixedY = rect.y + 5;
+			tiro.facing = facing;
+			if(velX > 300) velX = 300;
+			else if(velX < -300) velX = -300;
+			if(tiro.count > 50) {
+				tiro.count = 0;
+				tiro.isAlive = false;
 			}
 		}
-		gravity += (-2000 * Gdx.graphics.getDeltaTime());
-		velX += (aceX * Gdx.graphics.getDeltaTime());
-		if(velX > 300) velX = 300;
-		else if(velX < -300) velX = -300;
-		if(isAttacking) {
-			attackCount++;
-			if(attackCount > attackLimit) {
-				resetAttack();
-			}
-		}
-		if(tiro.isAlive) tiro.count += 1;
-		if(tiro.count > 50) {
-			tiro.count = 0;
-			tiro.isAlive = false;
-		}
-	
+	}
+	public void dispose() {
+		runningThread = false;
+		thread.interrupt();
 	}
 }

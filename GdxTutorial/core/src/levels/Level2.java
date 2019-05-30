@@ -8,6 +8,7 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
@@ -15,7 +16,7 @@ import editor.MapFileReader;
 import entities.Parallax;
 import entities.Player;
 import entities.soldados.Soldado;
-import entities.soldados.SoldadoAtirador;
+import entities.soldados.Policial;
 import platforms.Platform;
 import soundandmusic.MusicPlayer;
 
@@ -25,6 +26,10 @@ public class Level2 extends ScreenAdapter {
   public static int WIDTH;
   public static int HEIGHT;
   public Soldado[] soldados;
+  int rectCount = 0;
+  int rectCount2 = 400;
+  boolean transition = false;
+  boolean untransition = true;
   
   TextureRegion[] aguaTXT = new TextureRegion[] {
   		new TextureRegion(new Texture("Level2/AGUA1.png")),
@@ -68,6 +73,7 @@ public class Level2 extends ScreenAdapter {
   
   @Override
   public void show() {
+	  MyGdxGame.actualLevel = "Level2";
 	//Parando a thread anterior se existir.
 	  if(game.t1 != null && game.t1.isAlive()) {
   		game.t1.toStop = true;
@@ -154,8 +160,23 @@ public class Level2 extends ScreenAdapter {
   
   @Override
   public void render(float delta) {
-	  if(!game.paused) updateUnpaused(delta);
-	  else pause.update();
+	  if(!transition) {
+			if(!game.paused) {
+				if(untransition) {
+					updateUnpaused(delta);
+					untransitionScene();
+				} 
+				else updateUnpaused(delta);
+			}
+			else {
+				pause.update();
+			}
+			
+	}else {
+		this.drawUnpaused();
+		transitionScene();
+		
+	}
 	
   }
   
@@ -226,7 +247,7 @@ public class Level2 extends ScreenAdapter {
   
   public void createEnemies() {
 	  soldados = new Soldado[1];
-	  soldados[0] = new SoldadoAtirador(370, 27, 25, 35, 5, 10, 0, p1, platforms);
+	  soldados[0] = new Policial(370, 27, 25, 35, 5, 10, 0, p1, platforms);
   }
   
   public void dispose() {
@@ -235,6 +256,37 @@ public class Level2 extends ScreenAdapter {
 	  this.game.shapeRenderer.dispose();
 	  this.game.batch.dispose();
 	  
+  }
+  
+  public void transitionScene() {
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 0, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y - 230, rectCount, rectCount);
+	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y + 280, rectCount, -rectCount);
+	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y + 280, -rectCount, -rectCount);
+	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y - 230, -rectCount, rectCount);
+	  rectCount += 10;
+	  if(rectCount > 400) {
+		  camera.position.set(0, 0, 0);
+		  game.setScreen(new Level2(game));
+	  }
+	  game.shapeRenderer.end();
+  }
+  public void untransitionScene() {
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 0, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x - 240, 250, rectCount2, rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x - 240, 250, rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 430, 250, -rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 430, 250, -rectCount2, rectCount2);
+	  rectCount2 -= 10;
+	  System.out.println(rectCount2);
+	  if(rectCount2 < 0) {
+		  untransition = false;
+	  }
+	  game.shapeRenderer.end();
   }
   
   

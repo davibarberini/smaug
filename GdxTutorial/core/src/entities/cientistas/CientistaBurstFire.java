@@ -20,6 +20,8 @@ public class CientistaBurstFire extends Cientista {
 	public String comingFrom = "esquerda";
 	public int waitUntilShoot = 100;
 	Rectangle p1Rect = ply.rect;
+	public Thread thread;
+	public boolean runningThread = false;
 	
 	public CientistaBurstFire(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply, Platform[] platforms) {
@@ -44,54 +46,11 @@ public class CientistaBurstFire extends Cientista {
 	}
 	
 	public void update(SpriteBatch sb) {
-		if(animState != "morrendo" && vulnerable) {
-			if(ply.isAttacking) {
-				collisionPlayer(sb);
-				if(rect.overlaps(p1Rect)) {
-					vida -= 10;
-					if(vida <= 0) {
-						stateTime = 0;
-						animState = "morrendo";
-						ganhaVida();
-						Player.swordKills += 1;
-						if(ply.animState == "attacking") {
-							Player.attack1Kills += 1;
-							System.out.println(Player.attack1Kills);
-						}
-						else if(ply.animState == "attacking2") {
-							Player.attack2Kills += 1;
-							System.out.println(Player.attack2Kills);
-						}
-						else if(ply.animState == "attacking3") {
-							Player.attack3Kills += 1;
-							System.out.println(Player.attack3Kills);
-						}
-						else if(ply.animState == "airAttack") {
-							Player.airAttackKills += 1;
-							System.out.println(Player.airAttackKills);
-						}
-					} else {
-						vulnerable = false;
-						velX = 0;
-						fixedX = ply.rect.x;
-					}
-				}
-			}
-			if(ply.tiro.rect.overlaps(rect)) {
-				vida -= 10;
-				if(vida <= 0) {
-					stateTime = 0;
-					animState = "morrendo";
-					Player.cannonKills += 1;
-				} else {
-					vulnerable = false;
-					velX = 0;
-					fixedX = ply.rect.x;
-				}
-			}
-			
+		if(!runningThread) {
+			thread = new Thread(this);
+			thread.start();
+			runningThread = true;
 		}
-		
 		if(isAlive) {
 			if(!vulnerable) {
 				if(fixedX > rect.x) rect.x -= 1;
@@ -236,7 +195,7 @@ public class CientistaBurstFire extends Cientista {
 		
 		
 	}
-	public void collisionPlayer(SpriteBatch sb) {
+	public void collisionPlayer() {
 		p1Rect = new Rectangle(ply.rect);
 		p1Rect.width = ply.rect.width + ply.widthLimit;
 		p1Rect.height = ply.rect.height + ply.heightLimit;
@@ -246,6 +205,70 @@ public class CientistaBurstFire extends Cientista {
 		}
 		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
 		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
+	}
+	@Override
+	public void run() {
+		while(runningThread) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(animState != "morrendo" && vulnerable) {
+				if(ply.isAttacking) {
+					collisionPlayer();
+					if(rect.overlaps(p1Rect)) {
+						vida -= 10;
+						if(vida <= 0) {
+							stateTime = 0;
+							animState = "morrendo";
+							ganhaVida();
+							Player.swordKills += 1;
+							if(ply.animState == "attacking") {
+								Player.attack1Kills += 1;
+								System.out.println(Player.attack1Kills);
+							}
+							else if(ply.animState == "attacking2") {
+								Player.attack2Kills += 1;
+								System.out.println(Player.attack2Kills);
+							}
+							else if(ply.animState == "attacking3") {
+								Player.attack3Kills += 1;
+								System.out.println(Player.attack3Kills);
+							}
+							else if(ply.animState == "airAttack") {
+								Player.airAttackKills += 1;
+								System.out.println(Player.airAttackKills);
+							}
+							this.dispose();
+						} else {
+							vulnerable = false;
+							velX = 0;
+							fixedX = ply.rect.x;
+						}
+					}
+				}
+				if(ply.tiro.rect.overlaps(rect)) {
+					vida -= 10;
+					if(vida <= 0) {
+						stateTime = 0;
+						animState = "morrendo";
+						Player.cannonKills += 1;
+					} else {
+						vulnerable = false;
+						velX = 0;
+						fixedX = ply.rect.x;
+					}
+				}
+				
+			}
+			
+		}
+	}
+	public void dispose() {
+		this.runningThread = false;
+		this.thread.interrupt();
 	}
 
 }

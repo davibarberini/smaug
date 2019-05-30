@@ -1,6 +1,7 @@
 package entities.soldados;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -10,7 +11,7 @@ import entities.Player;
 import platforms.Platform;
 import projeteis.TiroAtravessa;
 
-public class SoldadoAtirador extends Soldado {
+public class Policial extends Soldado {
 	
 	public TiroAtravessa tiro;
 	public float velTiroX = 0;
@@ -18,77 +19,49 @@ public class SoldadoAtirador extends Soldado {
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
 	public int waitUntilShoot = 50;
+	public Thread thread;
+	public boolean runningThread = false;
 	Rectangle p1Rect = ply.rect;
 	Platform[] platforms;
+	Texture sprite = new Texture(Gdx.files.internal("Soldado/police.png"));
+	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	
-	public SoldadoAtirador(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
+	TextureRegion[] parado = new TextureRegion[1];
+	TextureRegion[] paradoAtirando = new TextureRegion[1];
+	TextureRegion[] morrendo = new TextureRegion[5];
+	TextureRegion[] morrendoCanhao = new TextureRegion[3];
+	
+	public Policial(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply, Platform[] platforms) {
 		super(x, y, w, h, vel, pixelsToWalkRight, pixelsToWalkLeft, ply);
 		tiro = new TiroAtravessa(0, 0, 5, 5, 0, 0, ply);
 		
 		this.platforms = platforms;
-		parado[0] = spriteSheet[0][0];
-		paradoAtirando[0] = spriteSheet[0][7];
-		for(int e=0; e < 4; e++) {
+		parado[0] = spriteSheet[1][0];
+		paradoAtirando[0] = spriteSheet[1][1];
+		for(int e=0; e < 6; e++) {
 			correndo[e] = spriteSheet[0][e];
 		}
+		for(int i=0; i < 5; i++) {
+			morrendo[i] = spriteSheet[2][i];
+		}
 		for(int i=0; i < 3; i++) {
-			morrendo[i] = spriteSheet[0][i + 4];
+			morrendoCanhao[i] = spriteSheet[3][i];
 		}
 		
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
 		paradoAnim = new Animation<TextureRegion>(0.06f, parado);
 		paradoAtirandoAnim = new Animation<TextureRegion>(0.06f, paradoAtirando);
-		correndoAnim = new Animation<TextureRegion>(0.06f, correndo);
+		correndoAnim = new Animation<TextureRegion>(0.1f, correndo);
+		morrendoCanhaoAnim = new Animation<TextureRegion>(0.06f, morrendoCanhao);
 		
 	}
 	
 	public void update(SpriteBatch sb) {
-		if(animState != "morrendo" && vulnerable) {
-			if(ply.isAttacking) {
-				collisionPlayer(sb);
-				if(rect.overlaps(p1Rect)) {
-					vida -= 10;
-					if(vida <= 0) {
-						stateTime = 0;
-						animState = "morrendo";
-						Player.swordKills += 1;
-						if(ply.animState == "attacking") {
-							Player.attack1Kills += 1;
-							System.out.println(Player.attack1Kills);
-						}
-						else if(ply.animState == "attacking2") {
-							Player.attack2Kills += 1;
-							System.out.println(Player.attack2Kills);
-						}
-						else if(ply.animState == "attacking3") {
-							Player.attack3Kills += 1;
-							System.out.println(Player.attack3Kills);
-						}
-						else if(ply.animState == "airAttack") {
-							Player.airAttackKills += 1;
-							System.out.println(Player.airAttackKills);
-						}
-					} else {
-						vulnerable = false;
-						velX = 0;
-						fixedX = ply.rect.x;
-					}
-				}
-			}
-			if(ply.tiro.rect.overlaps(rect)) {
-				vida -= 10;
-				if(vida <= 0) {
-					stateTime = 0;
-					animState = "morrendo";
-					Player.cannonKills += 1;
-				} else {
-					vulnerable = false;
-					velX = 0;
-					fixedX = ply.rect.x;
-				}
-			}
-			
+		if(!runningThread) {
+			thread = new Thread(this);
+			thread.start();
+			runningThread = true;
 		}
 		
 		if(isAlive) {
@@ -120,7 +93,7 @@ public class SoldadoAtirador extends Soldado {
 					vulnerableCount = 0;
 				}
 			}
-			if(animState == "morrendo") {
+			if(animState == "morrendo" || animState == "morrendoCanhao") {
 				deathCount += 1;
 				if(deathCount > 40) {
 					isAlive = false;
@@ -224,6 +197,18 @@ public class SoldadoAtirador extends Soldado {
 				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
 			}	
 		}
+		else if(animState == "morrendoCanhao") {
+			if(velX > 0) {
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoCanhaoAnim.getKeyFrame(stateTime, false);
+				sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			}
+			else{
+				stateTime += Gdx.graphics.getDeltaTime();
+				currentFrame = morrendoCanhaoAnim.getKeyFrame(stateTime, false);
+				sb.draw(currentFrame, this.rect.x + this.rect.width - pCorrectX, this.rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			}	
+		}
 		else {
 			stateTime = 0;
 		}
@@ -250,7 +235,7 @@ public class SoldadoAtirador extends Soldado {
 		
 		
 	}
-	public void collisionPlayer(SpriteBatch sb) {
+	public void collisionPlayer() {
 		p1Rect = new Rectangle(ply.rect);
 		p1Rect.width = ply.rect.width + ply.widthLimit;
 		p1Rect.height = ply.rect.height + ply.heightLimit;
@@ -261,5 +246,69 @@ public class SoldadoAtirador extends Soldado {
 		//sb.draw(teste, p1Rect.x, p1Rect.y, p1Rect.width, p1Rect.height);
 		//sb.draw(teste, rect.x, rect.y, rect.width, rect.height);
 	}
+	
+	@Override
+	public void run() {
+		while(runningThread) {
+			try {
+				Thread.sleep(10);
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			if(animState != "morrendo" && vulnerable) {
+				if(ply.isAttacking) {
+					collisionPlayer();
+					if(rect.overlaps(p1Rect)) {
+						vida -= 10;
+						if(vida <= 0) {
+							stateTime = 0;
+							animState = "morrendo";
+							Player.swordKills += 1;
+							if(ply.animState == "attacking") {
+								Player.attack1Kills += 1;
+							}
+							else if(ply.animState == "attacking2") {
+								Player.attack2Kills += 1;
+							}
+							else if(ply.animState == "attacking3") {
+								Player.attack3Kills += 1;
+							}
+							else if(ply.animState == "airAttack") {
+								Player.airAttackKills += 1;
+							}
+							this.dispose();
+						} else {
+							vulnerable = false;
+							velX = 0;
+							fixedX = ply.rect.x;
+						}
+					}
+				}
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
+					ply.tiro.isAlive = false;
+					ply.tiro.count = 0;
+					vida -= 10;
+					if(vida <= 0) {
+						stateTime = 0;
+						animState = "morrendoCanhao";
+						Player.cannonKills += 1;
+					} else {
+						vulnerable = false;
+						velX = 0;
+						fixedX = ply.rect.x;
+					}
+				}
+				
+			}
+			
+		}
+	}
+	
+	public void dispose() {
+		this.runningThread = false;
+		this.thread.interrupt();
+	}
+	
 
 }

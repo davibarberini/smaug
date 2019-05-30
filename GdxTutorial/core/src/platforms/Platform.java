@@ -2,6 +2,7 @@ package platforms;
 
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.math.Rectangle;
+import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
 import projeteis.TiroNormal;
@@ -96,7 +97,7 @@ public class Platform {
     	}
     }
     public void playerBulletCollision(TiroPlayer tiro) {
-    	if(tiro.rect.overlaps(rect)) {
+    	if(tiro.rect.overlaps(rect) && MyGdxGame.actualLevel == "Level1") {
     		tiro.count = 0;
     		tiro.isAlive = false;
     	}

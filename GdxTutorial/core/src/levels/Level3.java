@@ -14,7 +14,7 @@ import editor.MapFileReader;
 import entities.Parallax;
 import entities.Player;
 import entities.soldados.Soldado;
-import entities.soldados.SoldadoAtirador;
+import entities.soldados.Policial;
 import platforms.Platform;
 import soundandmusic.MusicPlayer;
 
@@ -60,6 +60,7 @@ public class Level3 extends ScreenAdapter {
   
   @Override
   public void show() {
+	  MyGdxGame.actualLevel = "Level3";
 	//Parando a thread anterior se existir.
 	  if(game.t1 != null && game.t1.isAlive()) {
   		game.t1.toStop = true;
@@ -221,7 +222,7 @@ public class Level3 extends ScreenAdapter {
   
   public void createEnemies() {
 	  soldados = new Soldado[1];
-	  soldados[0] = new SoldadoAtirador(370, 27, 25, 35, 5, 10, 0, p1, platforms);
+	  soldados[0] = new Policial(370, 27, 25, 35, 5, 10, 0, p1, platforms);
   }
   
   public void dispose() {

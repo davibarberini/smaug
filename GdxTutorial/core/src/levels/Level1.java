@@ -1,7 +1,4 @@
 package levels;
-
-import java.math.BigDecimal;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -9,6 +6,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
@@ -23,7 +21,7 @@ import platforms.Platform;
 import soundandmusic.MusicPlayer;
 
 
-public class Level1 extends ScreenAdapter implements Runnable{
+public class Level1 extends ScreenAdapter{
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
@@ -34,6 +32,10 @@ public class Level1 extends ScreenAdapter implements Runnable{
   int rodouNoMain = 1;
   int countMain = 0;
   int countThread = 0;
+  int rectCount = 0;
+  int rectCount2 = 400;
+  boolean transition = false;
+  boolean untransition = true;
   
   FillViewport view;
   
@@ -70,6 +72,7 @@ public class Level1 extends ScreenAdapter implements Runnable{
   @Override
   public void show() {
 	  MyGdxGame.initTime = System.currentTimeMillis();
+	  MyGdxGame.actualLevel = "Level1";
 	  //Parando a thread anterior se existir.
 	  if(game.t1 != null && game.t1.isAlive()) {
   		game.t1.toStop = true;
@@ -109,13 +112,10 @@ public class Level1 extends ScreenAdapter implements Runnable{
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.L) {
-            	  camera.position.set(0, 0, 0);
-                  game.setScreen(new Level2(game));
+            	  transition = true;
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
-              }
-              else if(keyCode == Input.Keys.L) {
               }
               else if(keyCode == Input.Keys.R) {
             	  Player.vida = 100;
@@ -123,7 +123,10 @@ public class Level1 extends ScreenAdapter implements Runnable{
               }
               else if (keyCode == Input.Keys.ENTER) {
             	  if(PauseScreen.selected == "return") game.paused = false;
-            	  else if(PauseScreen.selected == "mainmenu") game.setScreen(new TitleScreen(game));
+            	  else if(PauseScreen.selected == "mainmenu") {
+            		  dispose();
+            		  game.setScreen(new TitleScreen(game));  
+            	  }
             	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
               }
               else if(keyCode == Input.Keys.ESCAPE) {
@@ -157,21 +160,52 @@ public class Level1 extends ScreenAdapter implements Runnable{
   
   @Override
   public void render(float delta) {
-	if(!game.paused) {
-		updateUnpaused(delta);
+	if(!transition) {
+			if(!game.paused) {
+				if(untransition) {
+					updateUnpaused(delta);
+					untransitionScene();
+				} 
+				else updateUnpaused(delta);
+			}
+			else {
+				pause.update();
+			}
+			
+	}else {
+		this.drawUnpaused();
+		transitionScene();
+		
 	}
-	else {
-		pause.update();
-	}
+	
+	
   }
   
   public void updateUnpaused(float delta) {
-	  	countMain += 1;
-	  	if(!runningThread) {
-	  		runningThread = true;
-	  		Thread thread = new Thread(this);
-	  		thread.start();
-	  	}
+		//System.out.println(Gdx.graphics.getDeltaTime() + "  :  " + valor);
+		p1.rect.y += (p1.gravity * Gdx.graphics.getDeltaTime());
+		if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
+			cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
+		}
+		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionY(p1.gravity, p1);
+			  }  
+		}
+		p1.rect.x += (p1.velX * Gdx.graphics.getDeltaTime());
+		
+		if(cientistas[3].getEscudo().isAlive) {
+			cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
+		}
+		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionX(p1.velX, p1);
+			  }
+			  
+		}
+
 	  	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
 		
 		//if(p1.rect.overlaps()
@@ -235,45 +269,47 @@ public class Level1 extends ScreenAdapter implements Runnable{
   
   public void dispose() {
 	  Gdx.input.setInputProcessor(null);
-	  game.shapeRenderer.setProjectionMatrix(null);
 	  this.game.shapeRenderer.dispose();
 	  this.game.batch.dispose();
+	  p1.runningThread = false;
+	  p1.thread.interrupt();
+	  for(int e=0; e < cientistas.length; e++) {
+		  cientistas[e].runningThread = false;
+		  cientistas[e].thread.interrupt();
+	  }
 	  
   }
-
-  	@Override
-	public void run() {
-  		while(runningThread) {
-  			countThread += 1;
-  			float valor = countThread / countMain;
-  			//System.out.println(Gdx.graphics.getDeltaTime() + "  :  " + valor);
-  			p1.rect.y += (p1.gravity * Gdx.graphics.getDeltaTime()) / valor;
-  			rodouNoMain = 0;
-  			if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
-  				cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
-  			}
-  			for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
-  				  if(platforms[k] != null) {
-  					  Platform plat = platforms[k];
-  					  plat.platCollisionY(p1.gravity, p1);
-  				  }  
-  			}
-  			p1.rect.x += (p1.velX * Gdx.graphics.getDeltaTime()) / valor;
-  			
-  			if(cientistas[3].getEscudo().isAlive) {
-  				cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
-  			}
-  			for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-  				  if(platforms[k] != null) {
-  					  Platform plat = platforms[k];
-  					  plat.platCollisionX(p1.velX, p1);
-  				  }
-  				  
-  			}
-
-  		}
-		
-  	}
+  
+  public void transitionScene() {
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 0, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y - 230, rectCount, rectCount);
+	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y + 280, rectCount, -rectCount);
+	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y + 280, -rectCount, -rectCount);
+	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y - 230, -rectCount, rectCount);
+	  rectCount += 10;
+	  if(rectCount > 400) {
+		  camera.position.set(0, 0, 0);
+		  game.setScreen(new Level2(game));
+	  }
+	  game.shapeRenderer.end();
+  }
+  public void untransitionScene() {
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 0, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y - 230, rectCount2, rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y + 280, rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y + 280, -rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y - 230, -rectCount2, rectCount2);
+	  rectCount2 -= 10;
+	  System.out.println(rectCount2);
+	  if(rectCount2 < 0) {
+		  untransition = false;
+	  }
+	  game.shapeRenderer.end();
+  }
   
   
 }
