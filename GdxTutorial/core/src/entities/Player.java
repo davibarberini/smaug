@@ -54,6 +54,9 @@ public class Player extends Sprite implements Runnable{
 	boolean runningThread = false;
 	public TiroPlayer tiro;
 	
+	int countMain = 0;
+	int countThread = 0;
+	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> correndoCanhaoMAnim;
 	Animation<TextureRegion> correndoCanhaoCAnim;
@@ -192,7 +195,7 @@ public class Player extends Sprite implements Runnable{
 	public void update(MyGdxGame game) {
 		Thread thread = new Thread(this);
 		thread.start();
-		System.out.println(Thread.activeCount());
+		
 	}
 	
 	
@@ -619,8 +622,8 @@ public class Player extends Sprite implements Runnable{
 				MyGdxGame.endTime = System.currentTimeMillis();
 			}
 		}
-		gravity += -2000 * Gdx.graphics.getDeltaTime();
-		velX += aceX * Gdx.graphics.getDeltaTime();
+		gravity += (-2000 * Gdx.graphics.getDeltaTime());
+		velX += (aceX * Gdx.graphics.getDeltaTime());
 		if(velX > 300) velX = 300;
 		else if(velX < -300) velX = -300;
 		if(isAttacking) {
@@ -634,6 +637,6 @@ public class Player extends Sprite implements Runnable{
 			tiro.count = 0;
 			tiro.isAlive = false;
 		}
-		
+	
 	}
 }

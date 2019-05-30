@@ -4,8 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
 
-public class MusicPlayer extends Thread
-{
+public class MusicPlayer extends Thread {
     String caminho;
     Music music;
     public boolean toStop = false;

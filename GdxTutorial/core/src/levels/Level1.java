@@ -1,5 +1,7 @@
 package levels;
 
+import java.math.BigDecimal;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
@@ -21,12 +23,17 @@ import platforms.Platform;
 import soundandmusic.MusicPlayer;
 
 
-public class Level1 extends ScreenAdapter {
+public class Level1 extends ScreenAdapter implements Runnable{
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
+  boolean runningThread = false;
   
   public Cientista[] cientistas;
+  float passedTime = 0;
+  int rodouNoMain = 1;
+  int countMain = 0;
+  int countThread = 0;
   
   FillViewport view;
   
@@ -159,30 +166,14 @@ public class Level1 extends ScreenAdapter {
   }
   
   public void updateUnpaused(float delta) {
+	  	countMain += 1;
+	  	if(!runningThread) {
+	  		runningThread = true;
+	  		Thread thread = new Thread(this);
+	  		thread.start();
+	  	}
 	  	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
 		
-		p1.rect.y += p1.gravity * delta;
-		if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
-			cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
-		}
-		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
-			  if(platforms[k] != null) {
-				  Platform plat = platforms[k];
-				  plat.platCollisionY(p1.gravity, p1);
-			  }  
-		}
-		
-		p1.rect.x += p1.velX * delta;
-		if(cientistas[3].getEscudo().isAlive) {
-			cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
-		}
-		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-			  if(platforms[k] != null) {
-				  Platform plat = platforms[k];
-				  plat.platCollisionX(p1.velX, p1);
-			  }
-			  
-		}
 		//if(p1.rect.overlaps()
 		p1.update(game);
 		
@@ -249,6 +240,40 @@ public class Level1 extends ScreenAdapter {
 	  this.game.batch.dispose();
 	  
   }
+
+  	@Override
+	public void run() {
+  		while(runningThread) {
+  			countThread += 1;
+  			float valor = countThread / countMain;
+  			//System.out.println(Gdx.graphics.getDeltaTime() + "  :  " + valor);
+  			p1.rect.y += (p1.gravity * Gdx.graphics.getDeltaTime()) / valor;
+  			rodouNoMain = 0;
+  			if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
+  				cientistas[3].getEscudo().platCollisionY(p1.gravity, p1);
+  			}
+  			for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
+  				  if(platforms[k] != null) {
+  					  Platform plat = platforms[k];
+  					  plat.platCollisionY(p1.gravity, p1);
+  				  }  
+  			}
+  			p1.rect.x += (p1.velX * Gdx.graphics.getDeltaTime()) / valor;
+  			
+  			if(cientistas[3].getEscudo().isAlive) {
+  				cientistas[3].getEscudo().platCollisionX(p1.velX, p1);
+  			}
+  			for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+  				  if(platforms[k] != null) {
+  					  Platform plat = platforms[k];
+  					  plat.platCollisionX(p1.velX, p1);
+  				  }
+  				  
+  			}
+
+  		}
+		
+  	}
   
   
 }
