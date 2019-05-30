@@ -18,7 +18,7 @@ import platforms.Platform;
 import projeteis.TiroPlayer;
 
 
-public class Player extends Sprite {
+public class Player extends Sprite implements Runnable{
 	public Rectangle rect;
 	public double gravity, velX, velY, aceX;
 	public int jumpCount = 0;
@@ -51,6 +51,7 @@ public class Player extends Sprite {
 	public float actualWidth;
 	public int deathCount = 0;
 	public boolean paused = false;
+	boolean runningThread = false;
 	public TiroPlayer tiro;
 	
 	Animation<TextureRegion> correndoAnim;
@@ -189,47 +190,14 @@ public class Player extends Sprite {
 	}
  
 	public void update(MyGdxGame game) {
-		if(gravity < -100 && !isAttacking) {
-			animState = "jumping";
-			stateTime = 90f;
-		}
-		if(tiroCooldown > 10) isShooting = false;
-		if(facing == "direita") tiro.fixedX = rect.x + 15;
-		if(facing == "esquerda") tiro.fixedX = rect.x;
-		tiro.fixedY = rect.y + 5;
-		tiro.facing = facing;
-		tiroCooldown += 1;
-		if (vida <= 0) {
-			if(deathCount == 0)stateTime = 0;
-			animState = "morrendo";
-			deathCount += 1;
-			if(deathCount > 60) {
-				deathCount = 0;
-				MyGdxGame.endTime = System.currentTimeMillis();
-				game.setScreen(new EndScreen(game));
-			}
-		}
-		gravity += -2000 * Gdx.graphics.getDeltaTime();
-		velX += aceX * Gdx.graphics.getDeltaTime();
-		if(velX > 300) velX = 300;
-		else if(velX < -300) velX = -300;
-		if(isAttacking) {
-			attackCount++;
-			if(attackCount > attackLimit) {
-				resetAttack();
-			}
-		}
+		Thread thread = new Thread(this);
+		thread.start();
+		System.out.println(Thread.activeCount());
 	}
 	
 	
 	public void draw(SpriteBatch sb) {
 		tiro.update(sb);
-		if(tiro.isAlive) tiro.count += 1;
-		if(tiro.count > 50) {
-			tiro.count = 0;
-			tiro.isAlive = false;
-			tiro.drawFlash = false;
-		}
 		if(animState == "parado") {
 			if(weapon == "espada") {
 				if(facing == "direita") {
@@ -541,8 +509,8 @@ public class Player extends Sprite {
         }
         else if(keyCode == Input.Keys.I) {
         	if(weapon == "canhaoC") {
-        		isShooting = true;
         		if(!tiro.isAlive && tiroCooldown > 60) {
+        			isShooting = true;
             		tiro.rect.x = rect.x;
                 	tiro.rect.y = rect.y + 10;
                 	tiro.velX = 0;
@@ -552,13 +520,16 @@ public class Player extends Sprite {
                 	tiro.drawFlash = true;
             	}
         	}
-        	else weapon = "canhaoC";
+        	else {
+        		weapon = "canhaoC";
+        		isShooting = false;
+        	} 
         	
         }
         else if(keyCode == Input.Keys.J) {
         	if(weapon == "canhaoD") {
-        		isShooting = true;
         		if(!tiro.isAlive && tiroCooldown > 60) {
+        			isShooting = true;
             		tiro.rect.x = rect.x;
                 	tiro.rect.y = rect.y + 10;
                 	if(facing == "direita") tiro.velX = 400;
@@ -569,13 +540,16 @@ public class Player extends Sprite {
                 	tiro.drawFlash = true;
             	}
         	}
-        	else weapon = "canhaoD";
+        	else {
+        		weapon = "canhaoD";
+        		isShooting = false;
+        	} 
         	
         }
         else if(keyCode == Input.Keys.N) {
         	if(weapon == "canhaoM") {
-        		isShooting = true;
         		if(!tiro.isAlive && tiroCooldown > 60) {
+        			isShooting = true;
             		tiro.rect.x = rect.x;
                 	tiro.rect.y = rect.y;
                 	if(facing == "direita") tiro.velX = 400;
@@ -586,7 +560,10 @@ public class Player extends Sprite {
                 	tiro.drawFlash = true;
             	}
         	}
-        	else weapon = "canhaoM";
+        	else {
+        		weapon = "canhaoM";
+        		isShooting = false;
+        	} 
         	
         }
         else if(keyCode == Input.Keys.M) {
@@ -619,5 +596,44 @@ public class Player extends Sprite {
 		for(int v=0; v <qntVida; v++) {
 			sb.draw(vidaTXT, x + (v * 23), y, vidaTXT.getWidth(), vidaTXT.getHeight());
 		}
+	}
+
+	@Override
+	public void run() {
+		if(gravity < -100 && !isAttacking) {
+			animState = "jumping";
+			stateTime = 90f;
+		}
+		if(tiroCooldown > 10) isShooting = false;
+		if(facing == "direita") tiro.fixedX = rect.x + 15;
+		if(facing == "esquerda") tiro.fixedX = rect.x;
+		tiro.fixedY = rect.y + 5;
+		tiro.facing = facing;
+		tiroCooldown += 1;
+		if (vida <= 0) {
+			if(deathCount == 0)stateTime = 0;
+			animState = "morrendo";
+			deathCount += 1;
+			if(deathCount > 60) {
+				deathCount = 0;
+				MyGdxGame.endTime = System.currentTimeMillis();
+			}
+		}
+		gravity += -2000 * Gdx.graphics.getDeltaTime();
+		velX += aceX * Gdx.graphics.getDeltaTime();
+		if(velX > 300) velX = 300;
+		else if(velX < -300) velX = -300;
+		if(isAttacking) {
+			attackCount++;
+			if(attackCount > attackLimit) {
+				resetAttack();
+			}
+		}
+		if(tiro.isAlive) tiro.count += 1;
+		if(tiro.count > 50) {
+			tiro.count = 0;
+			tiro.isAlive = false;
+		}
+		
 	}
 }

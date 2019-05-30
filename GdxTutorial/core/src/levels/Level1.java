@@ -159,7 +159,7 @@ public class Level1 extends ScreenAdapter {
   }
   
   public void updateUnpaused(float delta) {
-	  game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
+	  	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
 		
 		p1.rect.y += p1.gravity * delta;
 		if(p1.rect.overlaps(cientistas[3].getEscudo().rect) && cientistas[3].getEscudo().isAlive ) {
@@ -171,7 +171,6 @@ public class Level1 extends ScreenAdapter {
 				  plat.platCollisionY(p1.gravity, p1);
 			  }  
 		}
-		
 		
 		p1.rect.x += p1.velX * delta;
 		if(cientistas[3].getEscudo().isAlive) {
