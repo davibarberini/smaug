@@ -268,15 +268,15 @@ public class Level1 extends ScreenAdapter{
   }
   
   public void dispose() {
-	  Gdx.input.setInputProcessor(null);
-	  this.game.shapeRenderer.dispose();
-	  this.game.batch.dispose();
+	  //Gdx.input.setInputProcessor(null);
+	  //this.game.shapeRenderer.dispose();
+	  //this.game.batch.dispose();
 	  p1.runningThread = false;
 	  p1.thread.interrupt();
-	  for(int e=0; e < cientistas.length; e++) {
+	  /*for(int e=0; e < cientistas.length; e++) {
 		  cientistas[e].runningThread = false;
 		  cientistas[e].thread.interrupt();
-	  }
+	  }*/
 	  
   }
   

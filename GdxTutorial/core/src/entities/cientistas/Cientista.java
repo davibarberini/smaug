@@ -80,9 +80,9 @@ public class Cientista extends Sprite implements Runnable{
  
 	public void update(SpriteBatch sb) {
 		if(!runningThread) {
+			runningThread = true;
 			thread = new Thread(this);
 			thread.start();
-			runningThread = true;
 		}
 		if(isAlive) {
 			if(!vulnerable) {

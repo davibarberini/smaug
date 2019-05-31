@@ -49,9 +49,9 @@ public class Player extends Sprite implements Runnable{
 	public float actualWidth;
 	public int deathCount = 0;
 	public boolean paused = false;
-	public boolean runningThread = false;
 	public TiroPlayer tiro;
 	public Thread thread;
+	public boolean runningThread = false;
 	
 	int countMain = 0;
 	int countThread = 0;
@@ -193,9 +193,9 @@ public class Player extends Sprite implements Runnable{
  
 	public void update(MyGdxGame game) {
 		if(!runningThread) {
+			runningThread = true;
 			thread = new Thread(this);
 			thread.start();
-			runningThread = true;
 		}
 		
 		tiroCooldown += 1;

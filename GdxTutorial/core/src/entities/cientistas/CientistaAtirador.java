@@ -45,9 +45,9 @@ public class CientistaAtirador extends Cientista {
 	
 	public void update(SpriteBatch sb) {
 		if(!runningThread) {
+			runningThread = true;
 			thread = new Thread(this);
 			thread.start();
-			runningThread = true;
 		}
 		
 		if(isAlive) {
