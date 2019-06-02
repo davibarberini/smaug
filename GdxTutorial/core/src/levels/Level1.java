@@ -34,6 +34,7 @@ public class Level1 extends ScreenAdapter{
   int countThread = 0;
   int rectCount = 0;
   int rectCount2 = 400;
+  int countTransition = 0;
 
   
   FillViewport view;
@@ -99,7 +100,7 @@ public class Level1 extends ScreenAdapter{
 	  HEIGHT = Gdx.graphics.getHeight();
 	  
 	  p1.rect.x = 50;
-	  p1.rect.y = 20;
+	  p1.rect.y = 50;
 	    
 	  camera = new OrthographicCamera(WIDTH, HEIGHT);
 	  camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
@@ -306,11 +307,21 @@ public class Level1 extends ScreenAdapter{
 	  game.shapeRenderer.rect(p1.rect.x - 320, p1.rect.y + 280, rectCount2, -rectCount2);
 	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y + 280, -rectCount2, -rectCount2);
 	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y - 230, -rectCount2, rectCount2);
-	  rectCount2 -= 10;
-	  if(rectCount2 < 0) {
-		  game.untransition = false;
+	  if(countTransition > 100) {
+		  rectCount2 -= 10;
+		  if(rectCount2 < 0) {
+			  game.untransition = false;
+		  }
+		  game.shapeRenderer.end();
 	  }
-	  game.shapeRenderer.end();
+	  else {
+		  game.shapeRenderer.end();
+		  game.batch.begin();
+		  countTransition += 1;
+		  game.font.draw(game.batch, "Level 1", p1.rect.x - 75, p1.rect.y + 45);
+		  game.batch.end();
+	  }
+	  
   }
   
   

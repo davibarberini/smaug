@@ -29,6 +29,7 @@ public class Level2 extends ScreenAdapter {
   public Soldado[] soldados;
   int rectCount = 0;
   int rectCount2 = 400;
+  int countTransition = 0;
   
   TextureRegion[] aguaTXT = new TextureRegion[] {
   		new TextureRegion(new Texture("Level2/AGUA1.png")),
@@ -291,11 +292,20 @@ public class Level2 extends ScreenAdapter {
 	  game.shapeRenderer.rect(p1.rect.x - 230, 490, rectCount2, -rectCount2);
 	  game.shapeRenderer.rect(p1.rect.x + 440, 490, -rectCount2, -rectCount2);
 	  game.shapeRenderer.rect(p1.rect.x + 440, -20, -rectCount2, rectCount2);
-	  rectCount2 -= 10;
-	  if(rectCount2 < 0) {
-		  game.untransition = false;
+	  if(countTransition > 100) {
+		  rectCount2 -= 10;
+		  if(rectCount2 < 0) {
+			  game.untransition = false;
+		  }
+		  game.shapeRenderer.end();
 	  }
-	  game.shapeRenderer.end();
+	  else {
+		  game.shapeRenderer.end();
+		  game.batch.begin();
+		  countTransition += 1;
+		  game.font.draw(game.batch, "Level 2", p1.rect.x + 20, 250);
+		  game.batch.end();
+	  }
   }
   
   
