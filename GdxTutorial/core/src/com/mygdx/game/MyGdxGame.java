@@ -21,6 +21,8 @@ public class MyGdxGame extends Game {
   public static double initTime, endTime;
   public boolean paused = false;
   public static String actualLevel = "Level1";
+  public boolean transition = false;
+  public boolean untransition = true;
 
   @Override
   public void create () {

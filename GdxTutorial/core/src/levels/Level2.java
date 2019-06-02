@@ -25,11 +25,10 @@ public class Level2 extends ScreenAdapter {
   public Player p1;
   public static int WIDTH;
   public static int HEIGHT;
+  public boolean fixCamera = false;
   public Soldado[] soldados;
   int rectCount = 0;
   int rectCount2 = 400;
-  boolean transition = false;
-  boolean untransition = true;
   
   TextureRegion[] aguaTXT = new TextureRegion[] {
   		new TextureRegion(new Texture("Level2/AGUA1.png")),
@@ -160,9 +159,9 @@ public class Level2 extends ScreenAdapter {
   
   @Override
   public void render(float delta) {
-	  if(!transition) {
+	  if(!game.transition) {
 			if(!game.paused) {
-				if(untransition) {
+				if(game.untransition) {
 					updateUnpaused(delta);
 					untransitionScene();
 				} 
@@ -201,6 +200,9 @@ public class Level2 extends ScreenAdapter {
 		p1.update(game);
 		
 	    camera.position.set(p1.rect.x + (p1.rect.width / 2) + 100 ,  220, 0);
+	    if(camera.position.x > 2300) {
+	    	camera.position.x = 2300;		
+	    }
 		//camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
 		camera.update();
 		
@@ -238,7 +240,11 @@ public class Level2 extends ScreenAdapter {
 	  }
 	  p1.draw(game.batch);
 	  //game.batch.draw(p1.life, p1.rect.x - 200,  400, Player.vida, 30);
-	  p1.drawVida(game.batch, p1.rect.x - 190, 410);
+	  if(camera.position.x == 2300) {
+		  p1.drawVida(game.batch, 1990, 410);
+	  }else {
+		  p1.drawVida(game.batch, p1.rect.x - 190, 410);
+	  }
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 
@@ -269,7 +275,11 @@ public class Level2 extends ScreenAdapter {
 	  rectCount += 10;
 	  if(rectCount > 400) {
 		  camera.position.set(0, 0, 0);
-		  game.setScreen(new Level2(game));
+		  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+		  game.t1.interrupt();
+		  game.untransition = true;
+		  game.transition = false;
+		  game.setScreen(new Level3(game));
 	  }
 	  game.shapeRenderer.end();
   }
@@ -277,14 +287,13 @@ public class Level2 extends ScreenAdapter {
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 0, 0, 1);
-	  game.shapeRenderer.rect(p1.rect.x - 240, 250, rectCount2, rectCount2);
-	  game.shapeRenderer.rect(p1.rect.x - 240, 250, rectCount2, -rectCount2);
-	  game.shapeRenderer.rect(p1.rect.x + 430, 250, -rectCount2, -rectCount2);
-	  game.shapeRenderer.rect(p1.rect.x + 430, 250, -rectCount2, rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x - 230, -20, rectCount2, rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x - 230, 490, rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 440, 490, -rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 440, -20, -rectCount2, rectCount2);
 	  rectCount2 -= 10;
-	  System.out.println(rectCount2);
 	  if(rectCount2 < 0) {
-		  untransition = false;
+		  game.untransition = false;
 	  }
 	  game.shapeRenderer.end();
   }

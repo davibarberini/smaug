@@ -34,8 +34,7 @@ public class Level1 extends ScreenAdapter{
   int countThread = 0;
   int rectCount = 0;
   int rectCount2 = 400;
-  boolean transition = false;
-  boolean untransition = true;
+
   
   FillViewport view;
   
@@ -112,7 +111,7 @@ public class Level1 extends ScreenAdapter{
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.L) {
-            	  transition = true;
+            	  game.transition = true;
               }
               else if(keyCode == Input.Keys.K) {
               	camera.zoom = 2;
@@ -160,9 +159,9 @@ public class Level1 extends ScreenAdapter{
   
   @Override
   public void render(float delta) {
-	if(!transition) {
+	if(!game.transition) {
 			if(!game.paused) {
-				if(untransition) {
+				if(game.untransition) {
 					updateUnpaused(delta);
 					untransitionScene();
 				} 
@@ -291,6 +290,10 @@ public class Level1 extends ScreenAdapter{
 	  rectCount += 10;
 	  if(rectCount > 400) {
 		  camera.position.set(0, 0, 0);
+		  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+		  game.t1.interrupt();
+		  game.untransition = true;
+		  game.transition = false;
 		  game.setScreen(new Level2(game));
 	  }
 	  game.shapeRenderer.end();
@@ -304,9 +307,8 @@ public class Level1 extends ScreenAdapter{
 	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y + 280, -rectCount2, -rectCount2);
 	  game.shapeRenderer.rect(p1.rect.x + 350, p1.rect.y - 230, -rectCount2, rectCount2);
 	  rectCount2 -= 10;
-	  System.out.println(rectCount2);
 	  if(rectCount2 < 0) {
-		  untransition = false;
+		  game.untransition = false;
 	  }
 	  game.shapeRenderer.end();
   }
