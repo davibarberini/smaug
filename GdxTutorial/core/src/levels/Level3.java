@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
@@ -24,6 +25,10 @@ public class Level3 extends ScreenAdapter {
   public static int WIDTH;
   public static int HEIGHT;
   public Soldado[] soldados;
+  
+  int rectCount = 0;
+  int rectCount2 = 400;
+  int countTransition = 0;
   
   MapFileReader mapReader;
   
@@ -101,8 +106,7 @@ public class Level3 extends ScreenAdapter {
           @Override
           public boolean keyDown(int keyCode) {
               if (keyCode == Input.Keys.L) {
-            	  camera.position.set(0, 0, 0);
-                  game.setScreen(new TitleScreen(game));
+            	  game.transition = true;
               }
               else if(keyCode == Input.Keys.K) {
               	  camera.zoom = 2;
@@ -147,8 +151,23 @@ public class Level3 extends ScreenAdapter {
   
   @Override
   public void render(float delta) {
-    if(!game.paused) updateUnpaused(delta);
-    else pause.update();
+	  if(!game.transition) {
+			if(!game.paused) {
+				if(game.untransition) {
+					updateUnpaused(delta);
+					untransitionScene();
+				} 
+				else updateUnpaused(delta);
+			}
+			else {
+				pause.update();
+			}
+			
+	}else {
+		this.drawUnpaused();
+		transitionScene();
+		
+	}
 	
   }
   
@@ -231,6 +250,49 @@ public class Level3 extends ScreenAdapter {
 	  this.game.shapeRenderer.dispose();
 	  this.game.batch.dispose();
 	  
+  }
+  
+  public void transitionScene() {
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 0, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x - 230, -20, rectCount, rectCount);
+	  game.shapeRenderer.rect(p1.rect.x - 230, 490, rectCount, -rectCount);
+	  game.shapeRenderer.rect(p1.rect.x + 440, 490, -rectCount, -rectCount);
+	  game.shapeRenderer.rect(p1.rect.x + 440, -20, -rectCount, rectCount);
+	  rectCount += 10;
+	  if(rectCount > 400) {
+		  camera.position.set(0, 0, 0);
+		  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+		  game.t1.interrupt();
+		  game.untransition = true;
+		  game.transition = false;
+		  game.setScreen(new TitleScreen(game));
+	  }
+	  game.shapeRenderer.end();
+  }
+  public void untransitionScene() {
+	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+	  game.shapeRenderer.setColor(0, 0, 0, 1);
+	  game.shapeRenderer.rect(p1.rect.x - 230, -20, rectCount2, rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x - 230, 490, rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 440, 490, -rectCount2, -rectCount2);
+	  game.shapeRenderer.rect(p1.rect.x + 440, -20, -rectCount2, rectCount2);
+	  if(countTransition > 100) {
+		  rectCount2 -= 10;
+		  if(rectCount2 < 0) {
+			  game.untransition = false;
+		  }
+		  game.shapeRenderer.end();
+	  }
+	  else {
+		  game.shapeRenderer.end();
+		  game.batch.begin();
+		  countTransition += 1;
+		  game.font.draw(game.batch, "Level 3", p1.rect.x + 20, 250);
+		  game.batch.end();
+	  }
   }
   
   
