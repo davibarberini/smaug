@@ -38,6 +38,7 @@ public class Player extends Sprite implements Runnable{
 	public boolean isShooting = false;
 	public int attackCount = 0;
 	public int tiroCooldown = 0;
+	public boolean beingPushed = false;
 	public static float vida = 100;
 	public static int score = 10000;
 	public static int swordKills = 0;
@@ -52,6 +53,8 @@ public class Player extends Sprite implements Runnable{
 	public TiroPlayer tiro;
 	public Thread thread;
 	public boolean runningThread = false;
+	
+	int countPushed = 0;
 	
 	int countMain = 0;
 	int countThread = 0;
@@ -197,7 +200,7 @@ public class Player extends Sprite implements Runnable{
 			thread = new Thread(this);
 			thread.start();
 		}
-		
+		if(beingPushed) countPushed += 1;
 		tiroCooldown += 1;
 		if (vida <= 0) {
 			if(deathCount == 0)stateTime = 0;
@@ -484,13 +487,13 @@ public class Player extends Sprite implements Runnable{
         	else if (PauseScreen.selected == "exit") PauseScreen.selected = "return";
 		}
         else if(keyCode == Input.Keys.D || keyCode == Input.Keys.RIGHT) {
-        	if(this.velX < 0) velX = 0;
+        	if(this.velX < 0 && !beingPushed) velX = 0;
         	this.aceX = 1000;
         	if(animState == "parado") animState = "running";
         	facing = "direita";
         }
         else if(keyCode == Input.Keys.A || keyCode == Input.Keys.LEFT) {
-        	if(this.velX > 0) velX = 0;
+        	if(this.velX > 0 && !beingPushed) velX = 0;
         	this.aceX = -1000;
         	if(animState == "parado") animState = "running";
         	facing = "esquerda";
@@ -601,14 +604,14 @@ public class Player extends Sprite implements Runnable{
 	}
 	
 	public void keyUp(int keyCode) {
-	  if(keyCode == Input.Keys.D && this.aceX > 0) {
+	  if((keyCode == Input.Keys.D || keyCode == Input.Keys.LEFT) && this.aceX > 0) {
         	this.aceX = 0;
-        	this.velX = 0;
+        	if(!beingPushed) this.velX = 0;
         	if(animState == "running") animState = "parado";
       }
-	  else if(keyCode == Input.Keys.A && this.aceX < 0) {
+	  else if((keyCode == Input.Keys.A || keyCode == Input.Keys.RIGHT) && this.aceX < 0) {
         	this.aceX = 0;
-        	this.velX = 0;
+        	if(!beingPushed) this.velX = 0;
         	if(animState == "running") animState = "parado";
       }
 	}
@@ -641,6 +644,7 @@ public class Player extends Sprite implements Runnable{
 				stateTime = 90f;
 			}
 			if(tiroCooldown > 10) isShooting = false;
+			if(countPushed > 60) beingPushed = false;
 			if(facing == "direita") tiro.fixedX = rect.x + 15;
 			if(facing == "esquerda") tiro.fixedX = rect.x;
 			tiro.fixedY = rect.y + 5;

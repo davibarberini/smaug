@@ -1,5 +1,7 @@
 package entities.soldados;
 
+import java.util.ArrayList;
+
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -10,32 +12,37 @@ import com.badlogic.gdx.math.Rectangle;
 import entities.Player;
 import platforms.Platform;
 import projeteis.TiroAtravessa;
+import projeteis.TiroSoldado;
 
-public class Policial extends Soldado {
+public class SoldadoAtirador extends Soldado {
 	
-	public TiroAtravessa tiro;
+	public ArrayList<TiroSoldado> tiros = new ArrayList<TiroSoldado>();
 	public float velTiroX = 0;
 	public float velTiroY = 0;
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
+	int countTiro = 0;
+	int atiradoCount = 0;
 	Texture vidaTXT = new Texture("Player/vida.png");
 	public int waitUntilShoot = 50;
+	boolean reload = false;
+	int reloadCount = 0;
 	public Thread thread;
 	public boolean runningThread = false;
 	Rectangle p1Rect = ply.rect;
 	Platform[] platforms;
-	Texture sprite = new Texture(Gdx.files.internal("Soldado/police.png"));
+	Texture sprite = new Texture(Gdx.files.internal("Soldado/soldado.png"));
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] paradoAtirando = new TextureRegion[1];
-	TextureRegion[] morrendo = new TextureRegion[5];
-	TextureRegion[] morrendoCanhao = new TextureRegion[3];
+	TextureRegion[] morrendo = new TextureRegion[4];
+	TextureRegion[] morrendoCanhao = new TextureRegion[4];
 	
-	public Policial(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
+	public SoldadoAtirador(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply, Platform[] platforms) {
 		super(x, y, w, h, vel, pixelsToWalkRight, pixelsToWalkLeft, ply);
-		tiro = new TiroAtravessa(0, 0, 10, 5, 0, 0, ply);
+		//tiro = new TiroAtravessa(0, 0, 10, 5, 0, 0, ply);
 		
 		this.platforms = platforms;
 		parado[0] = spriteSheet[1][0];
@@ -43,10 +50,10 @@ public class Policial extends Soldado {
 		for(int e=0; e < 6; e++) {
 			correndo[e] = spriteSheet[0][e];
 		}
-		for(int i=0; i < 5; i++) {
+		for(int i=0; i < 4; i++) {
 			morrendo[i] = spriteSheet[2][i];
 		}
-		for(int i=0; i < 3; i++) {
+		for(int i=0; i < 4; i++) {
 			morrendoCanhao[i] = spriteSheet[3][i];
 		}
 		
@@ -104,20 +111,26 @@ public class Policial extends Soldado {
 			else {
 				if(isNear) {
 					if(animState == "paradoAtirando") atirandoAnimCount += 1;
-					if(atirandoAnimCount > 10){
+					if(atirandoAnimCount > 5){
 						animState = "parado";
 						atirandoAnimCount = 0;
 					}
-					tiro.count += 1;
-					if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
+					if(atiradoCount < 10 && !reload && countTiro > 5) {
+						TiroSoldado tiro = new TiroSoldado(0, 0, 10, 5, 0, 0, ply);
 						animState = "paradoAtirando";
 						tiro.rect.x = rect.x;
 						tiro.rect.y = rect.y + 20;
 						tiro.velX = velTiroX;
 						tiro.velY = velTiroY;
 						tiro.wait = waitUntilShoot + 50;
-						tiro.isAlive = true;
+						tiros.add(tiro);
+						countTiro = 0;
+						atiradoCount += 1;
 					}
+					else {
+						countTiro += 1;
+					}
+					if(atiradoCount >= 10) reload = true;
 				}
 				else {
 					rect.x += velX * Gdx.graphics.getDeltaTime();
@@ -138,12 +151,31 @@ public class Policial extends Soldado {
 				}
 				this.checkNear();
 			}
-			if(comingFrom == "direita") tiro.fixedX = rect.x + 20;
-			else if(comingFrom == "esquerda") tiro.fixedX = rect.x - 20;
-			tiro.fixedY = rect.y + 20;
+			for(int e=0; e < tiros.size(); e++) {
+				TiroSoldado tiro = tiros.get(e);
+				if(comingFrom == "direita") tiro.fixedX = rect.x + 20;
+				else if(comingFrom == "esquerda") tiro.fixedX = rect.x - 20;
+				tiro.fixedY = rect.y + 20;
+				tiro.update(sb);
+				if(tiro.rect.overlaps(ply.rect)) {
+					Player.vida -= 10;
+					tiros.remove(e);
+				}
+				if(tiro.count > tiro.wait) {
+					tiros.remove(e);
+				}
+			}
+			
 			//sb.draw(vidaTXT, rect.x, rect.y, rect.width, rect.height);
 			this.draw(sb);
-			tiro.update(sb);
+			if(reload) {
+				reloadCount += 1;
+				if(reloadCount > 100) {
+					reload = false;
+					atiradoCount = 0;
+					reloadCount = 0;
+				}
+			}
 			
 		}
 		

@@ -21,10 +21,10 @@ public class Soldado extends Sprite implements Runnable {
 	public float vida = 20;
 	public int numColunas = 8;
 	public int numLinhas = 1;
-	public float spriteLargura = 80; 
-	public float spriteAltura = 80;
-	public float pCorrectX = -25;
-	public float pCorrectY = -20;
+	public float spriteLargura = 110; 
+	public float spriteAltura = 110;
+	public float pCorrectX = -30;
+	public float pCorrectY = -28;
 	public String animState = "running";
 	public float stateTime;
 	public int toWalkLeft, toWalkRight;

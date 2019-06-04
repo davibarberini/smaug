@@ -9,33 +9,32 @@ import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
 import platforms.Platform;
-import projeteis.TiroAtravessa;
 
-public class Policial extends Soldado {
+public class Assaltante extends Soldado {
 	
-	public TiroAtravessa tiro;
-	public float velTiroX = 0;
-	public float velTiroY = 0;
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
-	Texture vidaTXT = new Texture("Player/vida.png");
 	public int waitUntilShoot = 50;
+	public float spriteLargura = 80; 
+	public float spriteAltura = 80;
+	public float pCorrectX = -25;
+	public float pCorrectY = -20;
 	public Thread thread;
 	public boolean runningThread = false;
+	float acelY = 0;
 	Rectangle p1Rect = ply.rect;
 	Platform[] platforms;
-	Texture sprite = new Texture(Gdx.files.internal("Soldado/police.png"));
+	Texture sprite = new Texture(Gdx.files.internal("Soldado/assaltante.png"));
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
 	
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] paradoAtirando = new TextureRegion[1];
-	TextureRegion[] morrendo = new TextureRegion[5];
-	TextureRegion[] morrendoCanhao = new TextureRegion[3];
+	TextureRegion[] morrendo = new TextureRegion[4];
+	TextureRegion[] morrendoCanhao = new TextureRegion[4];
 	
-	public Policial(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
+	public Assaltante(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply, Platform[] platforms) {
 		super(x, y, w, h, vel, pixelsToWalkRight, pixelsToWalkLeft, ply);
-		tiro = new TiroAtravessa(0, 0, 10, 5, 0, 0, ply);
 		
 		this.platforms = platforms;
 		parado[0] = spriteSheet[1][0];
@@ -43,10 +42,10 @@ public class Policial extends Soldado {
 		for(int e=0; e < 6; e++) {
 			correndo[e] = spriteSheet[0][e];
 		}
-		for(int i=0; i < 5; i++) {
+		for(int i=0; i < 4; i++) {
 			morrendo[i] = spriteSheet[2][i];
 		}
-		for(int i=0; i < 3; i++) {
+		for(int i=0; i < 4; i++) {
 			morrendoCanhao[i] = spriteSheet[3][i];
 		}
 		
@@ -85,6 +84,7 @@ public class Policial extends Soldado {
 						  }  
 					}
 				}
+				
 				if(vulnerableCount < 15) rect.y += 1;
 				else if(vulnerableCount < 30) rect.y -= 1;
 				vulnerableCount += 1;
@@ -108,16 +108,22 @@ public class Policial extends Soldado {
 						animState = "parado";
 						atirandoAnimCount = 0;
 					}
-					tiro.count += 1;
-					if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
-						animState = "paradoAtirando";
-						tiro.rect.x = rect.x;
-						tiro.rect.y = rect.y + 20;
-						tiro.velX = velTiroX;
-						tiro.velY = velTiroY;
-						tiro.wait = waitUntilShoot + 50;
-						tiro.isAlive = true;
+					if(rect.y + 40 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 30 && ply.rect.x < rect.x + 30) {
+						if(waitUntilShoot > 50) {
+							animState = "paradoAtirando";
+							waitUntilShoot = 0;
+							ply.beingPushed = true;
+							if(comingFrom == "esquerda") {
+								ply.velX = -500;
+							}
+							else {
+								ply.velX = 500;
+							}
+						}
 					}
+					
+					
+					
 				}
 				else {
 					rect.x += velX * Gdx.graphics.getDeltaTime();
@@ -136,14 +142,18 @@ public class Policial extends Soldado {
 						velX = vel;
 					}
 				}
+				waitUntilShoot += 1;
 				this.checkNear();
+				rect.y -= 200 * Gdx.graphics.getDeltaTime();
+				for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+					  if(platforms[k] != null) {
+						  Platform plat = platforms[k];
+						  plat.genericPlatformCollisionY(rect, -10);
+					  }  
+				}
+				
 			}
-			if(comingFrom == "direita") tiro.fixedX = rect.x + 20;
-			else if(comingFrom == "esquerda") tiro.fixedX = rect.x - 20;
-			tiro.fixedY = rect.y + 20;
-			//sb.draw(vidaTXT, rect.x, rect.y, rect.width, rect.height);
 			this.draw(sb);
-			tiro.update(sb);
 			
 		}
 		
@@ -218,16 +228,14 @@ public class Policial extends Soldado {
 	}
 	
 	public void checkNear() {
-		if(rect.y + 120 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 300 && ply.rect.x < rect.x + 300) {
+		if(rect.y + 40 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 120 && ply.rect.x < rect.x + 120) {
 			isNear = true;
 			if(animState != "paradoAtirando") animState = "parado";
 			if(rect.x > ply.rect.x) {
 				comingFrom = "esquerda";
-				velTiroX = -400;
 			}
 			else {
 				comingFrom = "direita";
-				velTiroX = 400;
 			}
 		}
 		else {

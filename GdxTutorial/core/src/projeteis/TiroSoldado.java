@@ -10,19 +10,18 @@ import com.badlogic.gdx.math.Rectangle;
 import entities.Player;
 import platforms.Platform;
 
-public class TiroAtravessa {
+public class TiroSoldado {
 	public Rectangle rect;
 	public float velX, velY;
-	public boolean isAlive = false;
 	public int wait = 0;
 	public Player ply;
 	public float spriteLargura = 30;
 	public float spriteAltura = 30;
 	public float pCorrectY;
 	public float pCorrectX;
-	public int count = 0;
 	public float fixedX, fixedY;
 	public float stateTime = 0;
+	public int count = 0;
 	public Platform[] platforms;
 	
 	Animation<TextureRegion> projetilAnim;
@@ -34,7 +33,7 @@ public class TiroAtravessa {
 	TextureRegion[] projetil = new TextureRegion[4];
 
 	
-	public TiroAtravessa(float x, float y, float w, float h, float velX, float velY, Player ply) {
+	public TiroSoldado(float x, float y, float w, float h, float velX, float velY, Player ply) {
 		rect = new Rectangle(x, y, w, h);
 		fixedX = x;
 		fixedY = y;
@@ -49,21 +48,9 @@ public class TiroAtravessa {
 	}
 	
 	public void update(SpriteBatch sb) {
-		if(isAlive) {
-			rect.x += velX * Gdx.graphics.getDeltaTime();
-			rect.y += velY * Gdx.graphics.getDeltaTime();
-			if(rect.overlaps(ply.rect)) {
-				isAlive = false;
-				Player.vida -= 10;
-				count = 0;
-			}
-			if(count > wait) {
-				isAlive = false;
-				count = 0;
-				stateTime = 0;
-			}
-			this.draw(sb);
-		}
+		rect.x += velX * Gdx.graphics.getDeltaTime();
+		rect.y += velY * Gdx.graphics.getDeltaTime();
+		this.draw(sb);
 	}
 	
 	public void draw(SpriteBatch sb) {
