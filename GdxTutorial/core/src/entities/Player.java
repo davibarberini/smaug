@@ -51,6 +51,7 @@ public class Player extends Sprite implements Runnable{
 	public int deathCount = 0;
 	public boolean paused = false;
 	public TiroPlayer tiro;
+	public LifeRegen regen;
 	public Thread thread;
 	public boolean runningThread = false;
 	
@@ -127,6 +128,7 @@ public class Player extends Sprite implements Runnable{
 		velX = vX;
 		velY = vY;
 		tiro = new TiroPlayer(x, y, 20, 20, 0, 0, platforms);
+		regen = new LifeRegen(this);
 		
 		for(int e=0; e < 6; e++) {
 			correndo[e] = roboSheet[0][e];
@@ -223,6 +225,7 @@ public class Player extends Sprite implements Runnable{
 			}
 		}
 		if(tiro.isAlive) tiro.count += 1;
+		regen.update();
 	
 		
 	}
@@ -464,6 +467,7 @@ public class Player extends Sprite implements Runnable{
 		else {
 			stateTime = 0;
 		}
+		regen.draw(sb);
 	}
 	
 	public void keyDown(int keyCode) {
@@ -651,7 +655,7 @@ public class Player extends Sprite implements Runnable{
 			tiro.facing = facing;
 			if(velX > 300) velX = 300;
 			else if(velX < -300) velX = -300;
-			if(tiro.count > 50) {
+			if(tiro.count > 60) {
 				tiro.count = 0;
 				tiro.isAlive = false;
 			}

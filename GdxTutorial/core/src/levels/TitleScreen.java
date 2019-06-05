@@ -7,6 +7,7 @@ import com.badlogic.gdx.ScreenAdapter;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
@@ -21,6 +22,8 @@ public class TitleScreen extends ScreenAdapter{
     OrthographicCamera camera;
     FillViewport view;
     public String selected = "play";
+    int rectCount = 0;
+    int rectCount2 = 400;
 
     public TitleScreen(MyGdxGame game) {
         this.game = game;
@@ -70,7 +73,7 @@ public class TitleScreen extends ScreenAdapter{
                     if(selected == "play") {
                     	Player.score = 10000;
                     	Player.vida = 100;
-                    	game.setScreen(new Level1(game));
+                    	game.transition = true;
                     } 
                     else if(selected == "tutorial") game.setScreen(new Tutorial(game));
                     else if(selected == "exit") System.exit(1);
@@ -104,6 +107,21 @@ public class TitleScreen extends ScreenAdapter{
     
     @Override
     public void render(float delta) {
+    	if(!game.transition) {
+	    	if(game.untransition) {
+	    		draw();
+				untransitionScene();
+			}
+	    	else draw();
+		}
+	    else {
+			draw();
+			transitionScene();
+		}
+    	
+    }
+    
+    public void draw() {
     	game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
     	
         Gdx.gl.glClearColor(0, .25f, 0, 1);
@@ -125,8 +143,42 @@ public class TitleScreen extends ScreenAdapter{
     	game.font.draw(game.batch, "Exit", 190, 110);
     	
         game.batch.end();
-		
     }
+    
+    public void transitionScene() {
+    	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+    	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    	  game.shapeRenderer.setColor(0, 0, 0, 1);
+    	  game.shapeRenderer.rect(0, 0, rectCount, rectCount);
+    	  game.shapeRenderer.rect(0, 510, rectCount, -rectCount);
+    	  game.shapeRenderer.rect(640, 510, -rectCount, -rectCount);
+    	  game.shapeRenderer.rect(640, 0, -rectCount, rectCount);
+    	  rectCount += 10;
+    	  if(rectCount > 400) {
+    		  camera.position.set(0, 0, 0);
+    		  game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela
+    		  game.t1.interrupt();
+    		  game.untransition = true;
+    		  game.transition = false;
+  			  game.setScreen(new CutScene(game, "Level1"));
+    	  }
+    	  game.shapeRenderer.end();
+    	  
+    }
+    public void untransitionScene() {
+    	  game.shapeRenderer.setProjectionMatrix(camera.combined);
+    	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+    	  game.shapeRenderer.setColor(0, 0, 0, 1);
+    	  game.shapeRenderer.rect(0, 0, rectCount2, rectCount2);
+    	  game.shapeRenderer.rect(0, 510, rectCount2, -rectCount2);
+    	  game.shapeRenderer.rect(640, 510, -rectCount2, -rectCount2);
+    	  game.shapeRenderer.rect(640, 0, -rectCount2, rectCount2);
+	  	  rectCount2 -= 10;
+	  	  if(rectCount2 < 0) {
+	  		  game.untransition = false;
+	  	  }
+	  	  game.shapeRenderer.end();
+	}
     @Override
     public void hide(){
         Gdx.input.setInputProcessor(null);

@@ -177,6 +177,7 @@ public class Soldado extends Sprite implements Runnable {
 		if(n == 1) {
 			Player.vida += 10;
 			if(Player.vida > 100) Player.vida = 100;
+			ply.regen.alive = true;
 		}
 	}
 

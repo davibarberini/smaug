@@ -18,6 +18,7 @@ import entities.Player;
 import entities.soldados.Soldado;
 import entities.soldados.SoldadoAtirador;
 import entities.soldados.Assaltante;
+import entities.soldados.Drone;
 import entities.soldados.Policial;
 import platforms.Platform;
 import soundandmusic.MusicPlayer;
@@ -254,10 +255,11 @@ public class Level2 extends ScreenAdapter {
   }
   
   public void createEnemies() {
-	  soldados = new Soldado[3];
+	  soldados = new Soldado[4];
 	  soldados[0] = new Policial(370, 30, 40, 56, 5, 10, 0, p1, platforms);
-	  soldados[1] = new SoldadoAtirador(470, 30, 40, 56, 5, 10, 0, p1, platforms);
-	  soldados[2] = new Assaltante(1860, 23, 25, 35, 5, 10, 0, p1, platforms);
+	  soldados[1] = new SoldadoAtirador(670, 30, 40, 56, 5, 10, 0, p1, platforms);
+	  soldados[2] = new Assaltante(1860, 60, 25, 35, 5, 10, 0, p1, platforms);
+	  soldados[3] = new Drone(600, 400, 50, 20, 50, 100, 100, p1, platforms);
   }
   
   public void dispose() {
@@ -283,7 +285,7 @@ public class Level2 extends ScreenAdapter {
 		  game.t1.interrupt();
 		  game.untransition = true;
 		  game.transition = false;
-		  game.setScreen(new Level3(game));
+		  game.setScreen(new CutScene(game, "Level3"));
 	  }
 	  game.shapeRenderer.end();
   }

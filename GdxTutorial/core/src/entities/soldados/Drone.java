@@ -1,7 +1,5 @@
 package entities.soldados;
 
-import java.util.ArrayList;
-
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -11,49 +9,48 @@ import com.badlogic.gdx.math.Rectangle;
 
 import entities.Player;
 import platforms.Platform;
-import projeteis.TiroSoldado;
+import projeteis.TiroDrone;
 
-public class SoldadoAtirador extends Soldado {
+public class Drone extends Soldado {
 	
-	public ArrayList<TiroSoldado> tiros = new ArrayList<TiroSoldado>();
+	public TiroDrone tiro;
 	public float velTiroX = 0;
-	public float velTiroY = 0;
+	public float velTiroY = -400;
 	public boolean isNear = false;
 	public String comingFrom = "esquerda";
-	int countTiro = 0;
-	int atiradoCount = 0;
 	Texture vidaTXT = new Texture("Player/vida.png");
-	public int waitUntilShoot = 50;
-	boolean reload = false;
-	int reloadCount = 0;
+	public int waitUntilShoot = 30;
+	public float spriteLargura = 80; 
+	public float spriteAltura = 80;
+	public float pCorrectX = -14;
+	public float pCorrectY = -30;
 	public Thread thread;
 	public boolean runningThread = false;
 	Rectangle p1Rect = ply.rect;
 	Platform[] platforms;
-	Texture sprite = new Texture(Gdx.files.internal("Soldado/soldado.png"));
-	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
+	Texture sprite = new Texture(Gdx.files.internal("Soldado/drone.png"));
+	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 50, 50);
 	
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] paradoAtirando = new TextureRegion[1];
 	TextureRegion[] morrendo = new TextureRegion[4];
-	TextureRegion[] morrendoCanhao = new TextureRegion[4];
+	TextureRegion[] morrendoCanhao = new TextureRegion[3];
+	TextureRegion[] correndo = new TextureRegion[1];
 	
-	public SoldadoAtirador(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
+	public Drone(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply, Platform[] platforms) {
 		super(x, y, w, h, vel, pixelsToWalkRight, pixelsToWalkLeft, ply);
-		//tiro = new TiroAtravessa(0, 0, 10, 5, 0, 0, ply);
-		
+		tiro = new TiroDrone(0, 0, 10, 10, 0, 0, ply, platforms);
 		this.platforms = platforms;
-		parado[0] = spriteSheet[1][0];
-		paradoAtirando[0] = spriteSheet[1][1];
-		for(int e=0; e < 6; e++) {
-			correndo[e] = spriteSheet[0][e];
-		}
+		parado[0] = spriteSheet[0][0];
+		paradoAtirando[0] = spriteSheet[0][0];
+		correndo[0] = spriteSheet[0][1];
+		
 		for(int i=0; i < 4; i++) {
-			morrendo[i] = spriteSheet[2][i];
+			morrendo[i] = spriteSheet[1][i];
 		}
-		for(int i=0; i < 4; i++) {
-			morrendoCanhao[i] = spriteSheet[3][i];
+		for(int i=0; i < 3; i++) {
+			morrendoCanhao[i] = spriteSheet[2][i];
 		}
 		
 		morrendoAnim = new Animation<TextureRegion>(0.06f, morrendo);
@@ -73,26 +70,6 @@ public class SoldadoAtirador extends Soldado {
 		
 		if(isAlive) {
 			if(!vulnerable) {
-				if(fixedX > rect.x) {
-					rect.x -= 1;
-					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-						  if(platforms[k] != null) {
-							  Platform plat = platforms[k];
-							  plat.genericPlatformCollisionX(rect, -10);
-						  }  
-					}
-				} 
-				else {
-					rect.x += 1;
-					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-						  if(platforms[k] != null) {
-							  Platform plat = platforms[k];
-							  plat.genericPlatformCollisionX(rect, 10);
-						  }  
-					}
-				}
-				if(vulnerableCount < 15) rect.y += 1;
-				else if(vulnerableCount < 30) rect.y -= 1;
 				vulnerableCount += 1;
 				if(vulnerableCount > 50) {
 					velX = vel;
@@ -110,36 +87,23 @@ public class SoldadoAtirador extends Soldado {
 			else {
 				if(isNear) {
 					if(animState == "paradoAtirando") atirandoAnimCount += 1;
-					if(atirandoAnimCount > 5){
+					if(atirandoAnimCount > 10){
 						animState = "parado";
 						atirandoAnimCount = 0;
 					}
-					if(atiradoCount < 10 && !reload && countTiro > 5) {
-						TiroSoldado tiro = new TiroSoldado(0, 0, 10, 5, 0, 0, ply);
+					tiro.count += 1;
+					if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
 						animState = "paradoAtirando";
-						tiro.rect.x = rect.x;
-						tiro.rect.y = rect.y + 20;
+						tiro.rect.x = rect.x + 32;
+						tiro.rect.y = rect.y - 10;
 						tiro.velX = velTiroX;
 						tiro.velY = velTiroY;
-						tiro.wait = waitUntilShoot + 50;
-						tiros.add(tiro);
-						countTiro = 0;
-						atiradoCount += 1;
+						tiro.wait = waitUntilShoot + 100;
+						tiro.isAlive = true;
 					}
-					else {
-						countTiro += 1;
-					}
-					if(atiradoCount >= 10) reload = true;
 				}
 				else {
 					rect.x += velX * Gdx.graphics.getDeltaTime();
-					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-						  if(platforms[k] != null) {
-							  Platform plat = platforms[k];
-							  plat.genericPlatformCollisionX(rect, velX);
-						  }
-						  
-					}
 					walked += velX * Gdx.graphics.getDeltaTime();
 					if(walked >= toWalkRight) {
 						velX = -vel;
@@ -150,31 +114,10 @@ public class SoldadoAtirador extends Soldado {
 				}
 				this.checkNear();
 			}
-			for(int e=0; e < tiros.size(); e++) {
-				TiroSoldado tiro = tiros.get(e);
-				if(comingFrom == "direita") tiro.fixedX = rect.x + 20;
-				else if(comingFrom == "esquerda") tiro.fixedX = rect.x - 20;
-				tiro.fixedY = rect.y + 20;
-				tiro.update(sb);
-				if(tiro.rect.overlaps(ply.rect)) {
-					Player.vida -= 10;
-					tiros.remove(e);
-				}
-				if(tiro.count > tiro.wait) {
-					tiros.remove(e);
-				}
-			}
-			
+			tiro.fixedY = rect.y + 20;
 			//sb.draw(vidaTXT, rect.x, rect.y, rect.width, rect.height);
 			this.draw(sb);
-			if(reload) {
-				reloadCount += 1;
-				if(reloadCount > 100) {
-					reload = false;
-					atiradoCount = 0;
-					reloadCount = 0;
-				}
-			}
+			tiro.update(sb);
 			
 		}
 		
@@ -249,17 +192,9 @@ public class SoldadoAtirador extends Soldado {
 	}
 	
 	public void checkNear() {
-		if(rect.y + 200 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 300 && ply.rect.x < rect.x + 300) {
+		if(rect.y + 10 > ply.rect.y && ply.rect.y > rect.y - 800 && ply.rect.x > rect.x - 120 && ply.rect.x < rect.x + 120) {
 			isNear = true;
 			if(animState != "paradoAtirando") animState = "parado";
-			if(rect.x > ply.rect.x) {
-				comingFrom = "esquerda";
-				velTiroX = -400;
-			}
-			else {
-				comingFrom = "direita";
-				velTiroX = 400;
-			}
 		}
 		else {
 			isNear = false;

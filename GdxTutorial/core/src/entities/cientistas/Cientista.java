@@ -167,10 +167,11 @@ public class Cientista extends Sprite implements Runnable{
 	}
 	
 	public void ganhaVida() {
-		int n = rand.nextInt(5);
-		if(n == 1) {
+		int n = rand.nextInt(4);
+		if(n == 2) {
 			Player.vida += 10;
 			if(Player.vida > 100) Player.vida = 100;
+			ply.regen.alive = true;
 		}
 	}
 

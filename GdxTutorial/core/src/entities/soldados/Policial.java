@@ -218,7 +218,7 @@ public class Policial extends Soldado {
 	}
 	
 	public void checkNear() {
-		if(rect.y + 120 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 300 && ply.rect.x < rect.x + 300) {
+		if(rect.y + 200 > ply.rect.y && ply.rect.y > rect.y - 10 && ply.rect.x > rect.x - 300 && ply.rect.x < rect.x + 300) {
 			isNear = true;
 			if(animState != "paradoAtirando") animState = "parado";
 			if(rect.x > ply.rect.x) {

@@ -295,7 +295,7 @@ public class Level1 extends ScreenAdapter{
 		  game.t1.interrupt();
 		  game.untransition = true;
 		  game.transition = false;
-		  game.setScreen(new Level2(game));
+		  game.setScreen(new CutScene(game, "Level2"));
 	  }
 	  game.shapeRenderer.end();
   }

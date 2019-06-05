@@ -5,6 +5,7 @@ import com.badlogic.gdx.math.Rectangle;
 import com.mygdx.game.MyGdxGame;
 
 import entities.Player;
+import projeteis.TiroDrone;
 import projeteis.TiroNormal;
 import projeteis.TiroPlayer;
 import projeteis.TiroRicochete;
@@ -91,6 +92,12 @@ public class Platform {
     	
     }
     public void normalBulletCollision(TiroNormal tiro) {
+    	if(tiro.rect.overlaps(rect)) {
+    		tiro.count = 0;
+    		tiro.isAlive = false;
+    	}
+    }
+    public void droneBulletCollision(TiroDrone tiro) {
     	if(tiro.rect.overlaps(rect)) {
     		tiro.count = 0;
     		tiro.isAlive = false;

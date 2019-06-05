@@ -8,7 +8,6 @@ import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 
-import levels.PauseScreen;
 import levels.TitleScreen;
 import soundandmusic.MusicPlayer;
 
