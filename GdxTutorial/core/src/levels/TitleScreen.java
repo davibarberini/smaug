@@ -160,7 +160,7 @@ public class TitleScreen extends ScreenAdapter{
     		  game.t1.interrupt();
     		  game.untransition = true;
     		  game.transition = false;
-  			  game.setScreen(new CutScene(game, "Level1"));
+  			  game.setScreen(new CutScene(game, "Level3"));
     	  }
     	  game.shapeRenderer.end();
     	  

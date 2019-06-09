@@ -274,10 +274,10 @@ public class Level2 extends ScreenAdapter {
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 0, 0, 1);
-	  game.shapeRenderer.rect(p1.rect.x - 230, -20, rectCount, rectCount);
-	  game.shapeRenderer.rect(p1.rect.x - 230, 490, rectCount, -rectCount);
-	  game.shapeRenderer.rect(p1.rect.x + 440, 490, -rectCount, -rectCount);
-	  game.shapeRenderer.rect(p1.rect.x + 440, -20, -rectCount, rectCount);
+	  game.shapeRenderer.rect(1960, -20, rectCount, rectCount);
+	  game.shapeRenderer.rect(1960, 490, rectCount, -rectCount);
+	  game.shapeRenderer.rect(2630, 490, -rectCount, -rectCount);
+	  game.shapeRenderer.rect(2630, -20, -rectCount, rectCount);
 	  rectCount += 10;
 	  if(rectCount > 400) {
 		  camera.position.set(0, 0, 0);

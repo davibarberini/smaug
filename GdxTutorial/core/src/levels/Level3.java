@@ -26,6 +26,10 @@ public class Level3 extends ScreenAdapter {
   public static int HEIGHT;
   public Soldado[] soldados;
   
+  boolean bossFight = false;
+  boolean bossTransition = false;
+  int countBoss = 0;
+  
   int rectCount = 0;
   int rectCount2 = 400;
   int countTransition = 0;
@@ -171,6 +175,59 @@ public class Level3 extends ScreenAdapter {
 	
   }
   
+  public void updateUnpaused(float delta) {
+	  game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
+		if(!bossTransition) p1.rect.y += p1.gravity * delta;
+		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionY(p1.gravity, p1);
+			  }  
+		}
+		
+		if(!bossTransition) {
+			p1.rect.x += p1.velX * delta;
+			
+		} else p1.animState = "parado";
+		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
+			  if(platforms[k] != null) {
+				  Platform plat = platforms[k];
+				  plat.platCollisionX(p1.velX, p1);
+			  }
+			  
+		}
+		p1.update(game);
+	    if(camera.position.x > 2095 && !bossFight) {
+	    	bossFight = true;
+	    	bossTransition = true;
+	    	camera.position.x = 2095;
+	    }
+	    if(bossFight) {
+	    	if(p1.rect.x < 1770) {
+	    		p1.rect.x = 1770;
+	    	}
+	    }
+	    else camera.position.set(p1.rect.x + (p1.rect.width / 2) + 100 ,  220, 0);
+	    
+	    if(bossTransition) {
+	    	if(countBoss < 30) {
+	    		camera.position.x += 10;
+	    		camera.position.y += 10;
+	    	}
+	    	else {
+	    		camera.position.x = 2095;
+	    		camera.position.y = 220;
+	    	}
+	    	countBoss += 1;
+	    }
+	    
+		//camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
+		camera.update();
+		
+		this.drawUnpaused();
+	  
+  }
+  
   public void drawUnpaused() {
 	  Gdx.gl.glClearColor(0, 0, 1, 1);
 	  Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
@@ -205,38 +262,15 @@ public class Level3 extends ScreenAdapter {
 	  }
 	  p1.draw(game.batch);
 	  //game.batch.draw(p1.life, p1.rect.x - 300,  350, Player.vida, 30);
-	  p1.drawVida(game.batch, p1.rect.x - 190, 410);
+	  if(bossFight) {
+		  p1.drawVida(game.batch, 1785, 410);
+	  }else {
+		  p1.drawVida(game.batch, p1.rect.x - 190, 410);
+	  }
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
 	 
 	
-  }
-  public void updateUnpaused(float delta) {
-	  game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
-		p1.rect.y += p1.gravity * delta;
-		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
-			  if(platforms[k] != null) {
-				  Platform plat = platforms[k];
-				  plat.platCollisionY(p1.gravity, p1);
-			  }  
-		}
-		
-		p1.rect.x += p1.velX * delta;
-		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-			  if(platforms[k] != null) {
-				  Platform plat = platforms[k];
-				  plat.platCollisionX(p1.velX, p1);
-			  }
-			  
-		}
-		p1.update(game);
-		
-	    camera.position.set(p1.rect.x + (p1.rect.width / 2) + 100 ,  220, 0);
-		//camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
-		camera.update();
-		
-		this.drawUnpaused();
-	  
   }
   
   public void createEnemies() {

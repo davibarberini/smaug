@@ -37,7 +37,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
-  public String levelToEdit = "Tutorial/Tutorial";
+  public String levelToEdit = "Level3/Level3";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
 	
