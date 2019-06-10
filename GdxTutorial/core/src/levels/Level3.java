@@ -8,10 +8,12 @@ import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.glutils.ShapeRenderer;
+import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.utils.viewport.FillViewport;
 import com.mygdx.game.MyGdxGame;
 
 import editor.MapFileReader;
+import entities.Boss;
 import entities.Parallax;
 import entities.Player;
 import entities.soldados.Soldado;
@@ -26,6 +28,8 @@ public class Level3 extends ScreenAdapter {
   public static int HEIGHT;
   public Soldado[] soldados;
   
+  
+  public Boss boss;
   boolean bossFight = false;
   boolean bossTransition = false;
   int countBoss = 0;
@@ -197,6 +201,7 @@ public class Level3 extends ScreenAdapter {
 			  
 		}
 		p1.update(game);
+		boss.update();
 	    if(camera.position.x > 2095 && !bossFight) {
 	    	bossFight = true;
 	    	bossTransition = true;
@@ -211,14 +216,25 @@ public class Level3 extends ScreenAdapter {
 	    
 	    if(bossTransition) {
 	    	if(countBoss < 30) {
+	    		camera.zoom -= 0.01f;
 	    		camera.position.x += 10;
-	    		camera.position.y += 10;
+	    		camera.position.y += 5;
 	    	}
-	    	else {
+	    	else if (countBoss > 90 && countBoss < 120){
+	    		camera.zoom += 0.01f;
+	    		camera.position.x -= 10;
+	    		camera.position.y -= 5;
+	    	}
+	    	else if(countBoss > 120) {
+	    		camera.zoom = 1;
+	    		boss.alive = true;
+	    		bossTransition = false;
 	    		camera.position.x = 2095;
 	    		camera.position.y = 220;
+	    		p1.gravity = 0;
 	    	}
 	    	countBoss += 1;
+	    	
 	    }
 	    
 		//camera.position.set(p1.rect.x + (p1.rect.width / 2), p1.rect.y  + (p1.rect.width / 2), 0);
@@ -260,6 +276,7 @@ public class Level3 extends ScreenAdapter {
 	  for(int e=0; e < soldados.length; e++) {
 		  soldados[e].update(game.batch);
 	  }
+	  boss.draw(game.batch);
 	  p1.draw(game.batch);
 	  //game.batch.draw(p1.life, p1.rect.x - 300,  350, Player.vida, 30);
 	  if(bossFight) {
@@ -276,6 +293,7 @@ public class Level3 extends ScreenAdapter {
   public void createEnemies() {
 	  soldados = new Soldado[1];
 	  soldados[0] = new Policial(370, 27, 25, 35, 5, 10, 0, p1, platforms);
+	  boss = new Boss(new Rectangle(2300, 300, 200, 100), p1);
   }
   
   public void dispose() {

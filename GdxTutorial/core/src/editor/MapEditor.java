@@ -37,6 +37,7 @@ public class MapEditor extends ScreenAdapter {
   public static float colr, linr;
   public ArrayList <Platform> platforms = new ArrayList<Platform>();
   public int x, y;
+  String locRoot = Gdx.files.getLocalStoragePath();
   public String levelToEdit = "Level3/Level3";
   MapFileWriter mapWriter;
   MapFileReader mapReader;
