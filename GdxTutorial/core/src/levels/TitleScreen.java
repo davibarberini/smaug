@@ -76,6 +76,7 @@ public class TitleScreen extends ScreenAdapter{
                     	game.transition = true;
                     } 
                     else if(selected == "tutorial") game.setScreen(new Tutorial(game));
+                    else if(selected == "skin") game.setScreen(new SkinChange(game));
                     else if(selected == "exit") System.exit(1);
                     return true;
                 }
@@ -86,12 +87,14 @@ public class TitleScreen extends ScreenAdapter{
                 else if(keyCode == Input.Keys.UP || keyCode == Input.Keys.W) {
                 	if(selected == "play") selected = "exit";
                 	else if (selected == "tutorial") selected = "play";
-                	else if (selected == "exit") selected = "tutorial";
+                	else if (selected == "skin") selected = "tutorial";
+                	else if (selected == "exit") selected = "skin";
                 	return true;
                 }
                 else if(keyCode == Input.Keys.DOWN || keyCode == Input.Keys.S) {
                 	if(selected == "play") selected = "tutorial";
-                	else if (selected == "tutorial") selected = "exit";
+                	else if (selected == "tutorial") selected = "skin";
+                	else if (selected == "skin") selected = "exit";
                 	else if (selected == "exit") selected = "play";
                 	return true;
                 }
@@ -133,14 +136,16 @@ public class TitleScreen extends ScreenAdapter{
     	game.batch.draw(fundo, 0, 0, 640, 480);
     	
     	if(selected == "play") game.batch.draw(select, 130, 270, 40, 40);
-        else if(selected == "tutorial") game.batch.draw(select, 130, 170, 40, 40);
-        else if(selected == "exit") game.batch.draw(select, 130, 70, 40, 40);
+        else if(selected == "tutorial") game.batch.draw(select, 130, 200, 40, 40);
+        else if(selected == "skin") game.batch.draw(select, 130, 130, 40, 40);
+        else if(selected == "exit") game.batch.draw(select, 130, 60, 40, 40);
     	
     	game.titlefont.draw(game.batch, "OFF-LIFE", 170, 430);
     	//game.batch.draw(title, 155, 345);
     	game.font.draw(game.batch, "Play Game", 190, 310);
-    	game.font.draw(game.batch, "Tutorial", 190, 210);
-    	game.font.draw(game.batch, "Exit", 190, 110);
+    	game.font.draw(game.batch, "Tutorial", 190, 240);
+    	game.font.draw(game.batch, "Robot Skin", 190, 170);
+    	game.font.draw(game.batch, "Exit", 190, 100);
     	
         game.batch.end();
     }
@@ -160,7 +165,7 @@ public class TitleScreen extends ScreenAdapter{
     		  game.t1.interrupt();
     		  game.untransition = true;
     		  game.transition = false;
-  			  game.setScreen(new CutScene(game, "Level3"));
+  			  game.setScreen(new CutScene(game, "Level1"));
     	  }
     	  game.shapeRenderer.end();
     	  

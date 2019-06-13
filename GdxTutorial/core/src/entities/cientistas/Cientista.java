@@ -1,6 +1,7 @@
 package entities.cientistas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
@@ -39,6 +40,8 @@ public class Cientista extends Sprite implements Runnable{
 	public boolean runningThread = false;
 	public Thread thread;
 	Random rand = new Random();
+	
+	//Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/cientistaTiro.wav"));
 	
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> paradoAtirandoAnim;
@@ -173,6 +176,7 @@ public class Cientista extends Sprite implements Runnable{
 			if(Player.vida > 100) Player.vida = 100;
 			ply.regen.alive = true;
 		}
+		System.out.println(n);
 	}
 
 	@Override
@@ -196,19 +200,19 @@ public class Cientista extends Sprite implements Runnable{
 							Player.swordKills += 1;
 							if(ply.animState == "attacking") {
 								Player.attack1Kills += 1;
-								System.out.println(Player.attack1Kills);
+								//System.out.println(Player.attack1Kills);
 							}
 							else if(ply.animState == "attacking2") {
 								Player.attack2Kills += 1;
-								System.out.println(Player.attack2Kills);
+								//System.out.println(Player.attack2Kills);
 							}
 							else if(ply.animState == "attacking3") {
 								Player.attack3Kills += 1;
-								System.out.println(Player.attack3Kills);
+								//System.out.println(Player.attack3Kills);
 							}
 							else if(ply.animState == "airAttack") {
 								Player.airAttackKills += 1;
-								System.out.println(Player.airAttackKills);
+								//System.out.println(Player.airAttackKills);
 							}
 							this.dispose();
 						} else {

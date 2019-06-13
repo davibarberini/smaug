@@ -22,6 +22,7 @@ public class MyGdxGame extends Game {
   public static String actualLevel = "Level1";
   public boolean transition = false;
   public boolean untransition = true;
+  public static String skinSelected = "robo";
 
   @Override
   public void create () {

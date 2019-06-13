@@ -18,7 +18,7 @@ public class EndScreen extends ScreenAdapter {
     MyGdxGame game;
     OrthographicCamera camera;
     
-    Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
+    Texture robo = new Texture(Gdx.files.internal("Player/" + MyGdxGame.skinSelected + ".png"));
     TextureRegion[][] roboSheet = TextureRegion.split(robo, 80, 80);
     TextureRegion death = new TextureRegion(roboSheet[6][0]);
     
@@ -72,7 +72,7 @@ public class EndScreen extends ScreenAdapter {
     	
     	
     	//Criando a thread da musica
-    	game.t1 = new MusicPlayer("TitleScreen/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
+    	game.t1 = new MusicPlayer("EndScreen/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
         game.t1.start(); 
         
         Gdx.input.setInputProcessor(new InputAdapter() {

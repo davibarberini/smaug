@@ -2,6 +2,7 @@ package entities;
 
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.Sprite;
@@ -60,6 +61,10 @@ public class Player extends Sprite implements Runnable{
 	int countMain = 0;
 	int countThread = 0;
 	
+	Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/shoot.wav"));
+	public Sound regenSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/regen.wav"));
+	Sound jumpSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/pulo.wav"));
+	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> correndoCanhaoMAnim;
 	Animation<TextureRegion> correndoCanhaoCAnim;
@@ -89,7 +94,7 @@ public class Player extends Sprite implements Runnable{
 	
 	TextureRegion currentFrame;
 	
-	Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
+	Texture robo = new Texture(Gdx.files.internal("Player/" + MyGdxGame.skinSelected + ".png"));
 	public Texture life = new Texture(Gdx.files.internal("Player/vida.png"));
 	
 	TextureRegion[][] roboSheet = TextureRegion.split(robo, 80, 80);
@@ -478,6 +483,7 @@ public class Player extends Sprite implements Runnable{
             	else if (PauseScreen.selected == "mainmenu") PauseScreen.selected = "return";
             	else if (PauseScreen.selected == "exit") PauseScreen.selected = "mainmenu";
 			}else {
+				jumpSound.play(1f);
 				stateTime = 0;
 	            this.gravity = 600;
 	            animState = "jumping";
@@ -554,6 +560,7 @@ public class Player extends Sprite implements Runnable{
                 	tiro.isAlive = true;
                 	tiroCooldown = 0;
                 	tiro.drawFlash = true;
+                	tiroSound.play(1f);
             	}
         	}
         	else {
@@ -574,6 +581,7 @@ public class Player extends Sprite implements Runnable{
                 	tiro.isAlive = true;
                 	tiroCooldown = 0;
                 	tiro.drawFlash = true;
+                	tiroSound.play(1f);
             	}
         	}
         	else {
@@ -594,6 +602,7 @@ public class Player extends Sprite implements Runnable{
                 	tiro.isAlive = true;
                 	tiroCooldown = 0;
                 	tiro.drawFlash = true;
+                	tiroSound.play(1f);
             	}
         	}
         	else {
@@ -608,12 +617,12 @@ public class Player extends Sprite implements Runnable{
 	}
 	
 	public void keyUp(int keyCode) {
-	  if((keyCode == Input.Keys.D || keyCode == Input.Keys.LEFT) && this.aceX > 0) {
+	  if((keyCode == Input.Keys.D || keyCode == Input.Keys.RIGHT) && this.aceX > 0) {
         	this.aceX = 0;
         	if(!beingPushed) this.velX = 0;
         	if(animState == "running") animState = "parado";
       }
-	  else if((keyCode == Input.Keys.A || keyCode == Input.Keys.RIGHT) && this.aceX < 0) {
+	  else if((keyCode == Input.Keys.A || keyCode == Input.Keys.LEFT) && this.aceX < 0) {
         	this.aceX = 0;
         	if(!beingPushed) this.velX = 0;
         	if(animState == "running") animState = "parado";

@@ -3,6 +3,7 @@ package soundandmusic;
 import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.audio.Music;
+import com.mygdx.game.MyGdxGame;
 
 public class MusicPlayer extends Thread {
     String caminho;
@@ -19,6 +20,8 @@ public class MusicPlayer extends Thread {
        music.setLooping(true); //Defino que a musica ira loopar
        if(!music.isPlaying()) {
     	   music.play(); // Se a musica nao estiver tocando, toque.
+    	   if(MyGdxGame.actualLevel == "Level3") music.setVolume(0.5f);
+    	   if(MyGdxGame.actualLevel == "skin") music.setVolume(0.5f);
        }
        boolean running = true;
        while(running) {
@@ -26,7 +29,6 @@ public class MusicPlayer extends Thread {
     		   sleep(5);
     	   } catch (InterruptedException e) {
     		   // TODO Auto-generated catch block
-    		   e.printStackTrace();
     	   }
     	   if(this.toStop) {
         	   this.music.stop();
@@ -56,5 +58,8 @@ public class MusicPlayer extends Thread {
     }
     public void stopMusic() { //para parar a musica totalmente.
     	music.stop();
+    }
+    public void setMusicVolume(float f) { //para parar a musica totalmente.
+    	music.setVolume(f);
     }
 }

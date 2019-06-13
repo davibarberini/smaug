@@ -206,6 +206,18 @@ public class Level3 extends ScreenAdapter {
 	    	bossFight = true;
 	    	bossTransition = true;
 	    	camera.position.x = 2095;
+	    	if(game.t1 != null && game.t1.isAlive()) {
+	      		game.t1.toStop = true;
+	      		try {
+	      			//System.out.println("Join");
+	    			game.t1.join();
+	    		} catch (InterruptedException e) {
+	    			// TODO Auto-generated catch block
+	    			e.printStackTrace();
+	    		}
+	      	  }
+	    	game.t1 = new MusicPlayer("Level3/bossMusic.mp3"); // Crio a thread passando o caminho da musica como argumento.
+	        game.t1.start(); 
 	    }
 	    if(bossFight) {
 	    	if(p1.rect.x < 1770) {
@@ -293,7 +305,7 @@ public class Level3 extends ScreenAdapter {
   public void createEnemies() {
 	  soldados = new Soldado[1];
 	  soldados[0] = new Policial(370, 27, 25, 35, 5, 10, 0, p1, platforms);
-	  boss = new Boss(new Rectangle(2300, 300, 200, 100), p1);
+	  boss = new Boss(new Rectangle(2300, 300, 270, 100), p1);
   }
   
   public void dispose() {
