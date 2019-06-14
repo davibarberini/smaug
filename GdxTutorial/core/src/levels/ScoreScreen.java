@@ -41,6 +41,7 @@ public class ScoreScreen extends ScreenAdapter {
     int higherScore = 0;
     int countPosition = 1;
     float frPorcento;
+    String mostUsedAttack = "";
     float lowerScore, highestFa;
     boolean conectado = false;
     public static boolean hasPassed = false;
@@ -145,11 +146,26 @@ public class ScoreScreen extends ScreenAdapter {
     	}
     	
     	faAttack = new float[]{Player.attack1Kills, Player.attack2Kills, Player.attack3Kills, Player.airAttackKills, Player.cannonKills};
-    	if(Player.attack1Kills > highAttackFa) highAttackFa = Player.attack1Kills;
-    	if(Player.attack2Kills > highAttackFa) highAttackFa = Player.attack2Kills;
-    	if(Player.attack3Kills > highAttackFa) highAttackFa = Player.attack3Kills;
-    	if(Player.airAttackKills > highAttackFa) highAttackFa = Player.airAttackKills;
-    	if(Player.cannonKills > highAttackFa) highAttackFa = Player.cannonKills;
+    	if(Player.attack1Kills > highAttackFa) {
+    		highAttackFa = Player.attack1Kills;
+    		mostUsedAttack = "Attack 1";
+    	}
+    	if(Player.attack2Kills > highAttackFa) {
+    		highAttackFa = Player.attack2Kills;
+    		mostUsedAttack = "Attack 2";
+    	}
+    	if(Player.attack3Kills > highAttackFa) {
+    		highAttackFa = Player.attack3Kills;
+    		mostUsedAttack = "Attack 3";
+    	}
+    	if(Player.airAttackKills > highAttackFa) {
+    		mostUsedAttack = "Air Attack";
+    		highAttackFa = Player.airAttackKills;
+    	}
+    	if(Player.cannonKills > highAttackFa) {
+    		mostUsedAttack = "Cannon";
+    		highAttackFa = Player.cannonKills;
+    	}
     	if(highAttackFa % linNum != 0) valorAttackLin = ((highAttackFa + 1) / linNum);
     	else valorAttackLin = highAttackFa / linNum;
 //    	System.out.println(valorLin);
@@ -306,10 +322,11 @@ public class ScoreScreen extends ScreenAdapter {
         	if(e == 1) attackName = "Atk2";
         	if(e == 2) attackName = "Atk3";
         	if(e == 3) attackName = "AirAtk";
-        	if(e == 4) attackName = "Canhao";
+        	if(e == 4) attackName = "Cannon";
         	game.scoreFont.draw(game.batch, attackName, ((valorX - 15) / escala) + ((49 * escala) * e) + 740, valorY - 10);
         }
-		
+        
+        game.fontSmaller.draw(game.batch, "Most Used Attack: " + mostUsedAttack, valorX + 602, valorY + 300);
 		game.batch.end();
 		
 		//Linhas em branco para mostrar o grafico
@@ -318,6 +335,12 @@ public class ScoreScreen extends ScreenAdapter {
         game.shapeRenderer.setColor(0, 0, 1, 1);
         //Colunas vermelhas e verdes
         for(int e=0; e < 5; e++) {
+        	if(e == 0 && mostUsedAttack == "Attack 1") game.shapeRenderer.setColor(1, 1, 0, 1);
+        	else if(e == 1 && mostUsedAttack == "Attack 2") game.shapeRenderer.setColor(1, 1, 0, 1);
+        	else if(e == 2 && mostUsedAttack == "Attack 3") game.shapeRenderer.setColor(1, 1, 0, 1);
+        	else if(e == 3 && mostUsedAttack == "Air Attack") game.shapeRenderer.setColor(1, 1, 0, 1);
+        	else if(e == 4 && mostUsedAttack == "Cannon") game.shapeRenderer.setColor(1, 1, 0, 1);
+        	else game.shapeRenderer.setColor(0, 0, 1, 1);
         	float y = (faAttack[e] * (linAmplitude * escala)) / valorAttackLin;
         	game.shapeRenderer.rect(((valorX / escala) + ((50 * escala) * e)) + 702, valorY, (48 * escala), y);
         }
@@ -326,6 +349,9 @@ public class ScoreScreen extends ScreenAdapter {
         game.shapeRenderer.rect((valorX / escala) + 700, valorY, ((50 * escala) * 5) - 3, 1);
         game.shapeRenderer.rect((valorX / escala) + 700, valorY, 1, 200);
         game.shapeRenderer.end();
+        
+        
+        
 	}	
 	
     @Override

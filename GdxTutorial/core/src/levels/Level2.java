@@ -62,16 +62,11 @@ public class Level2 extends ScreenAdapter {
 		  System.out.println("Tamanho atual" + platforms.length);
 		  for(int e=0; e < platforms.length; e++) {
 			  platforms[e] = null;
-			  
-			
 		  }
 	  } catch(Exception e){
 		  
 	  }
 	  platforms = mapReader.readMapToLevel("Level2/Level2", game, "Level3");
-	  
-	  
-
   }
   
   @Override
@@ -156,8 +151,6 @@ public class Level2 extends ScreenAdapter {
         	  return true;
           }
       });
-	  
-	 
   }
   
   @Override
@@ -177,7 +170,6 @@ public class Level2 extends ScreenAdapter {
 	}else {
 		this.drawUnpaused();
 		transitionScene();
-		
 	}
 	
   }
@@ -250,8 +242,6 @@ public class Level2 extends ScreenAdapter {
 	  }
 	  //game.batch.draw(idle,  p1.rect.x, p1.rect.y, 35, 35);
 	  game.batch.end();
-	 
-	
   }
   
   public void createEnemies() {
@@ -312,9 +302,5 @@ public class Level2 extends ScreenAdapter {
 		  game.batch.end();
 	  }
   }
-  
-  
 }
-	
-
 //camera.translate(-moveSpeed * Gdx.graphics.getDeltaTime(), 0);
