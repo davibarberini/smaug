@@ -229,7 +229,7 @@ public class Player extends Sprite implements Runnable{
 				resetAttack();
 			}
 		}
-		if(tiro.isAlive) tiro.count += 1;
+		if(tiro.isAlive && !tiro.toDie) tiro.count += 1;
 		regen.update();
 	
 		
@@ -666,7 +666,8 @@ public class Player extends Sprite implements Runnable{
 			else if(velX < -300) velX = -300;
 			if(tiro.count > 60) {
 				tiro.count = 0;
-				tiro.isAlive = false;
+				tiro.toDie = true;
+				tiro.stateTime = 0;
 			}
 		}
 	}

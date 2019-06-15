@@ -318,7 +318,7 @@ public class SoldadoAtirador extends Soldado {
 						}
 					}
 				}
-				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive && isAlive) {
 					ply.tiro.isAlive = false;
 					ply.tiro.count = 0;
 					vida -= 10;

@@ -224,7 +224,9 @@ public class Soldado extends Sprite implements Runnable {
 						
 					}
 				}
-				if(ply.tiro.rect.overlaps(rect)) {
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive && isAlive) {
+					ply.tiro.isAlive = false;
+					ply.tiro.count = 0;
 					vida -= 10;
 					if(vida <= 0) {
 						stateTime = 0;

@@ -20,7 +20,12 @@ public class Boss extends Sprite{
 	public boolean alive = false;
 	int count = 0;
 	String animState = "tankFlying";
-	
+	float walked = 0;
+	float toWalkRight = -130;
+	float toWalkLeft = 500;
+	float vel = 400;
+	float velX = vel;
+	String state = "Tank";
 	Texture teste = new Texture("Player/vida.png");
 	
 	Texture tankSheet = new Texture(Gdx.files.internal("Boss/tank.png"));
@@ -92,15 +97,15 @@ public class Boss extends Sprite{
 	}
 	
 	public void update() {
-		if(alive) {
-			count += 1;
-			if(count < 60) {
-				rect.x -= 10;
+		if(alive && state == "Tank") {
+			rect.x += velX * Gdx.graphics.getDeltaTime();
+			walked += velX * Gdx.graphics.getDeltaTime();
+			if(walked >= toWalkRight) {
+				velX = -vel;
 			}
-			else if(count < 119) {
-				rect.x += 10;
+			else if(walked <= -toWalkLeft) {
+				velX = vel;
 			}
-			else count = 0;
 		}
 	}
 

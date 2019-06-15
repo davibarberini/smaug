@@ -68,21 +68,9 @@ public class Assaltante extends Soldado {
 			if(!vulnerable) {
 				if(fixedX > rect.x) {
 					rect.x -= 1;
-					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-						  if(platforms[k] != null) {
-							  Platform plat = platforms[k];
-							  plat.genericPlatformCollisionX(rect, -10);
-						  }  
-					}
 				} 
 				else {
 					rect.x += 1;
-					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-						  if(platforms[k] != null) {
-							  Platform plat = platforms[k];
-							  plat.genericPlatformCollisionX(rect, 10);
-						  }  
-					}
 				}
 				
 				if(vulnerableCount < 15) rect.y += 1;
@@ -123,17 +111,9 @@ public class Assaltante extends Soldado {
 					}
 					
 					
-					
 				}
 				else {
 					rect.x += velX * Gdx.graphics.getDeltaTime();
-					for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
-						  if(platforms[k] != null) {
-							  Platform plat = platforms[k];
-							  plat.genericPlatformCollisionX(rect, velX);
-						  }
-						  
-					}
 					walked += velX * Gdx.graphics.getDeltaTime();
 					if(walked >= toWalkRight) {
 						velX = -vel;
@@ -295,7 +275,7 @@ public class Assaltante extends Soldado {
 						}
 					}
 				}
-				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive && isAlive) {
 					ply.tiro.isAlive = false;
 					ply.tiro.count = 0;
 					vida -= 10;

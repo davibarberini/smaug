@@ -242,7 +242,7 @@ public class CientistaRicochete extends Cientista {
 						}
 					}
 				}
-				if(ply.tiro.rect.overlaps(rect)) {
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
 					vida -= 10;
 					if(vida <= 0) {
 						stateTime = 0;

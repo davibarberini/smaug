@@ -25,6 +25,10 @@ public class SkinChange extends ScreenAdapter{
     public String selected = "robo";
     int rectCount = 0;
     int rectCount2 = 400;
+    int size = 120;
+	int x1 = 325;
+	int x2 = 205;
+	int y = 150;
     
     float stateTime = 0;
     Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
@@ -43,6 +47,8 @@ public class SkinChange extends ScreenAdapter{
     TextureRegion[] correndoSo = new TextureRegion[6];
     TextureRegion[] correndoStark = new TextureRegion[6];
     TextureRegion[] correndoLgbt = new TextureRegion[6];
+    boolean rightTransition = false;
+    boolean leftTransition = false;
     
     TextureRegion[] parado = new TextureRegion[1];
     TextureRegion[] paradoSo = new TextureRegion[1];
@@ -182,20 +188,20 @@ public class SkinChange extends ScreenAdapter{
 		color.a = oldAlpha*scale; //ex. scale = 0.5 will make alpha halved
 		game.batch.setColor(color);
 		if(selected == "robo") {
-			game.batch.draw(paradoSo[0], 305, 130, 160, 160);
-			game.batch.draw(paradoLgbt[0], 185, 130, 160, 160);
+			game.batch.draw(paradoSo[0], x1, y, size, size);
+			game.batch.draw(paradoLgbt[0], x2, y, size, size);
 		}
 		else if(selected == "robospecialops") {
-			game.batch.draw(paradoStark[0], 305, 130, 160, 160);
-			game.batch.draw(parado[0], 185, 130, 160, 160);
+			game.batch.draw(paradoStark[0], x1, y, size, size);
+			game.batch.draw(parado[0], x2, y, size, size);
 		}
 		else if(selected == "robostark") {
-			game.batch.draw(paradoLgbt[0], 305, 130, 160, 160);
-			game.batch.draw(paradoSo[0], 185, 130, 160, 160);
+			game.batch.draw(paradoLgbt[0], x1, y, size, size);
+			game.batch.draw(paradoSo[0], x2, y, size, size);
 		}
 		else if(selected == "robolgbt") {
-			game.batch.draw(parado[0], 305, 130, 160, 160);
-			game.batch.draw(paradoStark[0], 185, 130, 160, 160);
+			game.batch.draw(parado[0], x1, y, size, size);
+			game.batch.draw(paradoStark[0], x2, y, size, size);
 		}
     	color.a = oldAlpha;
     	game.batch.setColor(color);

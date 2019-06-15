@@ -16,7 +16,7 @@ import soundandmusic.MusicPlayer;
 public class CutScene extends ScreenAdapter{
 
     MyGdxGame game;
-    public Texture fundo;
+    public Texture[] fundo;
     public String witchCutScene = "Level1";
     int rectCount = 0;
     int rectCount2 = 400;
@@ -30,16 +30,38 @@ public class CutScene extends ScreenAdapter{
         this.game = game;
         this.witchCutScene = wCS;
         if(witchCutScene == "Level1") {
-        	fundo = new Texture("CutScene/cut1.png");
-        	maxCount = 150;
+        	fundo = new Texture[]{
+        			new Texture("CutScene/CutScene1/cut1.png"),
+        			new Texture("CutScene/CutScene1/cut2.png"),
+        			new Texture("CutScene/CutScene1/cut3.png"),
+        			new Texture("CutScene/CutScene1/cut4.png"),
+        			new Texture("CutScene/CutScene1/cut5.png"),
+        			new Texture("CutScene/CutScene1/cut6.png"),
+        			new Texture("CutScene/CutScene1/cut7.png"),
+        			new Texture("CutScene/CutScene1/cut8.png")
+        			};
+        	maxCount = 800;
         }
         if(witchCutScene == "Level2") {
-        	fundo = new Texture("CutScene/cut2.png");
-        	maxCount = 150;
+        	fundo = new Texture[]{new Texture("CutScene/CutScene2/cut1.png")};
+        	maxCount = 200;
         }
         if(witchCutScene == "Level3") {
-        	fundo = new Texture("CutScene/cut3.png");
-        	maxCount = 100;
+        	fundo = new Texture[]{
+        			new Texture("CutScene/CutScene3/cut1.png"),
+        			new Texture("CutScene/CutScene3/cut2.png"),
+        			new Texture("CutScene/CutScene3/cut3.png"),
+        			new Texture("CutScene/CutScene3/cut4.png")
+        			};
+        	maxCount = 400;
+        }
+        if(witchCutScene == "final") {
+        	fundo = new Texture[]{
+        			new Texture("CutScene/CutScene4/cut1.png"),
+        			new Texture("CutScene/CutScene4/cut2.png"),
+        			new Texture("CutScene/CutScene4/cut3.png")
+        			};
+        	maxCount = 300;
         }
     }
 
@@ -116,11 +138,11 @@ public class CutScene extends ScreenAdapter{
     	
         Gdx.gl.glClearColor(0, .25f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        
+        int e = (int)(count / 100);
+        if(e > fundo.length - 1) e = fundo.length - 1;
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        
-    	game.batch.draw(fundo, 0, 0, 640, 480);
+        game.batch.draw(fundo[e], 0, 0, 640, 480);
     	
         game.batch.end();
     }

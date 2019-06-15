@@ -201,7 +201,7 @@ public class CientistaEscudo extends Cientista {
 						this.dispose();
 					}
 				}
-				if(ply.tiro.rect.overlaps(rect)) {
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
 					animState = "morrendo";
 					stateTime = 0;
 					Player.cannonKills += 1;

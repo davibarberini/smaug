@@ -16,6 +16,8 @@ import projeteis.Escudo;
 
 
 public class Cientista extends Sprite implements Runnable{
+	public boolean runningThread = false;
+	public Thread thread;
 	public Rectangle rect;
 	public float velX, vel;
 	public float fixedY, fixedX;
@@ -37,8 +39,6 @@ public class Cientista extends Sprite implements Runnable{
 	public int atirandoAnimCount = 0;
 	public int deathCount = 0;
 	Rectangle p1Rect;
-	public boolean runningThread = false;
-	public Thread thread;
 	Random rand = new Random();
 	
 	//Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/cientistaTiro.wav"));
@@ -223,7 +223,7 @@ public class Cientista extends Sprite implements Runnable{
 						
 					}
 				}
-				if(ply.tiro.rect.overlaps(rect)) {
+				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
 					vida -= 10;
 					if(vida <= 0) {
 						stateTime = 0;

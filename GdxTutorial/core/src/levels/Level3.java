@@ -285,9 +285,9 @@ public class Level3 extends ScreenAdapter {
 	  prx2.parallax(game, p1);
 	  prx1.parallax(game, p1);
 	  game.batch.draw(fundo, -225 , -180);
-	  for(int e=0; e < soldados.length; e++) {
-		  soldados[e].update(game.batch);
-	  }
+	  //for(int e=0; e < soldados.length; e++) {
+		  //soldados[e].update(game.batch);
+	 // }
 	  boss.draw(game.batch);
 	  p1.draw(game.batch);
 	  //game.batch.draw(p1.life, p1.rect.x - 300,  350, Player.vida, 30);
@@ -304,7 +304,6 @@ public class Level3 extends ScreenAdapter {
   
   public void createEnemies() {
 	  soldados = new Soldado[1];
-	  soldados[0] = new Policial(370, 27, 25, 35, 5, 10, 0, p1, platforms);
 	  boss = new Boss(new Rectangle(2300, 300, 270, 100), p1);
   }
   
