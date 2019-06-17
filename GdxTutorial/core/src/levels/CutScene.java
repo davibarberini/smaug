@@ -45,7 +45,7 @@ public class CutScene extends ScreenAdapter{
         }
         if(whichCutScene == "Level2") {
         	fundo = new Texture[]{new Texture("CutScene/CutScene2/cut1.png")};
-        	maxCount = 200;
+        	maxCount = 300;
         }
         if(whichCutScene == "Level3") {
         	fundo = new Texture[]{
@@ -165,22 +165,18 @@ public class CutScene extends ScreenAdapter{
         }
         
         if(whichCutScene == "Level1") {
-        	game.scoreFont.draw(game.batch, "Primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 90);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 68);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 46);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 24);
+        	game.scoreFont.draw(game.batch, "In a future modern world after the WW3 cientists created an A.I", 5, 90);
+            game.scoreFont.draw(game.batch, "to correct all human problems, but after an update, the A.I", 5, 68);
+            game.scoreFont.draw(game.batch, "concluded that the humans were the ones who caused the problems", 5, 46);
+            game.scoreFont.draw(game.batch, "now he is going to anihilate all human problems: The Humans", 5, 24);
         }
         else if (whichCutScene == "Level2") {
-        	game.scoreFont.draw(game.batch, "Primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 90);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 68);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 46);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 24);
+        	game.scoreFont.draw(game.batch, "When you are leaving the laboratory you see a blueprint in the desk", 5, 90);
+            game.scoreFont.draw(game.batch, "seems to be a blueprint of a cannon, interesting...", 5, 68);
         }
         else if (whichCutScene == "Level3") {
-        	game.scoreFont.draw(game.batch, "Primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 90);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 68);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 46);
-            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 24);
+        	game.scoreFont.draw(game.batch, "Looks like someone is trying to kill you.", 5, 90);
+            game.scoreFont.draw(game.batch, "guess you gotta a new target huh?", 5, 68);
         }
         
     	

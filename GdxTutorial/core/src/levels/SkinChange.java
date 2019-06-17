@@ -35,7 +35,7 @@ public class SkinChange extends ScreenAdapter{
     Texture robo = new Texture(Gdx.files.internal("Player/robo.png"));
     Texture roboSo = new Texture(Gdx.files.internal("Player/robospecialops.png"));
     Texture roboStark = new Texture(Gdx.files.internal("Player/robostark.png"));
-    Texture roboLgbt = new Texture(Gdx.files.internal("Player/roboLgbt.png"));
+    Texture roboLgbt = new Texture(Gdx.files.internal("Player/robolgbt.png"));
     TextureRegion[][] roboSheet = TextureRegion.split(robo, 80, 80);
     TextureRegion[][] roboSoSheet = TextureRegion.split(roboSo, 80, 80);
     TextureRegion[][] roboStarkSheet = TextureRegion.split(roboStark, 80, 80);
