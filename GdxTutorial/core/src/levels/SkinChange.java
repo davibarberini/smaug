@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
@@ -49,6 +50,10 @@ public class SkinChange extends ScreenAdapter{
     TextureRegion[] correndoLgbt = new TextureRegion[6];
     boolean rightTransition = false;
     boolean leftTransition = false;
+    
+    Sound interaction = Gdx.audio.newSound(Gdx.files.internal("SkinChanger/change.wav"));
+    Sound selectSound = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/select.wav"));
+    
     
     TextureRegion[] parado = new TextureRegion[1];
     TextureRegion[] paradoSo = new TextureRegion[1];
@@ -113,11 +118,13 @@ public class SkinChange extends ScreenAdapter{
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean keyDown(int keyCode) {
                 if (keyCode == Input.Keys.F || keyCode == Input.Keys.ENTER || keyCode == Input.Keys.ESCAPE) {
+                	selectSound.play(0.3f);
                     game.setScreen(new TitleScreen(game));
                     MyGdxGame.skinSelected = selected;
                     return true;
                 }
                 else if(keyCode == Input.Keys.D || keyCode == Input.Keys.RIGHT) {
+                	interaction.play(0.3f);
                 	if(selected == "robo") selected = "robospecialops";
                 	else if (selected == "robospecialops") selected = "robostark";
                 	else if (selected == "robostark") selected = "robolgbt";
@@ -125,6 +132,7 @@ public class SkinChange extends ScreenAdapter{
                 	return true;
                 }
                 else if(keyCode == Input.Keys.A || keyCode == Input.Keys.LEFT) {
+                	interaction.play(0.5f);
                 	if(selected == "robo") selected = "robolgbt";
                 	else if (selected == "robospecialops") selected = "robo";
                 	else if (selected == "robostark") selected = "robospecialops";

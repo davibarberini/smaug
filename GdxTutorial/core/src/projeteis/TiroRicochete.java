@@ -40,6 +40,7 @@ public class TiroRicochete extends TiroNormal{
 			}
 			moved += velY * Gdx.graphics.getDeltaTime();
 			if(rect.overlaps(ply.rect)) {
+				ply.damageSound.play(0.2f);
 				isAlive = false;
 				Player.vida -= 10;
 				count = 0;

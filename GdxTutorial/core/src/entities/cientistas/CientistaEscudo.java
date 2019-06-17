@@ -1,6 +1,7 @@
 package entities.cientistas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Color;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -21,6 +22,8 @@ public class CientistaEscudo extends Cientista {
 	public int waitUntilShoot = 50;
 	public Thread thread;
 	public boolean runningThread;
+	
+	Sound escudoSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/escudo.wav"));
 
 	public CientistaEscudo(float x, float y, float w, float h, float vel, int pixelsToWalkRight,
 			int pixelsToWalkLeft, Player ply) {
@@ -60,6 +63,7 @@ public class CientistaEscudo extends Cientista {
 				if(isNear) {
 					escudo.count += 1;
 					if(escudo.count >= waitUntilShoot && escudo.isAlive == false) {
+						escudoSound.play(0.2f);
 						escudo.rect.x = rect.x - (escudo.pixelsToProtect / 2);
 						escudo.rect.width = rect.width + escudo.pixelsToProtect;
 						escudo.rect.height = rect.height + escudo.pixelsToProtect;
@@ -178,6 +182,7 @@ public class CientistaEscudo extends Cientista {
 				if(ply.isAttacking) {
 					collisionPlayer();
 					if(rect.overlaps(p1Rect)) {
+						morrendoSound.play(0.5f);
 						animState = "morrendo";
 						stateTime = 0;
 						Player.swordKills += 1;
@@ -202,6 +207,7 @@ public class CientistaEscudo extends Cientista {
 					}
 				}
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
+					morrendoSound.play(0.5f);
 					animState = "morrendo";
 					stateTime = 0;
 					Player.cannonKills += 1;

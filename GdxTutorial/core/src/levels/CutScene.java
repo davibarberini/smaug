@@ -17,7 +17,7 @@ public class CutScene extends ScreenAdapter{
 
     MyGdxGame game;
     public Texture[] fundo;
-    public String witchCutScene = "Level1";
+    public String whichCutScene = "Level1";
     int rectCount = 0;
     int rectCount2 = 400;
     int countTransition = 0;
@@ -25,11 +25,12 @@ public class CutScene extends ScreenAdapter{
     FillViewport view;
     int count = 0;
     int maxCount = 0;
+    int e;
 
     public CutScene(MyGdxGame game, String wCS) {
         this.game = game;
-        this.witchCutScene = wCS;
-        if(witchCutScene == "Level1") {
+        this.whichCutScene = wCS;
+        if(whichCutScene == "Level1") {
         	fundo = new Texture[]{
         			new Texture("CutScene/CutScene1/cut1.png"),
         			new Texture("CutScene/CutScene1/cut2.png"),
@@ -42,11 +43,11 @@ public class CutScene extends ScreenAdapter{
         			};
         	maxCount = 800;
         }
-        if(witchCutScene == "Level2") {
+        if(whichCutScene == "Level2") {
         	fundo = new Texture[]{new Texture("CutScene/CutScene2/cut1.png")};
         	maxCount = 200;
         }
-        if(witchCutScene == "Level3") {
+        if(whichCutScene == "Level3") {
         	fundo = new Texture[]{
         			new Texture("CutScene/CutScene3/cut1.png"),
         			new Texture("CutScene/CutScene3/cut2.png"),
@@ -55,13 +56,13 @@ public class CutScene extends ScreenAdapter{
         			};
         	maxCount = 400;
         }
-        if(witchCutScene == "final") {
+        if(whichCutScene == "Final") {
         	fundo = new Texture[]{
         			new Texture("CutScene/CutScene4/cut1.png"),
         			new Texture("CutScene/CutScene4/cut2.png"),
         			new Texture("CutScene/CutScene4/cut3.png")
         			};
-        	maxCount = 300;
+        	maxCount = 540;
         }
     }
 
@@ -82,7 +83,7 @@ public class CutScene extends ScreenAdapter{
     	
     	
     	//Criando a thread da musica
-    	game.t1 = new MusicPlayer("TitleScreen/music.mp3"); // Crio a thread passando o caminho da musica como argumento.
+    	game.t1 = new MusicPlayer("CutScene/music.ogg"); // Crio a thread passando o caminho da musica como argumento.
         game.t1.start(); 
         
     	camera = new OrthographicCamera(Gdx.graphics.getWidth(), Gdx.graphics.getHeight());
@@ -124,13 +125,13 @@ public class CutScene extends ScreenAdapter{
     public void draw() {
     	count += 1;
     	if (count > maxCount) {
-    		if(witchCutScene == "Level1") {
+    		if(whichCutScene == "Level1") {
     			game.transition = true;
     		}
-    		else if(witchCutScene == "Level2") {
+    		else if(whichCutScene == "Level2") {
     			game.transition = true;
     		}
-    		else if(witchCutScene == "Level3") {
+    		else if(whichCutScene == "Level3") {
     			game.transition = true;
     		}
     	}
@@ -138,13 +139,53 @@ public class CutScene extends ScreenAdapter{
     	
         Gdx.gl.glClearColor(0, .25f, 0, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
-        int e = (int)(count / 100);
-        if(e > fundo.length - 1) e = fundo.length - 1;
+        if(whichCutScene != "Final") {
+        	e = (int)(count / 100);
+            if(e > fundo.length - 1) e = fundo.length - 1;
+        }
+        else {
+        	e = (int)(count / 180);
+            if(e > fundo.length - 1) e = fundo.length - 1;
+        }
+        
+        
+        game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
+        if(whichCutScene != "Final") {
+        	game.shapeRenderer.rect(0, 0, 640, 100);
+        }
+        game.shapeRenderer.end();
+        
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
-        game.batch.draw(fundo[e], 0, 0, 640, 480);
+        if(whichCutScene != "Final") {
+        	game.batch.draw(fundo[e], 0, 100, 640, 380);
+        }
+        else {
+        	game.batch.draw(fundo[e], 0, 0, 640, 480);
+        }
+        
+        if(whichCutScene == "Level1") {
+        	game.scoreFont.draw(game.batch, "Primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 90);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 68);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 46);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 24);
+        }
+        else if (whichCutScene == "Level2") {
+        	game.scoreFont.draw(game.batch, "Primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 90);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 68);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 46);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 24);
+        }
+        else if (whichCutScene == "Level3") {
+        	game.scoreFont.draw(game.batch, "Primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 90);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 68);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 46);
+            game.scoreFont.draw(game.batch, "primeira frase da historia do jogo vou ver ate onde o limite vai testando por aq", 5, 24);
+        }
+        
     	
         game.batch.end();
+        
     }
     @Override
     public void hide(){
@@ -166,14 +207,17 @@ public class CutScene extends ScreenAdapter{
   		  game.t1.interrupt();
   		  game.untransition = true;
   		  game.transition = false;
-		  if(witchCutScene == "Level1") {
+		  if(whichCutScene == "Level1") {
 			  game.setScreen(new Level1(game));
 		  }
-		  else if(witchCutScene == "Level2") {
+		  else if(whichCutScene == "Level2") {
 			  game.setScreen(new Level2(game));
 		  }
-		  else if(witchCutScene == "Level3") {
+		  else if(whichCutScene == "Level3") {
 			  game.setScreen(new Level3(game));
+		  }
+		  else if(whichCutScene == "Final") {
+			  game.setScreen(new CreditsScene(game));
 		  }
   	  }
   	  game.shapeRenderer.end();

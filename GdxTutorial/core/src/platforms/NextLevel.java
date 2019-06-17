@@ -25,6 +25,7 @@ public class NextLevel extends Platform{
 			collideX = false;
 			System.out.println(nextLevel);
 			if(!collideY) {
+				game.transitionSound.play(0.2f);
 				if(nextLevel == "Level2") {
 					collideX = true;
 					game.transition = true;
@@ -49,6 +50,7 @@ public class NextLevel extends Platform{
 			collideY = false;
 			System.out.println(nextLevel);
 			if(!collideX) {
+				game.transitionSound.play(0.2f);
 				if(nextLevel == "Level2") {
 					collideY = true;
 					game.t1.stopMusic(); // Para parar a music e parar a thread quando troca de tela

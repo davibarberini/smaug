@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,6 +44,9 @@ public class Level3 extends ScreenAdapter {
   PauseScreen pause;
 	
   public Platform [] platforms;
+  
+  Sound selectSound = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/select.wav"));
+  
   
   OrthographicCamera camera;
   FillViewport view;
@@ -120,26 +124,55 @@ public class Level3 extends ScreenAdapter {
               	  camera.zoom = 2;
               }
               else if(keyCode == Input.Keys.R) {
+            	  Boss.flyingSound.stop();
+            	  Boss.negevSound.stop();
+            	  Boss.raioSound.stop();
+            	  Boss.tiroLaserSound.stop();
             	  Player.vida = 100;
             	  game.setScreen(new Level3(game));
               }
               else if (keyCode == Input.Keys.ENTER) {
-            	  if(PauseScreen.selected == "return") game.paused = false;
-            	  else if(PauseScreen.selected == "mainmenu") game.setScreen(new TitleScreen(game));
-            	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
+            	  if(game.paused) {
+            		  selectSound.play(0.2f);
+            		  if(PauseScreen.selected == "return") {
+            			  game.paused = false;
+            			  p1.paused = false;
+            			  if(bossFight) {
+                			  camera.position.x = 2095;
+                			  camera.position.y = 220;
+                		  }
+            		  } 
+                	  else if(PauseScreen.selected == "mainmenu") {
+                		  Boss.flyingSound.stop();
+                    	  Boss.negevSound.stop();
+                    	  Boss.raioSound.stop();
+                    	  Boss.tiroLaserSound.stop();
+                		  game.setScreen(new TitleScreen(game));  
+                	  }
+                	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
+            		  
+            	  }
               }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  if(game.paused) {
+            		  Boss.flyingSound.stop();
+                	  Boss.negevSound.stop();
+                	  Boss.raioSound.stop();
+                	  Boss.tiroLaserSound.stop();
             		  game.paused = false;
             		  p1.paused = false;
+            		  if(bossFight) {
+            			  camera.position.x = 2095;
+            			  camera.position.y = 220;
+            		  }
             	  }
             	  else {
             		  p1.paused = true;
             		  game.paused = true;
             	  }
               }
-              else if(keyCode == Input.Keys.Q) {
-            	  game.setScreen(new EndScreen(game));
+              else if(keyCode == Input.Keys.O) {
+            	  p1.rect.x = 2000;
               }
               p1.keyDown(keyCode);
               game.t1.keysDown(keyCode);
@@ -182,6 +215,9 @@ public class Level3 extends ScreenAdapter {
   public void updateUnpaused(float delta) {
 	  game.resize(Gdx.graphics.getWidth(), Gdx.graphics.getHeight(), view, camera);
 		if(!bossTransition) p1.rect.y += p1.gravity * delta;
+		if(boss.tankCollision) {
+			boss.tPlatform.platCollisionY(p1.gravity, p1);
+		}
 		for(int k=0; k < platforms.length; k++) {     //Colisao após a movimentação Y
 			  if(platforms[k] != null) {
 				  Platform plat = platforms[k];
@@ -193,6 +229,15 @@ public class Level3 extends ScreenAdapter {
 			p1.rect.x += p1.velX * delta;
 			
 		} else p1.animState = "parado";
+		if(boss.tankCollision) {
+			boss.tPlatform.platCollisionX(p1.velX, p1);
+			if(p1.tiro.rect.overlaps(boss.tPlatform.rect) && !p1.tiro.toDie && p1.tiro.isAlive) {
+				p1.tiro.tiroExplosionSound.play(0.5f);
+				p1.tiro.count = 0;
+				p1.tiro.toDie = true;
+				p1.tiro.stateTime = 0;
+			}
+		}
 		for(int k=0; k < platforms.length; k++) {   //Colisao após a movimentação X
 			  if(platforms[k] != null) {
 				  Platform plat = platforms[k];
@@ -304,7 +349,7 @@ public class Level3 extends ScreenAdapter {
   
   public void createEnemies() {
 	  soldados = new Soldado[1];
-	  boss = new Boss(new Rectangle(2300, 300, 270, 100), p1);
+	  boss = new Boss(new Rectangle(2300, 300, 270, 100), p1, game);
   }
   
   public void dispose() {
@@ -319,10 +364,10 @@ public class Level3 extends ScreenAdapter {
 	  game.shapeRenderer.setProjectionMatrix(camera.combined);
 	  game.shapeRenderer.begin(ShapeRenderer.ShapeType.Filled);
 	  game.shapeRenderer.setColor(0, 0, 0, 1);
-	  game.shapeRenderer.rect(p1.rect.x - 230, -20, rectCount, rectCount);
-	  game.shapeRenderer.rect(p1.rect.x - 230, 490, rectCount, -rectCount);
-	  game.shapeRenderer.rect(p1.rect.x + 440, 490, -rectCount, -rectCount);
-	  game.shapeRenderer.rect(p1.rect.x + 440, -20, -rectCount, rectCount);
+	  game.shapeRenderer.rect(1760, -20, rectCount, rectCount);
+	  game.shapeRenderer.rect(1760, 490, rectCount, -rectCount);
+	  game.shapeRenderer.rect(2430, 490, -rectCount, -rectCount);
+	  game.shapeRenderer.rect(2430, -20, -rectCount, rectCount);
 	  rectCount += 10;
 	  if(rectCount > 400) {
 		  camera.position.set(0, 0, 0);
@@ -330,7 +375,7 @@ public class Level3 extends ScreenAdapter {
 		  game.t1.interrupt();
 		  game.untransition = true;
 		  game.transition = false;
-		  game.setScreen(new TitleScreen(game));
+		  game.setScreen(new CutScene(game, "Final"));
 	  }
 	  game.shapeRenderer.end();
   }

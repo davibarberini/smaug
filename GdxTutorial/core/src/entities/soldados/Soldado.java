@@ -178,6 +178,7 @@ public class Soldado extends Sprite implements Runnable {
 			Player.vida += 10;
 			if(Player.vida > 100) Player.vida = 100;
 			ply.regen.alive = true;
+			ply.regenSound.play(0.3f);
 		}
 	}
 
@@ -225,8 +226,12 @@ public class Soldado extends Sprite implements Runnable {
 					}
 				}
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive && isAlive) {
-					ply.tiro.isAlive = false;
-					ply.tiro.count = 0;
+					if(!ply.tiro.toDie) {
+						ply.tiro.tiroExplosionSound.play(0.5f);
+			    		ply.tiro.count = 0;
+						ply.tiro.toDie = true;
+						ply.tiro.stateTime = 0;
+					}
 					vida -= 10;
 					if(vida <= 0) {
 						stateTime = 0;

@@ -3,6 +3,7 @@ package entities.soldados;
 import java.util.ArrayList;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -32,6 +33,10 @@ public class SoldadoAtirador extends Soldado {
 	Platform[] platforms;
 	Texture sprite = new Texture(Gdx.files.internal("Soldado/soldado.png"));
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 80, 80);
+	
+	Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Soldado/Sounds/soldadoTiro.wav"));
+	Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("Soldado/Sounds/humanDano.wav"));
+	Sound deathSound = Gdx.audio.newSound(Gdx.files.internal("Soldado/Sounds/humanMorrendo.wav"));
 	
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] paradoAtirando = new TextureRegion[1];
@@ -115,6 +120,7 @@ public class SoldadoAtirador extends Soldado {
 						atirandoAnimCount = 0;
 					}
 					if(atiradoCount < 10 && !reload && countTiro > 5) {
+						tiroSound.play(0.3f);
 						TiroSoldado tiro = new TiroSoldado(0, 0, 10, 5, 0, 0, ply);
 						animState = "paradoAtirando";
 						tiro.rect.x = rect.x;
@@ -157,6 +163,7 @@ public class SoldadoAtirador extends Soldado {
 				tiro.fixedY = rect.y + 20;
 				tiro.update(sb);
 				if(tiro.rect.overlaps(ply.rect)) {
+					ply.damageSound.play(0.2f);
 					Player.vida -= 10;
 					tiros.remove(e);
 				}
@@ -295,6 +302,7 @@ public class SoldadoAtirador extends Soldado {
 					if(rect.overlaps(p1Rect)) {
 						vida -= 10;
 						if(vida <= 0) {
+							deathSound.play(0.2f);
 							stateTime = 0;
 							animState = "morrendo";
 							Player.swordKills += 1;
@@ -312,6 +320,7 @@ public class SoldadoAtirador extends Soldado {
 							}
 							this.dispose();
 						} else {
+							damageSound.play(0.3f);
 							vulnerable = false;
 							velX = 0;
 							fixedX = ply.rect.x;
@@ -319,14 +328,20 @@ public class SoldadoAtirador extends Soldado {
 					}
 				}
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive && isAlive) {
-					ply.tiro.isAlive = false;
-					ply.tiro.count = 0;
+					if(!ply.tiro.toDie) {
+						ply.tiro.tiroExplosionSound.play(0.5f);
+			    		ply.tiro.count = 0;
+						ply.tiro.toDie = true;
+						ply.tiro.stateTime = 0;
+					}
 					vida -= 10;
 					if(vida <= 0) {
+						deathSound.play(0.2f);
 						stateTime = 0;
+						if(animState != "morrendoCanhao") Player.cannonKills += 1;
 						animState = "morrendoCanhao";
-						Player.cannonKills += 1;
 					} else {
+						damageSound.play(0.3f);
 						vulnerable = false;
 						velX = 0;
 						fixedX = ply.rect.x;

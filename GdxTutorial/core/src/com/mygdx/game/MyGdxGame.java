@@ -2,6 +2,7 @@ package com.mygdx.game;
 
 import com.badlogic.gdx.Game;
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.g2d.BitmapFont;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -23,6 +24,7 @@ public class MyGdxGame extends Game {
   public boolean transition = false;
   public boolean untransition = true;
   public static String skinSelected = "robo";
+  public Sound transitionSound;
 
   @Override
   public void create () {
@@ -35,6 +37,7 @@ public class MyGdxGame extends Game {
 	  titlefont.getData().setScale(1.5f, 1.5f);
 	  fontSmaller.getData().setScale(0.5f, 0.5f);
 	  scoreFont.getData().setScale(0.3f, 0.3f);
+	  transitionSound = Gdx.audio.newSound(Gdx.files.internal("MyGdxGame/transition.wav"));
 	  setScreen(new TitleScreen(this));
   }
   

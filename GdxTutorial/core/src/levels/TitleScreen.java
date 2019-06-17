@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -24,6 +25,8 @@ public class TitleScreen extends ScreenAdapter{
     public String selected = "play";
     int rectCount = 0;
     int rectCount2 = 400;
+    Sound interaction = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/interaction.wav"));
+    Sound selectSound = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/select.wav"));
 
     public TitleScreen(MyGdxGame game) {
         this.game = game;
@@ -36,6 +39,7 @@ public class TitleScreen extends ScreenAdapter{
     	Player.score = 10000;
     	EndScreen.hasPassed = false;
     	ScoreScreen.hasPassed = false;
+    	CreditsScene.hasPassed = false;
     	game.untransition = true;
     	game.transition = false;
     	game.paused = false;
@@ -70,6 +74,7 @@ public class TitleScreen extends ScreenAdapter{
         Gdx.input.setInputProcessor(new InputAdapter() {
             public boolean keyDown(int keyCode) {
                 if (keyCode == Input.Keys.F || keyCode == Input.Keys.ENTER) {
+                	selectSound.play(0.3f);
                     if(selected == "play") {
                     	Player.score = 10000;
                     	Player.vida = 100;
@@ -85,6 +90,7 @@ public class TitleScreen extends ScreenAdapter{
                 	return true;
                 }
                 else if(keyCode == Input.Keys.UP || keyCode == Input.Keys.W) {
+                	interaction.play(0.5f);
                 	if(selected == "play") selected = "exit";
                 	else if (selected == "tutorial") selected = "play";
                 	else if (selected == "skin") selected = "tutorial";
@@ -92,6 +98,7 @@ public class TitleScreen extends ScreenAdapter{
                 	return true;
                 }
                 else if(keyCode == Input.Keys.DOWN || keyCode == Input.Keys.S) {
+                	interaction.play(0.5f);
                 	if(selected == "play") selected = "tutorial";
                 	else if (selected == "tutorial") selected = "skin";
                 	else if (selected == "skin") selected = "exit";
@@ -100,6 +107,9 @@ public class TitleScreen extends ScreenAdapter{
                 }
                 else if(keyCode == Input.Keys.ESCAPE) {
                 	Gdx.app.exit();
+                }
+                else if(keyCode == Input.Keys.C) {
+                	game.setScreen(new CreditsScene(game));
                 }
                 game.t1.keysDown(keyCode); //Chama a função dos inputs da classe MusicPlayer
                 return true;
@@ -168,7 +178,6 @@ public class TitleScreen extends ScreenAdapter{
   			  game.setScreen(new CutScene(game, "Level1"));
     	  }
     	  game.shapeRenderer.end();
-    	  
     }
     public void untransitionScene() {
     	  game.shapeRenderer.setProjectionMatrix(camera.combined);

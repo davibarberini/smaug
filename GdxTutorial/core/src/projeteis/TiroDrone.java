@@ -31,7 +31,7 @@ public class TiroDrone {
 	Texture sprite = new Texture(Gdx.files.internal("Cientista/projeteis.png"));
 	
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 20, 20);
-	TextureRegion[] projetil = new TextureRegion[4];
+	TextureRegion[] projetil = new TextureRegion[1];
 
 	
 	public TiroDrone(float x, float y, float w, float h, float velX, float velY, Player ply, Platform[] platforms) {
@@ -42,10 +42,7 @@ public class TiroDrone {
 		this.velY = velY;
 		this.ply = ply;
 		this.platforms = platforms;
-		
-		for(int e=0; e < 4; e++) {
-			projetil[e] = spriteSheet[1][e + 1];
-		}
+		projetil[0] = spriteSheet[4][0];
 		
 		projetilAnim = new Animation<TextureRegion>(0.06f, projetil);
 	}
@@ -58,6 +55,7 @@ public class TiroDrone {
 				if(platforms[e].isPlatform()) platforms[e].droneBulletCollision(this);
 			}
 			if(rect.overlaps(ply.rect)) {
+				ply.damageSound.play(0.2f);
 				isAlive = false;
 				Player.vida -= 10;
 				count = 0;

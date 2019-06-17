@@ -40,8 +40,9 @@ public class Cientista extends Sprite implements Runnable{
 	public int deathCount = 0;
 	Rectangle p1Rect;
 	Random rand = new Random();
-	
-	//Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/cientistaTiro.wav"));
+	Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/cientistaTiro.wav"));
+	Sound morrendoSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/morrendo.wav"));
+	Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("Cientista/Sounds/damage.wav"));
 	
 	Animation<TextureRegion> paradoAnim;
 	Animation<TextureRegion> paradoAtirandoAnim;
@@ -170,11 +171,13 @@ public class Cientista extends Sprite implements Runnable{
 	}
 	
 	public void ganhaVida() {
+		//pega um valor de 0 a 3
 		int n = rand.nextInt(4);
 		if(n == 2) {
 			Player.vida += 10;
 			if(Player.vida > 100) Player.vida = 100;
 			ply.regen.alive = true;
+			ply.regenSound.play(0.3f);
 		}
 		System.out.println(n);
 	}
@@ -194,6 +197,7 @@ public class Cientista extends Sprite implements Runnable{
 					if(rect.overlaps(p1Rect)) {				
 						vida -= 10;
 						if(vida <= 0) {
+							morrendoSound.play(0.5f);
 							stateTime = 0;
 							animState = "morrendo";
 							ganhaVida();
@@ -216,6 +220,7 @@ public class Cientista extends Sprite implements Runnable{
 							}
 							this.dispose();
 						} else {
+							damageSound.play(0.3f);
 							vulnerable = false;
 							velX = 0;
 							fixedX = ply.rect.x;
@@ -226,6 +231,7 @@ public class Cientista extends Sprite implements Runnable{
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
 					vida -= 10;
 					if(vida <= 0) {
+						morrendoSound.play(0.5f);
 						stateTime = 0;
 						animState = "morrendo";
 						Player.cannonKills += 1;

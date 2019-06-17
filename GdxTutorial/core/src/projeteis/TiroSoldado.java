@@ -15,8 +15,8 @@ public class TiroSoldado {
 	public float velX, velY;
 	public int wait = 0;
 	public Player ply;
-	public float spriteLargura = 30;
-	public float spriteAltura = 30;
+	public float spriteLargura = 20;
+	public float spriteAltura = 20;
 	public float pCorrectY;
 	public float pCorrectX;
 	public float fixedX, fixedY;
@@ -30,7 +30,7 @@ public class TiroSoldado {
 	Texture sprite = new Texture(Gdx.files.internal("Cientista/projeteis.png"));
 	
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 20, 20);
-	TextureRegion[] projetil = new TextureRegion[4];
+	TextureRegion[] projetil = new TextureRegion[1];
 
 	
 	public TiroSoldado(float x, float y, float w, float h, float velX, float velY, Player ply) {
@@ -40,9 +40,7 @@ public class TiroSoldado {
 		this.velX = velX;
 		this.velY = velY;
 		this.ply = ply;
-		for(int e=0; e < 4; e++) {
-			projetil[e] = spriteSheet[0][e + 1];
-		}
+		projetil[0] = spriteSheet[5][0];
 		
 		projetilAnim = new Animation<TextureRegion>(0.06f, projetil);
 	}
@@ -57,13 +55,13 @@ public class TiroSoldado {
 		if(velX > 0) {
 			stateTime += Gdx.graphics.getDeltaTime();
 			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
-			sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY, spriteLargura, spriteAltura);
+			sb.draw(currentFrame, this.rect.x  + pCorrectX, this.rect.y + pCorrectY + 5, spriteLargura, spriteAltura);
 			
 		}
 		else{
 			stateTime += Gdx.graphics.getDeltaTime();
 			currentFrame = projetilAnim.getKeyFrame(stateTime, true);
-			sb.draw(currentFrame, rect.x + this.rect.width, rect.y + pCorrectY, -spriteLargura, spriteAltura);
+			sb.draw(currentFrame, rect.x + this.rect.width, rect.y + pCorrectY + 5, -spriteLargura, spriteAltura);
 			
 		}
 	}

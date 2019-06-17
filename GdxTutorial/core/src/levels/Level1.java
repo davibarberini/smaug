@@ -3,6 +3,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -36,6 +37,7 @@ public class Level1 extends ScreenAdapter{
   int rectCount2 = 400;
   int countTransition = 0;
 
+  Sound selectSound = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/select.wav"));
   
   FillViewport view;
   
@@ -122,12 +124,20 @@ public class Level1 extends ScreenAdapter{
             	  game.setScreen(new Level1(game));
               }
               else if (keyCode == Input.Keys.ENTER) {
-            	  if(PauseScreen.selected == "return") game.paused = false;
-            	  else if(PauseScreen.selected == "mainmenu") {
-            		  dispose();
-            		  game.setScreen(new TitleScreen(game));  
+            	  if(game.paused) {
+            		  selectSound.play(0.2f);
+            		  if(PauseScreen.selected == "return") {
+            			  game.paused = false;
+            			  p1.paused = false;
+            		  }
+                	  else if(PauseScreen.selected == "mainmenu") {
+                		  dispose();
+                		  game.setScreen(new TitleScreen(game));  
+                	  }
+                	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
+            		  
             	  }
-            	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
+            	  
               }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  if(game.paused) {

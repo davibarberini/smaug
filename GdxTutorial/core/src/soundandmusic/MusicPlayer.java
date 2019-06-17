@@ -20,8 +20,7 @@ public class MusicPlayer extends Thread {
        music.setLooping(true); //Defino que a musica ira loopar
        if(!music.isPlaying()) {
     	   music.play(); // Se a musica nao estiver tocando, toque.
-    	   if(MyGdxGame.actualLevel == "Level3") music.setVolume(0.5f);
-    	   if(MyGdxGame.actualLevel == "skin") music.setVolume(0.5f);
+    	   music.setVolume(0.2f);
        }
        boolean running = true;
        while(running) {

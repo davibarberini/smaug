@@ -31,7 +31,7 @@ public class TiroAtravessa {
 	Texture sprite = new Texture(Gdx.files.internal("Cientista/projeteis.png"));
 	
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 20, 20);
-	TextureRegion[] projetil = new TextureRegion[4];
+	TextureRegion[] projetil = new TextureRegion[3];
 
 	
 	public TiroAtravessa(float x, float y, float w, float h, float velX, float velY, Player ply) {
@@ -41,8 +41,8 @@ public class TiroAtravessa {
 		this.velX = velX;
 		this.velY = velY;
 		this.ply = ply;
-		for(int e=0; e < 4; e++) {
-			projetil[e] = spriteSheet[0][e + 1];
+		for(int e=0; e < 3; e++) {
+			projetil[e] = spriteSheet[3][e];
 		}
 		
 		projetilAnim = new Animation<TextureRegion>(0.06f, projetil);
@@ -53,6 +53,7 @@ public class TiroAtravessa {
 			rect.x += velX * Gdx.graphics.getDeltaTime();
 			rect.y += velY * Gdx.graphics.getDeltaTime();
 			if(rect.overlaps(ply.rect)) {
+				ply.damageSound.play(0.2f);
 				isAlive = false;
 				Player.vida -= 10;
 				count = 0;

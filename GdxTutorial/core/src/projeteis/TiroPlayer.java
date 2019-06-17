@@ -1,6 +1,7 @@
 package projeteis;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -31,7 +32,7 @@ public class TiroPlayer{
 	
 	TextureRegion currentFrame;
 	Texture sprite = new Texture(Gdx.files.internal("Player/tiro.png"));
-	
+	public Sound tiroExplosionSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/explosion.wav"));
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 30, 30);
 	TextureRegion[] projetil = new TextureRegion[4];
 	TextureRegion[] explosion = new TextureRegion[4];

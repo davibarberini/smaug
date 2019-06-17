@@ -4,6 +4,7 @@ import com.badlogic.gdx.Gdx;
 import com.badlogic.gdx.Input;
 import com.badlogic.gdx.InputAdapter;
 import com.badlogic.gdx.ScreenAdapter;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -43,6 +44,8 @@ public class Level2 extends ScreenAdapter {
   MapFileReader mapReader;
   
   PauseScreen pause;
+  
+  Sound selectSound = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/select.wav"));
 	
   public Platform [] platforms;
   
@@ -122,9 +125,18 @@ public class Level2 extends ScreenAdapter {
             	  game.setScreen(new Level2(game));
               }
               else if (keyCode == Input.Keys.ENTER) {
-            	  if(PauseScreen.selected == "return") game.paused = false;
-            	  else if(PauseScreen.selected == "mainmenu") game.setScreen(new TitleScreen(game));
-            	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
+            	  if(game.paused) {
+            		  selectSound.play(0.2f);
+            		  if(PauseScreen.selected == "return") {
+            			  game.paused = false;
+            			  p1.paused = false;
+            		  }
+                	  else if(PauseScreen.selected == "mainmenu") {
+                		  game.setScreen(new TitleScreen(game));  
+                	  }
+                	  else if(PauseScreen.selected == "exit") Gdx.app.exit();
+            		  
+            	  }
               }
               else if(keyCode == Input.Keys.ESCAPE) {
             	  if(game.paused) {

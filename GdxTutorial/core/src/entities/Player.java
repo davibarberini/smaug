@@ -64,6 +64,12 @@ public class Player extends Sprite implements Runnable{
 	Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/shoot.wav"));
 	public Sound regenSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/regen.wav"));
 	Sound jumpSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/pulo.wav"));
+	Sound attack1Sound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/sword1.wav"));
+	Sound attack2Sound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/sword2.wav"));
+	Sound attack3Sound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/sword3.wav"));
+	public Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/damage.wav"));
+	Sound morrendoSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/morrendo.wav"));
+	Sound airAttackSound = Gdx.audio.newSound(Gdx.files.internal("Player/Sounds/airAttack.wav"));
 	
 	Animation<TextureRegion> correndoAnim;
 	Animation<TextureRegion> correndoCanhaoMAnim;
@@ -209,19 +215,30 @@ public class Player extends Sprite implements Runnable{
 		}
 		if(beingPushed) countPushed += 1;
 		tiroCooldown += 1;
+		
+		gravity += (-2000 * Gdx.graphics.getDeltaTime());
+		velX += (aceX * Gdx.graphics.getDeltaTime());
+		
 		if (vida <= 0) {
-			if(deathCount == 0)stateTime = 0;
+			Boss.flyingSound.stop();
+			Boss.negevSound.stop();
+			Boss.raioSound.stop();
+			Boss.tiroLaserSound.stop();
+			velX = 0;
+			if(deathCount == 0) {
+				stateTime = 0;
+				morrendoSound.play(0.5f);
+			}
 			animState = "morrendo";
 			deathCount += 1;
 			if(deathCount > 60) {
 				deathCount = 0;
 				MyGdxGame.endTime = System.currentTimeMillis();
 				this.dispose();
+				
 				game.setScreen(new EndScreen(game));
 			}
 		}
-		gravity += (-2000 * Gdx.graphics.getDeltaTime());
-		velX += (aceX * Gdx.graphics.getDeltaTime());
 		
 		if(isAttacking) {
 			attackCount++;
@@ -483,7 +500,7 @@ public class Player extends Sprite implements Runnable{
             	else if (PauseScreen.selected == "mainmenu") PauseScreen.selected = "return";
             	else if (PauseScreen.selected == "exit") PauseScreen.selected = "mainmenu";
 			}else {
-				jumpSound.play(1f);
+				jumpSound.play(0.3f);
 				stateTime = 0;
 	            this.gravity = 600;
 	            animState = "jumping";
@@ -518,13 +535,15 @@ public class Player extends Sprite implements Runnable{
                 		attackLimit = 25;
                 		widthLimit = 15;
                 		animState = "attacking2";
+                		attack2Sound.play(0.3f);
                 	}
                 	else if(animState == "attacking2") {
                 		attackCount = 0;
-                		attackLimit = 70;
+                		attackLimit = 100;
                 		stateTime = 0;
                 		widthLimit = 10;
                 		animState = "attacking3";
+                		attack3Sound.play(0.4f);
                 	}
                 	else{
                 		attackCount = 0;
@@ -532,10 +551,12 @@ public class Player extends Sprite implements Runnable{
                 		attackLimit = 25;
                 		widthLimit = 25;
                 		animState = "attacking";
+                		attack1Sound.play(0.3f);
                 	}
             	}
             	else {
             		if(animState != "airAttack") {
+            			airAttackSound.play(0.1f);
             			attackCount = 0;
                 		attackLimit = 70;
                 		widthLimit = 25;
@@ -549,7 +570,7 @@ public class Player extends Sprite implements Runnable{
         	
         	
         }
-        else if(keyCode == Input.Keys.I) {
+        else if(keyCode == Input.Keys.I && MyGdxGame.actualLevel != "Level1") {
         	if(weapon == "canhaoC") {
         		if(!tiro.isAlive && tiroCooldown > 60) {
         			isShooting = true;
@@ -560,7 +581,7 @@ public class Player extends Sprite implements Runnable{
                 	tiro.isAlive = true;
                 	tiroCooldown = 0;
                 	tiro.drawFlash = true;
-                	tiroSound.play(1f);
+                	tiroSound.play(0.4f);
             	}
         	}
         	else {
@@ -569,7 +590,7 @@ public class Player extends Sprite implements Runnable{
         	} 
         	
         }
-        else if(keyCode == Input.Keys.J) {
+        else if(keyCode == Input.Keys.J && MyGdxGame.actualLevel != "Level1") {
         	if(weapon == "canhaoD") {
         		if(!tiro.isAlive && tiroCooldown > 60) {
         			isShooting = true;
@@ -581,7 +602,7 @@ public class Player extends Sprite implements Runnable{
                 	tiro.isAlive = true;
                 	tiroCooldown = 0;
                 	tiro.drawFlash = true;
-                	tiroSound.play(1f);
+                	tiroSound.play(0.4f);
             	}
         	}
         	else {
@@ -590,7 +611,7 @@ public class Player extends Sprite implements Runnable{
         	} 
         	
         }
-        else if(keyCode == Input.Keys.N) {
+        else if(keyCode == Input.Keys.N && MyGdxGame.actualLevel != "Level1") {
         	if(weapon == "canhaoM") {
         		if(!tiro.isAlive && tiroCooldown > 60) {
         			isShooting = true;
@@ -602,7 +623,7 @@ public class Player extends Sprite implements Runnable{
                 	tiro.isAlive = true;
                 	tiroCooldown = 0;
                 	tiro.drawFlash = true;
-                	tiroSound.play(1f);
+                	tiroSound.play(0.4f);
             	}
         	}
         	else {
@@ -610,9 +631,6 @@ public class Player extends Sprite implements Runnable{
         		isShooting = false;
         	} 
         	
-        }
-        else if(keyCode == Input.Keys.M) {
-        	vida = 0;
         }
 	}
 	
@@ -665,6 +683,7 @@ public class Player extends Sprite implements Runnable{
 			if(velX > 300) velX = 300;
 			else if(velX < -300) velX = -300;
 			if(tiro.count > 60) {
+				tiro.tiroExplosionSound.play(0.5f);
 				tiro.count = 0;
 				tiro.toDie = true;
 				tiro.stateTime = 0;

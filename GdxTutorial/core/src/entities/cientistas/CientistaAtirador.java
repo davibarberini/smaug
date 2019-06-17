@@ -1,6 +1,7 @@
 package entities.cientistas;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
 import com.badlogic.gdx.graphics.g2d.TextureRegion;
@@ -79,7 +80,7 @@ public class CientistaAtirador extends Cientista {
 					}
 					tiro.count += 1;
 					if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
-						//tiroSound.play(1f);
+						tiroSound.play(0.5f);
 						animState = "paradoAtirando";
 						tiro.rect.x = rect.x;
 						tiro.rect.y = rect.y + 20;
@@ -214,6 +215,7 @@ public class CientistaAtirador extends Cientista {
 					if(rect.overlaps(p1Rect)) {
 						vida -= 10;
 						if(vida <= 0) {
+							morrendoSound.play(0.5f);
 							stateTime = 0;
 							animState = "morrendo";
 							ganhaVida();
@@ -236,6 +238,7 @@ public class CientistaAtirador extends Cientista {
 							}
 							this.dispose();
 						} else {
+							damageSound.play(0.3f);
 							vulnerable = false;
 							velX = 0;
 							fixedX = ply.rect.x;
@@ -245,6 +248,7 @@ public class CientistaAtirador extends Cientista {
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
 					vida -= 10;
 					if(vida <= 0) {
+						morrendoSound.play(0.5f);
 						stateTime = 0;
 						animState = "morrendo";
 						Player.cannonKills += 1;

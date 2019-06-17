@@ -61,6 +61,7 @@ public class Tutorial extends ScreenAdapter {
 	  
 	  public void show() {
 		  Player.vida = 100;
+		  MyGdxGame.actualLevel = "Tutorial";
 		  
 		  //Parando a thread anterior se existir.
 		  if(game.t1 != null && game.t1.isAlive()) {

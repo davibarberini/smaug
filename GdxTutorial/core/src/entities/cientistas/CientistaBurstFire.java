@@ -83,6 +83,7 @@ public class CientistaBurstFire extends Cientista {
 						tiros[e].count += 1;
 						if(countBurst > e * 10) {
 							if(tiros[e].count >= waitUntilShoot && tiros[e].isAlive == false) {
+								tiroSound.play(0.5f);
 								animState = "paradoAtirando";
 								tiros[e].rect.x = rect.x;
 								tiros[e].rect.y = rect.y + 20;
@@ -221,6 +222,7 @@ public class CientistaBurstFire extends Cientista {
 					if(rect.overlaps(p1Rect)) {
 						vida -= 10;
 						if(vida <= 0) {
+							morrendoSound.play(0.5f);
 							stateTime = 0;
 							animState = "morrendo";
 							ganhaVida();
@@ -243,6 +245,7 @@ public class CientistaBurstFire extends Cientista {
 							}
 							this.dispose();
 						} else {
+							damageSound.play(0.3f);
 							vulnerable = false;
 							velX = 0;
 							fixedX = ply.rect.x;
@@ -252,6 +255,7 @@ public class CientistaBurstFire extends Cientista {
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive) {
 					vida -= 10;
 					if(vida <= 0) {
+						morrendoSound.play(0.5f);
 						stateTime = 0;
 						animState = "morrendo";
 						Player.cannonKills += 1;

@@ -1,6 +1,7 @@
 package entities.soldados;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.Texture;
 import com.badlogic.gdx.graphics.g2d.Animation;
 import com.badlogic.gdx.graphics.g2d.SpriteBatch;
@@ -30,6 +31,9 @@ public class Drone extends Soldado {
 	Platform[] platforms;
 	Texture sprite = new Texture(Gdx.files.internal("Soldado/drone.png"));
 	TextureRegion[][] spriteSheet = TextureRegion.split(sprite, 50, 50);
+	
+	Sound tiroSound = Gdx.audio.newSound(Gdx.files.internal("Soldado/Sounds/droneTiro.wav"));
+	Sound damageSound = Gdx.audio.newSound(Gdx.files.internal("Soldado/Sounds/droneDamage.wav"));
 	
 	TextureRegion[] parado = new TextureRegion[1];
 	TextureRegion[] paradoAtirando = new TextureRegion[1];
@@ -93,6 +97,7 @@ public class Drone extends Soldado {
 					}
 					tiro.count += 1;
 					if(tiro.count >= waitUntilShoot && tiro.isAlive == false) {
+						tiroSound.play(0.3f);
 						animState = "paradoAtirando";
 						tiro.rect.x = rect.x + 32;
 						tiro.rect.y = rect.y - 10;
@@ -228,6 +233,7 @@ public class Drone extends Soldado {
 				if(ply.isAttacking) {
 					collisionPlayer();
 					if(rect.overlaps(p1Rect)) {
+						damageSound.play(0.4f);
 						vida -= 10;
 						if(vida <= 0) {
 							stateTime = 0;
@@ -254,13 +260,18 @@ public class Drone extends Soldado {
 					}
 				}
 				if(ply.tiro.rect.overlaps(rect) && ply.tiro.isAlive && isAlive) {
-					ply.tiro.isAlive = false;
-					ply.tiro.count = 0;
+					if(!ply.tiro.toDie) {
+						ply.tiro.tiroExplosionSound.play(0.5f);
+			    		ply.tiro.count = 0;
+						ply.tiro.toDie = true;
+						ply.tiro.stateTime = 0;
+						damageSound.play(0.4f);
+					}
 					vida -= 10;
 					if(vida <= 0) {
 						stateTime = 0;
+						if(animState != "morrendoCanhao") Player.cannonKills += 1;
 						animState = "morrendoCanhao";
-						Player.cannonKills += 1;
 					} else {
 						vulnerable = false;
 						velX = 0;

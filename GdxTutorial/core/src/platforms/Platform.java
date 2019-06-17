@@ -104,9 +104,11 @@ public class Platform {
     	}
     }
     public void playerBulletCollision(TiroPlayer tiro) {
-    	if(tiro.rect.overlaps(rect) && MyGdxGame.actualLevel == "Level1") {
+    	if(tiro.rect.overlaps(rect) && !tiro.toDie && MyGdxGame.actualLevel != "Level2") {
+    		tiro.tiroExplosionSound.play(0.5f);
     		tiro.count = 0;
-    		tiro.isAlive = false;
+			tiro.toDie = true;
+			tiro.stateTime = 0;
     	}
     }
     public void genericPlatformCollisionX(Rectangle secondRect, double velX) {

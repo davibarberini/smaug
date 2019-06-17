@@ -1,6 +1,7 @@
 package levels;
 
 import com.badlogic.gdx.Gdx;
+import com.badlogic.gdx.audio.Sound;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
@@ -11,7 +12,8 @@ public class PauseScreen {
 	MyGdxGame game;
 	OrthographicCamera camera;
 	public static String selected = "return";
-	
+	String lastSelected = selected;
+	Sound interaction = Gdx.audio.newSound(Gdx.files.internal("TitleScreen/interaction.wav"));
 	Texture select = new Texture("TitleScreen/icon.png");
 	
 	public PauseScreen(MyGdxGame game, OrthographicCamera camera) {
@@ -21,6 +23,10 @@ public class PauseScreen {
 	}
 	
 	public void update() {
+		if(lastSelected != selected) {
+			lastSelected = selected;
+			interaction.play(0.3f);
+		}
 		camera.position.set(0, 0, 0);
 		camera.update();
 		this.draw();
